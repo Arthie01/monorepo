@@ -1,0 +1,18 @@
+# Laravel
+laravel_app/.env
+laravel_app/vendor/
+laravel_app/node_modules/
+laravel_app/storage/logs/
+laravel_app/storage/framework/cache/
+laravel_app/storage/framework/sessions/
+laravel_app/storage/framework/views/
+laravel_app/bootstrap/cache/
+
+# Flask
+flask_app/venv/
+flask_app/__pycache__/
+flask_app/*.pyc
+
+# IDEs
+.vscode/
+.idea/

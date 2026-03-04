@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión — Macuin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+  <!-- Corner diagonal decorations -->
+  <div class="bg-decor bg-decor--tl" aria-hidden="true"></div>
+  <div class="bg-decor bg-decor--br" aria-hidden="true"></div>
+
+  <main class="login-wrapper" role="main">
+    <div class="login-card">
+
+      <!-- Header -->
+      <header class="login-header">
+        <div class="login-logo">
+          <img
+            src="{{ url_for('static', filename='images/logo2.jpeg') }}"
+            alt="Logotipo Macuin"
+          >
+        </div>
+        <h1 class="login-title">Bienvenido de nuevo</h1>
+        <p class="login-subtitle">Ingresa a tu cuenta para continuar</p>
+      </header>
+
+      <!-- Form -->
+      <form class="login-form" action="#" method="post" novalidate>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <img src="{{ url_for('static', filename='images/correo.jpg') }}" alt="">
+            </span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="tucorreo@ejemplo.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <img src="{{ url_for('static', filename='images/candado.jpg') }}" alt="">
+            </span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Remember me + Forgot password -->
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" name="remember" class="checkbox-input">
+            <span class="checkbox-custom" aria-hidden="true"></span>
+            <span class="checkbox-text">Recuérdame</span>
+          </label>
+          <a href="#" class="link-forgot">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-login">
+          <span>Iniciar sesión</span>
+        </button>
+
+      </form>
+
+      <!-- Register prompt -->
+      <p class="register-prompt">
+        ¿No tienes cuenta?&nbsp;<a href="#" class="link-register">Regístrate aquí</a>
+      </p>
+
+    </div>
+  </main>
+
+</body>
+</html>
