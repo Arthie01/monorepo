@@ -91,30 +91,6 @@
         </button>
       </div>
 
-      <!-- ── Single preview card ── -->
-      <section class="preview-section" aria-label="Vista previa de autoparte">
-        <p class="preview-eyebrow">Vista previa de autoparte</p>
-        <div class="cards-row">
-          <article class="part-card" aria-label="Tarjeta de ejemplo">
-            <div class="card-img-wrap">
-              <img
-                src="{{ url_for('static', filename='images/copa_piston.png') }}"
-                alt="Copa de pistón"
-                class="card-img"
-              >
-            </div>
-            <div class="card-body">
-              <p class="card-name">Nombre de autoparte</p>
-              <p class="card-price">$ &mdash;&mdash;</p>
-              <p class="card-stock">Stock: &mdash;</p>
-            </div>
-            <div class="card-footer">
-              <button type="button" class="btn-card-add">Agregar</button>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <!-- ── Table panel ── -->
       <div class="table-panel">
 
@@ -153,6 +129,38 @@
               </tr>
             </thead>
             <tbody>
+
+              <!-- Fila de ejemplo con copa_piston -->
+              <tr class="row-example">
+                <td class="td-id">DEMO</td>
+                <td>
+                  <div class="tbl-img-wrap">
+                    <img
+                      src="{{ url_for('static', filename='images/copa_piston.png') }}"
+                      alt="Copa de pistón"
+                      class="tbl-img"
+                    >
+                  </div>
+                </td>
+                <td>
+                  <span class="td-name">Nombre de autoparte</span>
+                  <span class="td-unit">1 — Unidad</span>
+                </td>
+                <td><span class="td-muted">&mdash;</span></td>
+                <td><span class="td-muted">&mdash;</span></td>
+                <td><span class="td-muted">&mdash;</span></td>
+                <td><span class="badge badge--neutral">&mdash;</span></td>
+                <td>
+                  <div class="tbl-actions">
+                    <button type="button" class="act-btn act-btn--edit" aria-label="Editar autoparte">
+                      <img src="{{ url_for('static', filename='images/edit.png') }}" alt="" aria-hidden="true">
+                    </button>
+                    <button type="button" class="act-btn act-btn--del" aria-label="Eliminar autoparte">
+                      <img src="{{ url_for('static', filename='images/trash.png') }}" alt="" aria-hidden="true">
+                    </button>
+                  </div>
+                </td>
+              </tr>
 
               <tr class="sk" aria-hidden="true">
                 <td><b class="sk-b sk-id"></b></td>
