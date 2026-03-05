@@ -26,5 +26,11 @@ def gestion_autopartes():
     return render_template("gestion_autopartes.html")
 
 
+@app.route("/gestion-pedidos", methods=["GET"])
+def gestion_pedidos():
+    """Pantalla de gestión de pedidos (solo UI)."""
+    return render_template("gestion_pedidos.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
