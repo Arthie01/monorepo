@@ -56,7 +56,7 @@
                     <input type="checkbox" id="remember" name="remember">
                     Recuérdame
                 </label>
-                <a class="forgot-link" href="#">¿Olvidaste tu contraseña?</a>
+                <a class="forgot-link" href="{{ url('/forgot-password') }}">¿Olvidaste tu contraseña?</a>
             </div>
 
             {{-- Submit --}}
