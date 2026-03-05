@@ -20,5 +20,11 @@ def login():
     return render_template("login.html")
 
 
+@app.route("/gestion-autopartes", methods=["GET"])
+def gestion_autopartes():
+    """Pantalla de gestión de autopartes (solo UI)."""
+    return render_template("gestion_autopartes.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
