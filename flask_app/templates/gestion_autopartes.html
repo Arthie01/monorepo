@@ -37,17 +37,19 @@
   <main class="page-main" role="main">
     <div class="container">
 
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb" aria-label="Ruta de navegación">
-        <a href="#" class="bc-link">Inicio</a>
-        <span class="bc-sep" aria-hidden="true">/</span>
-        <span class="bc-current" aria-current="page">Gestión de Autopartes</span>
-      </nav>
-
-      <!-- Page heading -->
-      <div class="page-heading">
-        <h1 class="page-title">Gestión de Autopartes</h1>
-        <p class="page-subtitle">Administra tu inventario y gestión de autopartes.</p>
+      <!-- Breadcrumb + heading row -->
+      <div class="page-toprow">
+        <div>
+          <nav class="breadcrumb" aria-label="Ruta de navegación">
+            <a href="#" class="bc-link">Inicio</a>
+            <span class="bc-sep" aria-hidden="true">/</span>
+            <span class="bc-current" aria-current="page">Gestión de Autopartes</span>
+          </nav>
+          <div class="page-heading">
+            <h1 class="page-title">Gestión de Autopartes</h1>
+            <p class="page-subtitle">Administra tu inventario y gestión de autopartes.</p>
+          </div>
+        </div>
       </div>
 
       <!-- ── Filter bar ── -->
@@ -100,12 +102,6 @@
             <span class="count-range">1 a 7</span> de <span class="count-total">&mdash;</span> autopartes
           </p>
           <div class="tbar-right">
-            <nav class="pagination" aria-label="Paginación superior">
-              <button class="pp pp--on" aria-current="page">1</button>
-              <button class="pp">2</button>
-              <button class="pp">3</button>
-              <button class="pp pp--nav" aria-label="Siguiente">&#8250;</button>
-            </nav>
             <button type="button" class="btn-add">
               <img src="{{ url_for('static', filename='images/plus.png') }}" alt="" class="btn-icon" aria-hidden="true">
               <span>Agregar Autoparte</span>
@@ -132,7 +128,7 @@
 
               <!-- Fila de ejemplo con copa_piston -->
               <tr class="row-example">
-                <td class="td-id">DEMO</td>
+                <td class="td-id">1</td>
                 <td>
                   <div class="tbl-img-wrap">
                     <img
@@ -143,7 +139,7 @@
                   </div>
                 </td>
                 <td>
-                  <span class="td-name">Nombre de autoparte</span>
+                  <span class="td-name">Copa Piston del Rasho Macuin Cuchau</span>
                   <span class="td-unit">1 — Unidad</span>
                 </td>
                 <td><span class="td-muted">&mdash;</span></td>

@@ -77,7 +77,7 @@ body {
 .hd1 {
   position: absolute;
   top: 0; left: 0;
-  width: 220px; height: 100%;
+  width: 320px; height: 100%;
   background: linear-gradient(140deg, #b71c1c 0%, #e53935 60%, transparent 100%);
   clip-path: polygon(0 0, 80% 0, 52% 100%, 0 100%);
   opacity: 0.92;
@@ -85,8 +85,8 @@ body {
 
 .hd2 {
   position: absolute;
-  top: 0; left: 140px;
-  width: 120px; height: 100%;
+  top: 0; left: 210px;
+  width: 160px; height: 100%;
   background: linear-gradient(140deg, #c62828 0%, #ef5350 100%);
   clip-path: polygon(38% 0, 100% 0, 68% 100%, 0 100%);
   opacity: 0.55;
@@ -95,13 +95,13 @@ body {
 .hdr-inner {
   position: relative;
   z-index: 1;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 28px;
-  height: 72px;
+  padding: 0 40px;
+  height: 110px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .site-logo {
@@ -111,18 +111,14 @@ body {
 }
 
 .site-logo img {
-  height: 54px;
+  height: 84px;
   width: auto;
   object-fit: contain;
-  border-radius: 8px;
-  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.12));
+  border-radius: 12px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18));
 }
 
 .hdr-actions {
-  position: absolute;
-  right: 28px;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -130,9 +126,9 @@ body {
 
 .hdr-btn {
   position: relative;
-  width: 38px; height: 38px;
-  background: var(--alt);
-  border: 1.5px solid var(--border);
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.25);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -142,8 +138,8 @@ body {
 }
 
 .hdr-btn:hover {
-  background: var(--red-pale);
-  border-color: var(--border-mid);
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
 }
 
 .hdr-btn:focus-visible {
@@ -154,7 +150,7 @@ body {
 /* CSS-drawn icons — no icon fonts */
 .hdr-icon {
   display: block;
-  width: 18px; height: 18px;
+  width: 20px; height: 20px;
 }
 
 .hdr-icon--user {
@@ -223,15 +219,24 @@ body {
 .page-main {
   position: relative;
   z-index: 1;
-  padding: 32px 24px 72px;
+  padding: 28px 40px 72px;
 }
 
 .container {
-  max-width: 1160px;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
+}
+
+/* ─── Page top row ─── */
+.page-toprow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 /* ─── Breadcrumb ─── */
@@ -268,7 +273,7 @@ body {
   border-radius: var(--r-lg);
   box-shadow: var(--sh-panel);
   border: 1px solid var(--border);
-  padding: 16px 20px;
+  padding: 18px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -291,8 +296,8 @@ body {
   background: var(--alt);
   border: 1.5px solid var(--border);
   border-radius: var(--r-pill);
-  padding: 0 4px 0 16px;
-  height: 42px;
+  padding: 0 6px 0 18px;
+  height: 46px;
   transition:
     border-color var(--t) var(--e),
     box-shadow   var(--t) var(--e);
@@ -326,11 +331,11 @@ body {
   border: none;
   outline: none;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: var(--muted);
-  padding: 0 28px 0 0;
+  padding: 0 30px 0 0;
   cursor: pointer;
-  min-width: 120px;
+  min-width: 148px;
 }
 
 .cap-select:focus { color: var(--strong); }
@@ -350,8 +355,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 0 24px;
-  height: 42px;
+  padding: 0 28px;
+  height: 46px;
   background: var(--red);
   border: none;
   border-radius: var(--r-pill);
