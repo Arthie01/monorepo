@@ -3,97 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión — Macuin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <title>Iniciar sesión — Macuin</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
-  <div class="auth-split">
-    <div class="auth-left">
-      <div class="auth-circle auth-circle--1" aria-hidden="true"></div>
-      <div class="auth-circle auth-circle--2" aria-hidden="true"></div>
-      <div class="auth-circle auth-circle--3" aria-hidden="true"></div>
-      <div class="auth-left__content">
-        <div class="brand-block"><span class="brand-name">MACUIN</span></div>
-        <h1 class="auth-headline">
-          Tu distribuidor<br>de autopartes<br>
-          <span class="auth-headline__muted">de confianza</span>
-        </h1>
-        <p class="auth-desc">
-          Mas de 15,000 referencias para todas las marcas del mercado mexicano.
-          Calidad garantizada para talleres y refaccionarias.
-        </p>
-        <div class="auth-stats">
-          <div class="auth-stat">
-            <span class="auth-stat__value">15K+</span>
-            <span class="auth-stat__label">Referencias</span>
-          </div>
-          <div class="auth-stat">
-            <span class="auth-stat__value">500+</span>
-            <span class="auth-stat__label">Marcas</span>
-          </div>
-          <div class="auth-stat">
-            <span class="auth-stat__value">24h</span>
-            <span class="auth-stat__label">Entrega</span>
+
+  <!-- Corner diagonal decorations -->
+  <div class="bg-decor bg-decor--tl" aria-hidden="true"></div>
+  <div class="bg-decor bg-decor--br" aria-hidden="true"></div>
+
+  <main class="login-wrapper" role="main">
+    <div class="login-card">
+
+      <!-- Header -->
+      <header class="login-header">
+        <div class="login-logo">
+          <img
+            src="{{ url_for('static', filename='images/logo2.jpeg') }}"
+            alt="Logotipo Macuin"
+          >
+        </div>
+        <h1 class="login-title">Bienvenido de nuevo</h1>
+        <p class="login-subtitle">Ingresa a tu cuenta para continuar</p>
+      </header>
+
+      <!-- Form -->
+      <form class="login-form" action="#" method="post" novalidate>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <img src="{{ url_for('static', filename='images/correo.jpg') }}" alt="">
+            </span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="tucorreo@ejemplo.com"
+              autocomplete="email"
+              required
+            >
           </div>
         </div>
-      </div>
-    </div>
-    <div class="auth-right">
-      <div class="auth-form-wrap">
-        <div class="auth-form-header">
-          <p class="auth-eyebrow">Bienvenido de vuelta</p>
-          <h2 class="auth-title">Iniciar Sesion</h2>
-          <div class="auth-title-line"></div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <img src="{{ url_for('static', filename='images/candado.jpg') }}" alt="">
+            </span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+          </div>
         </div>
-        <form method="POST" action="#" novalidate>
-          <div class="mac-form-group">
-            <label class="mac-label" for="email">Correo Electronico</label>
-            <div class="mac-input-icon">
-              <i class="mac-input-icon__icon fas fa-envelope"></i>
-              <input type="email" id="email" name="email" class="mac-input"
-                     placeholder="correo@ejemplo.com" autocomplete="email" required>
-            </div>
-          </div>
-          <div class="mac-form-group">
-            <div class="mac-label-row">
-              <label class="mac-label" for="password">Contrasena</label>
-              <a href="#" class="mac-forgot">Olvidaste tu contrasena?</a>
-            </div>
-            <div class="mac-input-icon">
-              <i class="mac-input-icon__icon fas fa-lock"></i>
-              <input type="password" id="password" name="password" class="mac-input"
-                     placeholder="..." autocomplete="current-password" required>
-              <button type="button" class="mac-eye-btn" onclick="togglePass()" aria-label="Mostrar contrasena">
-                <i class="fas fa-eye" id="eye-icon"></i>
-              </button>
-            </div>
-          </div>
-          <div class="mac-form-group mac-form-group--sm">
-            <label class="mac-checkbox">
-              <input type="checkbox" name="remember">
-              <span>Mantener sesion iniciada</span>
-            </label>
-          </div>
-          <button type="submit" class="mac-btn mac-btn--primary mac-btn--block mac-btn--lg">
-            <i class="fas fa-sign-in-alt"></i>
-            INGRESAR
-          </button>
-          <p class="auth-register-link">No tienes cuenta? <a href="#">Registrate aqui</a></p>
-        </form>
-      </div>
+
+        <!-- Remember me + Forgot password -->
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" name="remember" class="checkbox-input">
+            <span class="checkbox-custom" aria-hidden="true"></span>
+            <span class="checkbox-text">Recuérdame</span>
+          </label>
+          <a href="#" class="link-forgot">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-login">
+          <span>Iniciar sesión</span>
+        </button>
+
+      </form>
+
+      <!-- Register prompt -->
+      <p class="register-prompt">
+        ¿No tienes cuenta?&nbsp;<a href="#" class="link-register">Regístrate aquí</a>
+      </p>
+
     </div>
-  </div>
-  <script>
-    function togglePass() {
-      const input = document.getElementById('password');
-      const icon  = document.getElementById('eye-icon');
-      input.type  = input.type === 'password' ? 'text' : 'password';
-      icon.className = input.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
-    }
-  </script>
+  </main>
+
 </body>
 </html>
