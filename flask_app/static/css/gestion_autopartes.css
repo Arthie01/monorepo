@@ -70,26 +70,6 @@ body {
   box-shadow: 0 2px 12px rgba(0,0,0,.5);
 }
 
-.hdr-top-banner {
-  background: #C41230;
-  color: #fff;
-  text-align: center;
-  padding: 9px 0;
-  font-family: var(--font-body);
-  font-size: 13px;
-}
-.hdr-top-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-.hdr-top-sep { opacity: .4; }
-.hdr-top-banner a { color:#fff; font-weight:600; text-decoration:none; }
-
 .hdr-inner {
   max-width: 1280px;
   margin: 0 auto;
