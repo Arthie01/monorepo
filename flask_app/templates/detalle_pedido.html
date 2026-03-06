@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalle de Pedido #PED-001 — Macuin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/detalle_pedido.css') }}"
+    />
+  </head>
+  <body>
+    <!-- ══ SITE HEADER ══ -->
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
+        </a>
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+          <a href="/gestion-pedidos" class="hdr-nav__link hdr-nav__link--active"
+            >Pedidos</a
+          >
+          <a href="/reportes" class="hdr-nav__link">Reportes</a>
+        </nav>
+        <div class="hdr-actions">
+          <a href="/perfil" class="hdr-action-link" aria-label="Perfil"
+            ><i class="fas fa-user"></i
+          ></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══ MAIN ══ -->
+    <main class="page-main" role="main">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="#" class="bc-link">Inicio</a>
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <a href="/gestion-pedidos" class="bc-link">Gestión de Pedidos</a>
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <span class="bc-current" aria-current="page">Detalle de Pedido</span>
+        </nav>
+
+        <!-- Page heading -->
+        <div class="page-heading">
+          <div>
+            <h1 class="page-title">Pedido <span>#PED-001</span></h1>
+            <p class="page-subtitle">
+              Creado el 05 de marzo de 2026 por Artemio Hurtado
+            </p>
+          </div>
+          <span class="folio-badge">FOLIO: PED-001</span>
+        </div>
+
+        <!-- ═══ TWO-COLUMN LAYOUT ═══ -->
+        <div class="detail-layout">
+          <!-- ── Left column: main content ── -->
+          <div class="detail-left">
+            <!-- Card: Estado del pedido (Timeline) -->
+            <div class="detail-card">
+              <div class="card-header">
+                <h2 class="card-header__title">
+                  <i class="fas fa-route"></i> Estado del Pedido
+                </h2>
+              </div>
+              <div class="state-timeline">
+                <div class="state-step done">
+                  <div class="state-dot"><i class="fas fa-check"></i></div>
+                  <span class="state-label">Recibido</span>
+                  <span class="state-date">05/03/2026</span>
+                </div>
+                <div class="state-step active">
+                  <div class="state-dot"><i class="fas fa-spinner"></i></div>
+                  <span class="state-label">En proceso</span>
+                  <span class="state-date">—</span>
+                </div>
+                <div class="state-step">
+                  <div class="state-dot"><i class="fas fa-truck"></i></div>
+                  <span class="state-label">Enviado</span>
+                  <span class="state-date">—</span>
+                </div>
+                <div class="state-step">
+                  <div class="state-dot"><i class="fas fa-box-open"></i></div>
+                  <span class="state-label">Entregado</span>
+                  <span class="state-date">—</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Productos del pedido -->
+            <div class="detail-card">
+              <div class="card-header">
+                <h2 class="card-header__title">
+                  <i class="fas fa-boxes-stacked"></i> Productos del Pedido
+                </h2>
+              </div>
+              <div class="card-body" style="padding: 0">
+                <table class="items-table">
+                  <thead>
+                    <tr>
+                      <th>Imagen</th>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio Unit.</th>
+                      <th style="text-align: right">Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <img
+                          src="{{ url_for('static', filename='images/copa_piston.png') }}"
+                          alt="Copa Pistón"
+                          class="item-img"
+                        />
+                      </td>
+                      <td>
+                        <div class="item-name">Copa Pistón RSHO Macuin</div>
+                        <div class="item-sku">SKU: AUT-001</div>
+                      </td>
+                      <td>1</td>
+                      <td>$2.00</td>
+                      <td style="text-align: right">$2.00</td>
+                    </tr>
+
+                    <!-- Totales -->
+                    <tr class="total-row">
+                      <td colspan="3"></td>
+                      <td style="text-align: right">Subtotal</td>
+                      <td style="text-align: right">$2.00</td>
+                    </tr>
+                    <tr class="total-row">
+                      <td colspan="3"></td>
+                      <td style="text-align: right">Envío</td>
+                      <td style="text-align: right">$0.00</td>
+                    </tr>
+                    <tr class="total-row grand">
+                      <td colspan="3"></td>
+                      <td style="text-align: right">Total</td>
+                      <td style="text-align: right">$2.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- /detail-left -->
+
+          <!-- ── Right column: sidebar ── -->
+          <div class="detail-right">
+            <!-- Card: Info del cliente -->
+            <div class="detail-card">
+              <div class="card-header">
+                <h2 class="card-header__title">
+                  <i class="fas fa-user"></i> Cliente
+                </h2>
+              </div>
+              <div class="card-body">
+                <div class="info-row">
+                  <i class="fas fa-user"></i>
+                  <div>
+                    <div class="info-label">Nombre</div>
+                    <div class="info-value">Artemio Hurtado</div>
+                  </div>
+                </div>
+                <div class="info-row">
+                  <i class="fas fa-envelope"></i>
+                  <div>
+                    <div class="info-label">Correo</div>
+                    <div class="info-value">artemio@correo.com</div>
+                  </div>
+                </div>
+                <div class="info-row">
+                  <i class="fas fa-phone"></i>
+                  <div>
+                    <div class="info-label">Teléfono</div>
+                    <div class="info-value">+52 614 123 4567</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Dirección de envío -->
+            <div class="detail-card">
+              <div class="card-header">
+                <h2 class="card-header__title">
+                  <i class="fas fa-location-dot"></i> Dirección de Envío
+                </h2>
+              </div>
+              <div class="card-body">
+                <div class="info-row">
+                  <i class="fas fa-map-pin"></i>
+                  <div>
+                    <div class="info-label">Dirección</div>
+                    <div class="info-value">
+                      Av. Tecnológico #1234, Col. Centro
+                    </div>
+                  </div>
+                </div>
+                <div class="info-row">
+                  <i class="fas fa-city"></i>
+                  <div>
+                    <div class="info-label">Ciudad</div>
+                    <div class="info-value">Chihuahua, Chih. CP 31000</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Actualizar estado del pedido -->
+            <div class="detail-card">
+              <div class="card-header">
+                <h2 class="card-header__title">
+                  <i class="fas fa-pen-to-square"></i> Actualizar Estado
+                </h2>
+              </div>
+              <div class="card-body">
+                <p class="state-change-title">Estado actual</p>
+                <div style="margin-bottom: 16px">
+                  <span class="current-badge">En proceso</span>
+                </div>
+
+                <p class="state-change-title">Cambiar a</p>
+                <div class="state-btn-group">
+                  <button type="button" class="state-btn">
+                    <i class="fas fa-clock"></i>
+                    Pendiente
+                  </button>
+                  <button type="button" class="state-btn state-btn--active">
+                    <i class="fas fa-gear"></i>
+                    En proceso
+                  </button>
+                  <button type="button" class="state-btn">
+                    <i class="fas fa-truck"></i>
+                    Enviado
+                  </button>
+                  <button type="button" class="state-btn">
+                    <i class="fas fa-circle-check"></i>
+                    Entregado
+                  </button>
+                  <button type="button" class="state-btn state-btn--cancel">
+                    <i class="fas fa-xmark"></i>
+                    Cancelar pedido
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /detail-right -->
+        </div>
+        <!-- /detail-layout -->
+      </div>
+      <!-- /container -->
+    </main>
+  </body>
+</html>

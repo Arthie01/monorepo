@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Editar Autoparte — Macuin</title>
+    <title>Agregar Autoparte — Macuin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,7 +16,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/editar_autoparte.css') }}"
+      href="{{ url_for('static', filename='css/agregar_autoparte.css') }}"
     />
   </head>
   <body>
@@ -55,19 +55,16 @@
             >Gestión de Autopartes</a
           >
           <span class="bc-sep" aria-hidden="true">/</span>
-          <span class="bc-current" aria-current="page">Editar Autoparte</span>
+          <span class="bc-current" aria-current="page">Agregar Autoparte</span>
         </nav>
 
         <!-- Page heading -->
         <div class="page-heading">
-          <div class="page-heading__left">
-            <h1 class="page-title">Editar Autoparte</h1>
+          <div>
+            <h1 class="page-title">Agregar Autoparte</h1>
             <p class="page-subtitle">
-              Modifica los datos de la pieza seleccionada.
+              Registra una nueva pieza en el inventario del almacén.
             </p>
-          </div>
-          <div class="page-heading__badge">
-            <span class="id-badge"># 1</span>
           </div>
         </div>
 
@@ -81,21 +78,13 @@
           <!-- ── Left column: image ── -->
           <aside class="edit-img-col">
             <div class="img-preview-wrap">
-              <img
-                src="{{ url_for('static', filename='images/copa_piston.png') }}"
-                alt="Copa de pistón"
-                class="img-preview"
-                id="imgPreview"
-              />
-              <div class="img-overlay">
-                <i class="fas fa-camera"></i>
-                <span>Cambiar imagen</span>
-              </div>
+              <i class="fas fa-image img-placeholder-icon"></i>
+              <span class="img-placeholder-text">Sin imagen</span>
             </div>
 
             <label class="img-upload-btn" for="imgFile">
               <i class="fas fa-upload"></i>
-              <span>Subir nueva imagen</span>
+              <span>Subir imagen</span>
               <input
                 type="file"
                 id="imgFile"
@@ -108,9 +97,9 @@
 
             <p class="img-hint">JPG, PNG o WEBP · Máx. 5 MB</p>
 
-            <!-- Estado rápido -->
+            <!-- Estado inicial -->
             <div class="status-block">
-              <p class="status-block__label">Estado actual</p>
+              <p class="status-block__label">Estado inicial</p>
               <div class="status-options">
                 <label class="status-opt">
                   <input type="radio" name="estado" value="en_stock" checked />
@@ -143,7 +132,6 @@
                     id="fCodigo"
                     name="codigo"
                     class="field-input"
-                    value="AUT-001"
                     placeholder="Ej. AUT-001"
                   />
                 </div>
@@ -157,7 +145,7 @@
                     id="fNombre"
                     name="nombre"
                     class="field-input"
-                    value="Copa Piston del Rasho Macuin Cuchau"
+                    placeholder="Ej. Balata delantera cerámica"
                     required
                   />
                 </div>
@@ -171,12 +159,13 @@
                       class="field-select"
                     >
                       <option value="">— Seleccionar —</option>
-                      <option value="motor" selected>Motor</option>
+                      <option value="motor">Motor</option>
                       <option value="frenos">Frenos</option>
                       <option value="suspension">Suspensión</option>
                       <option value="electrico">Eléctrico</option>
                       <option value="transmision">Transmisión</option>
                       <option value="carroceria">Carrocería</option>
+                      <option value="filtros">Filtros</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -187,11 +176,12 @@
                   <div class="field-select-wrap">
                     <select id="fMarca" name="marca" class="field-select">
                       <option value="">— Seleccionar —</option>
-                      <option value="macuin" selected>Macuin</option>
                       <option value="bosch">Bosch</option>
                       <option value="ngk">NGK</option>
                       <option value="gates">Gates</option>
                       <option value="monroe">Monroe</option>
+                      <option value="mann">Mann</option>
+                      <option value="otra">Otra</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -207,7 +197,7 @@
               <div class="fields-grid">
                 <div class="field-group field-group--third">
                   <label class="field-label" for="fStock"
-                    >Stock <span class="req">*</span></label
+                    >Stock inicial <span class="req">*</span></label
                   >
                   <div class="field-input-icon-wrap">
                     <i class="fas fa-cubes field-input-icon"></i>
@@ -216,7 +206,7 @@
                       id="fStock"
                       name="stock"
                       class="field-input field-input--icon"
-                      value="24"
+                      placeholder="0"
                       min="0"
                       required
                     />
@@ -234,7 +224,7 @@
                       id="fPrecio"
                       name="precio"
                       class="field-input field-input--prefix"
-                      value="450.00"
+                      placeholder="0.00"
                       min="0"
                       step="0.01"
                       required
@@ -267,7 +257,7 @@
                     id="fStockMin"
                     name="stock_min"
                     class="field-input"
-                    value="5"
+                    placeholder="5"
                     min="0"
                   />
                 </div>
@@ -281,7 +271,6 @@
                     id="fUbicacion"
                     name="ubicacion"
                     class="field-input"
-                    value="A-03"
                     placeholder="Ej. A-03, Estante 2"
                   />
                 </div>
@@ -303,7 +292,6 @@
                     id="fMarcaVeh"
                     name="marca_vehiculo"
                     class="field-input"
-                    value=""
                     placeholder="Ej. Nissan, Chevrolet"
                   />
                 </div>
@@ -315,7 +303,6 @@
                     id="fModelo"
                     name="modelo"
                     class="field-input"
-                    value=""
                     placeholder="Ej. Tsuru, Sentra 2010-2015"
                   />
                 </div>
@@ -363,13 +350,9 @@
               <span>Cancelar</span>
             </a>
             <div class="edit-footer__right">
-              <button type="button" class="btn-secondary">
-                <i class="fas fa-eye"></i>
-                <span>Vista previa</span>
-              </button>
               <button type="submit" class="btn-save">
-                <i class="fas fa-floppy-disk"></i>
-                <span>Guardar cambios</span>
+                <i class="fas fa-plus"></i>
+                <span>Agregar Autoparte</span>
               </button>
             </div>
           </footer>
