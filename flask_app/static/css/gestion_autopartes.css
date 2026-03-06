@@ -1,14 +1,18 @@
 /* ═══════════════════════════════════════════════
    gestion_autopartes.css — Macuin Admin UI
    Production-grade · Pure CSS · Zero frameworks
-   ═══════════════════════════════════════════════ */
-
+   ═══════════════════════════════════════════════ */@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
 /* ─── Design Tokens ─── */
 :root {
-  --red:        #c0392b;
-  --red-dark:   #96281b;
-  --red-glow:   rgba(192,57,43,0.13);
-  --red-pale:   rgba(192,57,43,0.07);
+  --red:        #C41230;
+  --red-dark:   #8B0D21;
+  --red-glow:   rgba(196,18,48,0.13);
+  --red-pale:   rgba(196,18,48,0.07);
+
+  --macuin-dark:  #0D0D0D;
+  --macuin-steel: #8B949E;
+  --font-display: 'Oswald', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
 
   --bg:         #f1f3f6;
   --surface:    #ffffff;
@@ -48,7 +52,7 @@ html {
   text-rendering: optimizeLegibility;
 }
 body {
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-family: var(--font-body);
   background: var(--bg);
   color: var(--body);
   min-height: 100dvh;
@@ -101,7 +105,7 @@ body {
   height: 110px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .site-logo {
@@ -119,6 +123,10 @@ body {
 }
 
 .hdr-actions {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -239,6 +247,50 @@ body {
   flex-wrap: wrap;
 }
 
+/* ─── KPI summary cards ─── */
+.page-kpis {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border-mid);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-card);
+  min-width: 96px;
+}
+
+.kpi-card--ok   { border-top-color: #22c55e; }
+.kpi-card--warn { border-top-color: var(--red); }
+
+.kpi-val {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--strong);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.kpi-lbl {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
 /* ─── Breadcrumb ─── */
 .breadcrumb {
   display: flex;
@@ -262,7 +314,7 @@ body {
 
 /* ─── Page heading ─── */
 .page-heading { display: flex; flex-direction: column; gap: 5px; }
-.page-title   { font-size: 1.875rem; font-weight: 700; color: var(--strong); letter-spacing: -0.025em; line-height: 1.2; }
+.page-title   { font-family:var(--font-display);font-size: 1.875rem; font-weight: 700; color: var(--strong); letter-spacing: -0.01em; line-height: 1.2; text-transform: uppercase; }
 .page-subtitle { font-size: 0.9375rem; color: var(--muted); line-height: 1.5; }
 
 /* ═══════════════════════════════════════════════
@@ -425,6 +477,54 @@ body {
   flex-wrap: wrap;
 }
 
+/* Inline search — fills dead centre of the toolbar */
+.tbar-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.tbar-search-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+.tbar-search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px; height: 15px;
+  object-fit: contain;
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.tbar-search-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 14px 0 35px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: inherit;
+  font-size: 0.8438rem;
+  color: var(--body);
+  outline: none;
+  transition:
+    border-color var(--t) var(--e),
+    box-shadow   var(--t) var(--e);
+  appearance: none;
+}
+.tbar-search-input::placeholder { color: var(--faint); }
+.tbar-search-input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-glow);
+}
+
 /* "Agregar Autoparte" button */
 .btn-add {
   display: inline-flex;
@@ -471,9 +571,10 @@ body {
 
 .admin-table th {
   padding: 11px 16px;
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
   text-align: left;
@@ -724,6 +825,9 @@ body {
   .page-main { padding: 24px 16px 56px; }
   .hdr-inner { padding: 0 16px; }
   .filter-bar { padding: 14px 16px; }
+  .page-kpis { gap: 8px; }
+  .kpi-card { padding: 12px 18px; min-width: 80px; }
+  .kpi-val { font-size: 1.375rem; }
 }
 
 @media (max-width: 680px) {
@@ -736,7 +840,11 @@ body {
   .cap-select { min-width: unset; width: 100%; }
   .btn-search { width: 100%; justify-content: center; border-radius: var(--r-md); }
   .tbar { flex-direction: column; align-items: flex-start; }
+  .tbar-center { padding: 0; width: 100%; }
+  .tbar-search-wrap { max-width: 100%; }
   .tbar-right { width: 100%; justify-content: space-between; }
+  .page-kpis { width: 100%; }
+  .kpi-card { flex: 1; }
   .bg-corner { width: 220px; height: 220px; }
 }
 
