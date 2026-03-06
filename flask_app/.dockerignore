@@ -1,0 +1,21 @@
+# Entorno virtual de Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Variables de entorno locales
+.flaskenv
+.env
+
+# Git
+.git/
+.gitignore
+
+# Documentación
+README.md
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

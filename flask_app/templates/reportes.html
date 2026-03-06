@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reportes — Macuin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/reportes.css') }}"
+    />
+  </head>
+  <body>
+    <!-- ══ SITE HEADER ══ -->
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
+        </a>
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+          <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+          <a href="/reportes" class="hdr-nav__link hdr-nav__link--active"
+            >Reportes</a
+          >
+        </nav>
+        <div class="hdr-actions">
+          <a href="/perfil" class="hdr-action-link" aria-label="Perfil"
+            ><i class="fas fa-user"></i
+          ></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══ MAIN ══ -->
+    <main class="page-main" role="main">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="#" class="bc-link">Inicio</a>
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <span class="bc-current" aria-current="page">Reportes</span>
+        </nav>
+
+        <!-- Page heading -->
+        <div class="page-heading">
+          <div>
+            <h1 class="page-title">Reportes</h1>
+            <p class="page-subtitle">
+              Análisis de ventas, inventario y operaciones del almacén.
+            </p>
+          </div>
+        </div>
+
+        <!-- ── Filter bar ── -->
+        <div class="filter-bar">
+          <span class="filter-label"
+            ><i class="fas fa-calendar"></i> Periodo:</span
+          >
+          <input type="date" class="filter-date" value="2026-01-01" />
+          <span style="color: var(--muted)">—</span>
+          <input type="date" class="filter-date" value="2026-03-06" />
+
+          <button type="button" class="filter-capsule filter-capsule--active">
+            <i class="fas fa-calendar-week"></i> Último mes
+          </button>
+          <button type="button" class="filter-capsule">
+            <i class="fas fa-calendar"></i> Trimestre
+          </button>
+          <button type="button" class="filter-capsule">
+            <i class="fas fa-calendar-days"></i> Año
+          </button>
+
+          <button type="button" class="btn-export">
+            <i class="fas fa-file-arrow-down"></i> Exportar PDF
+          </button>
+        </div>
+
+        <!-- ── KPI Grid ── -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i class="fas fa-peso-sign"></i></div>
+            <div class="kpi-value">$48,320</div>
+            <div class="kpi-label">Ventas totales</div>
+            <div class="kpi-trend kpi-trend--up">
+              <i class="fas fa-arrow-up"></i> +12.4% vs mes anterior
+            </div>
+          </div>
+          <div class="kpi-card kpi-card--ok">
+            <div class="kpi-icon"><i class="fas fa-box-open"></i></div>
+            <div class="kpi-value">156</div>
+            <div class="kpi-label">Pedidos completados</div>
+            <div class="kpi-trend kpi-trend--up">
+              <i class="fas fa-arrow-up"></i> +8.2%
+            </div>
+          </div>
+          <div class="kpi-card kpi-card--warn">
+            <div class="kpi-icon"><i class="fas fa-cubes"></i></div>
+            <div class="kpi-value">3,247</div>
+            <div class="kpi-label">SKUs en inventario</div>
+            <div class="kpi-trend kpi-trend--down">
+              <i class="fas fa-arrow-down"></i> -2.1%
+            </div>
+          </div>
+          <div class="kpi-card kpi-card--info">
+            <div class="kpi-icon"><i class="fas fa-users"></i></div>
+            <div class="kpi-value">89</div>
+            <div class="kpi-label">Clientes activos</div>
+            <div class="kpi-trend kpi-trend--up">
+              <i class="fas fa-arrow-up"></i> +5.6%
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Tabs ── -->
+        <div class="tabs-bar" role="tablist">
+          <button
+            class="tab-btn active"
+            role="tab"
+            aria-selected="true"
+            data-tab="ventas"
+          >
+            <i class="fas fa-chart-line"></i> Ventas
+          </button>
+          <button
+            class="tab-btn"
+            role="tab"
+            aria-selected="false"
+            data-tab="inventario"
+          >
+            <i class="fas fa-warehouse"></i> Inventario
+          </button>
+          <button
+            class="tab-btn"
+            role="tab"
+            aria-selected="false"
+            data-tab="pedidos"
+          >
+            <i class="fas fa-clipboard-list"></i> Pedidos
+          </button>
+        </div>
+
+        <!-- ══ TAB: Ventas ══ -->
+        <div class="tab-panel active" id="tab-ventas">
+          <!-- Ventas mensuales + Categorías más vendidas -->
+          <div class="section-2col section-2col--wide">
+            <!-- Chart: Ventas por mes -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-chart-bar"></i> Ventas por Mes
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="month-chart">
+                  <div class="month-col">
+                    <div class="month-bar-wrap">
+                      <div class="month-bar" style="height: 45%"></div>
+                    </div>
+                    <span class="month-name">Oct</span>
+                  </div>
+                  <div class="month-col">
+                    <div class="month-bar-wrap">
+                      <div class="month-bar" style="height: 62%"></div>
+                    </div>
+                    <span class="month-name">Nov</span>
+                  </div>
+                  <div class="month-col">
+                    <div class="month-bar-wrap">
+                      <div class="month-bar" style="height: 80%"></div>
+                    </div>
+                    <span class="month-name">Dic</span>
+                  </div>
+                  <div class="month-col">
+                    <div class="month-bar-wrap">
+                      <div class="month-bar" style="height: 55%"></div>
+                    </div>
+                    <span class="month-name">Ene</span>
+                  </div>
+                  <div class="month-col">
+                    <div class="month-bar-wrap">
+                      <div class="month-bar" style="height: 70%"></div>
+                    </div>
+                    <span class="month-name">Feb</span>
+                  </div>
+                  <div class="month-col">
+                    <div class="month-bar-wrap">
+                      <div class="month-bar" style="height: 92%"></div>
+                    </div>
+                    <span class="month-name">Mar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Donut: Ventas por categoría -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-chart-pie"></i> Por Categoría
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="donut-wrap">
+                  <div class="donut" aria-label="Gráfica de categorías"></div>
+                  <div class="donut-legend">
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--ok"></span>
+                      Motor
+                      <span class="legend-val">52%</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--info"></span>
+                      Frenos
+                      <span class="legend-val">20%</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--warn"></span>
+                      Suspensión
+                      <span class="legend-val">16%</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--err"></span>
+                      Eléctrico
+                      <span class="legend-val">12%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top productos + Resumen reciente -->
+          <div class="section-2col">
+            <!-- Top 5 productos más vendidos -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-trophy"></i> Top 5 Productos
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="top-list">
+                  <div class="top-item">
+                    <span class="top-rank top-rank--1">1</span>
+                    <div class="top-info">
+                      <div class="top-name">Balata Delantera Cerámica</div>
+                      <div class="top-sub">Frenos · SKU: FRN-042</div>
+                    </div>
+                    <span class="top-val">$12,480</span>
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank top-rank--2">2</span>
+                    <div class="top-info">
+                      <div class="top-name">Filtro de Aceite Premium</div>
+                      <div class="top-sub">Filtros · SKU: FLT-018</div>
+                    </div>
+                    <span class="top-val">$8,920</span>
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank top-rank--3">3</span>
+                    <div class="top-info">
+                      <div class="top-name">Amortiguador Trasero Gas</div>
+                      <div class="top-sub">Suspensión · SKU: SUS-031</div>
+                    </div>
+                    <span class="top-val">$7,650</span>
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank">4</span>
+                    <div class="top-info">
+                      <div class="top-name">Bujía de Encendido Iridio</div>
+                      <div class="top-sub">Motor · SKU: MOT-105</div>
+                    </div>
+                    <span class="top-val">$6,340</span>
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank">5</span>
+                    <div class="top-info">
+                      <div class="top-name">Copa Pistón RSHO</div>
+                      <div class="top-sub">Motor · SKU: AUT-001</div>
+                    </div>
+                    <span class="top-val">$5,120</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ventas por marca -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-tags"></i> Ventas por Marca
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="bar-chart">
+                  <div class="bar-row">
+                    <span class="bar-label">Bosch</span>
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 78%"></div>
+                    </div>
+                    <span class="bar-value">$18,200</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">NGK</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--ok"
+                        style="width: 56%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">$12,400</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Monroe</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--info"
+                        style="width: 42%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">$9,800</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Gates</span>
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 30%"></div>
+                    </div>
+                    <span class="bar-value">$5,620</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Mann</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--ok"
+                        style="width: 18%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">$2,300</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-ventas -->
+
+        <!-- ══ TAB: Inventario ══ -->
+        <div class="tab-panel" id="tab-inventario">
+          <div class="section-2col">
+            <!-- Stock por categoría -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-warehouse"></i> Stock por Categoría
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="bar-chart">
+                  <div class="bar-row">
+                    <span class="bar-label">Motor</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--ok"
+                        style="width: 85%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">1,240 uds</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Frenos</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--ok"
+                        style="width: 68%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">890 uds</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Suspensión</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--info"
+                        style="width: 52%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">620 uds</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Eléctrico</span>
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 35%"></div>
+                    </div>
+                    <span class="bar-value">310 uds</span>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">Filtros</span>
+                    <div class="bar-track">
+                      <div
+                        class="bar-fill bar-fill--ok"
+                        style="width: 22%"
+                      ></div>
+                    </div>
+                    <span class="bar-value">187 uds</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Alertas de stock bajo -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-triangle-exclamation"></i> Alertas de Stock
+                  Bajo
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="top-list">
+                  <div class="top-item">
+                    <span class="top-rank" style="color: var(--err)">!</span>
+                    <div class="top-info">
+                      <div class="top-name">Banda de Distribución</div>
+                      <div class="top-sub">Motor · Stock: 2 / Mín: 10</div>
+                    </div>
+                    <span class="top-val" style="color: var(--err)">2 uds</span>
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank" style="color: var(--err)">!</span>
+                    <div class="top-info">
+                      <div class="top-name">Sensor de Oxígeno</div>
+                      <div class="top-sub">Eléctrico · Stock: 3 / Mín: 8</div>
+                    </div>
+                    <span class="top-val" style="color: var(--err)">3 uds</span>
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank" style="color: var(--warn)"
+                      >&#9888;</span
+                    >
+                    <div class="top-info">
+                      <div class="top-name">Disco de Freno Ventilado</div>
+                      <div class="top-sub">Frenos · Stock: 6 / Mín: 12</div>
+                    </div>
+                    <span class="top-val" style="color: var(--warn)"
+                      >6 uds</span
+                    >
+                  </div>
+                  <div class="top-item">
+                    <span class="top-rank" style="color: var(--warn)"
+                      >&#9888;</span
+                    >
+                    <div class="top-info">
+                      <div class="top-name">Rótula Superior</div>
+                      <div class="top-sub">Suspensión · Stock: 4 / Mín: 7</div>
+                    </div>
+                    <span class="top-val" style="color: var(--warn)"
+                      >4 uds</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-inventario -->
+
+        <!-- ══ TAB: Pedidos ══ -->
+        <div class="tab-panel" id="tab-pedidos">
+          <div class="section-2col section-2col--wide">
+            <!-- Tabla resumen de pedidos recientes -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-clipboard-list"></i> Pedidos Recientes
+                </h3>
+              </div>
+              <div class="report-card__body" style="padding: 0">
+                <table class="report-table">
+                  <thead>
+                    <tr>
+                      <th>Folio</th>
+                      <th>Cliente</th>
+                      <th>Fecha</th>
+                      <th>Estado</th>
+                      <th style="text-align: right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: 600">#PED-001</td>
+                      <td>Artemio Hurtado</td>
+                      <td>05/03/2026</td>
+                      <td>
+                        <span class="badge-status badge-status--warn"
+                          >Pendiente</span
+                        >
+                      </td>
+                      <td style="text-align: right; font-weight: 600">$2.00</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600">#PED-002</td>
+                      <td>Refaccionaria El Paisa</td>
+                      <td>04/03/2026</td>
+                      <td>
+                        <span class="badge-status badge-status--ok"
+                          >Entregado</span
+                        >
+                      </td>
+                      <td style="text-align: right; font-weight: 600">
+                        $4,580.00
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600">#PED-003</td>
+                      <td>Taller Mecánico Rápido</td>
+                      <td>03/03/2026</td>
+                      <td>
+                        <span class="badge-status badge-status--info"
+                          >Enviado</span
+                        >
+                      </td>
+                      <td style="text-align: right; font-weight: 600">
+                        $1,890.00
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600">#PED-004</td>
+                      <td>AutoServicio Norte</td>
+                      <td>02/03/2026</td>
+                      <td>
+                        <span class="badge-status badge-status--ok"
+                          >Entregado</span
+                        >
+                      </td>
+                      <td style="text-align: right; font-weight: 600">
+                        $6,230.00
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600">#PED-005</td>
+                      <td>Carlos Mendoza</td>
+                      <td>01/03/2026</td>
+                      <td>
+                        <span class="badge-status badge-status--err"
+                          >Cancelado</span
+                        >
+                      </td>
+                      <td style="text-align: right; font-weight: 600">
+                        $320.00
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Estado de pedidos (donut) -->
+            <div class="report-card">
+              <div class="report-card__header">
+                <h3 class="report-card__title">
+                  <i class="fas fa-chart-pie"></i> Estado de Pedidos
+                </h3>
+              </div>
+              <div class="report-card__body">
+                <div class="donut-wrap">
+                  <div
+                    class="donut"
+                    aria-label="Gráfica de estados de pedidos"
+                  ></div>
+                  <div class="donut-legend">
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--ok"></span>
+                      Entregados
+                      <span class="legend-val">52%</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--info"></span>
+                      Enviados
+                      <span class="legend-val">20%</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--warn"></span>
+                      Pendientes
+                      <span class="legend-val">16%</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot legend-dot--err"></span>
+                      Cancelados
+                      <span class="legend-val">12%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-pedidos -->
+      </div>
+      <!-- /container -->
+    </main>
+
+    <script>
+      /* Tabs switching */
+      document.querySelectorAll(".tab-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".tab-btn").forEach(function (b) {
+            b.classList.remove("active");
+            b.setAttribute("aria-selected", "false");
+          });
+          document.querySelectorAll(".tab-panel").forEach(function (p) {
+            p.classList.remove("active");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+          var tabId = "tab-" + btn.getAttribute("data-tab");
+          document.getElementById(tabId).classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

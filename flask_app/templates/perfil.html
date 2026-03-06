@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil — Macuin Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/perfil.css') }}"
+    />
+  </head>
+  <body>
+    <!-- ══ SITE HEADER ══ -->
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
+        </a>
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+          <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+          <a href="/reportes" class="hdr-nav__link">Reportes</a>
+        </nav>
+        <div class="hdr-actions">
+          <a
+            href="/perfil"
+            class="hdr-action-link"
+            aria-label="Perfil"
+            style="color: #fff; background: rgba(255, 255, 255, 0.08)"
+            ><i class="fas fa-user"></i
+          ></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══ MAIN ══ -->
+    <main class="page-main" role="main">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="#" class="bc-link">Inicio</a>
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <span class="bc-current" aria-current="page">Mi Perfil</span>
+        </nav>
+
+        <!-- Page heading -->
+        <div class="page-heading">
+          <div>
+            <h1 class="page-title">Mi Perfil</h1>
+            <p class="page-subtitle">
+              Gestiona tu información personal y credenciales de acceso.
+            </p>
+          </div>
+        </div>
+
+        <!-- ═══ TWO-COLUMN LAYOUT ═══ -->
+        <div class="profile-layout">
+          <!-- ── Sidebar ── -->
+          <aside class="profile-sidebar">
+            <!-- Avatar -->
+            <div class="sidebar-avatar">
+              <div class="avatar-circle">AH</div>
+              <div class="avatar-name">Artemio Hurtado</div>
+              <div class="avatar-email">artemio@macuin.mx</div>
+              <span class="avatar-role">Personal Activo</span>
+            </div>
+
+            <!-- Navegación -->
+            <nav class="sidebar-nav">
+              <a href="#info" class="sidebar-nav__link active"
+                ><i class="fas fa-user"></i> Información Personal</a
+              >
+              <a href="#password" class="sidebar-nav__link"
+                ><i class="fas fa-lock"></i> Cambiar Contraseña</a
+              >
+              <a href="#actividad" class="sidebar-nav__link"
+                ><i class="fas fa-clipboard-list"></i> Actividad Reciente</a
+              >
+              <a href="#zona-peligro" class="sidebar-nav__link"
+                ><i class="fas fa-shield-halved"></i> Seguridad</a
+              >
+            </nav>
+
+            <!-- Cerrar sesión -->
+            <div class="sidebar-footer">
+              <a href="/login" class="btn-logout">
+                <i class="fas fa-right-from-bracket"></i> Cerrar Sesión
+              </a>
+            </div>
+          </aside>
+
+          <!-- ── Contenido principal ── -->
+          <div>
+            <!-- Sección: Información Personal -->
+            <div id="info" class="profile-card">
+              <div class="profile-card__header">
+                <h2 class="profile-card__title">
+                  <i class="fas fa-user"></i> Información Personal
+                </h2>
+                <button
+                  type="button"
+                  class="btn-edit"
+                  onclick="toggleEdit('personal-form')"
+                >
+                  <i class="fas fa-pen"></i> Editar
+                </button>
+              </div>
+              <div class="profile-card__body">
+                <form id="personal-form" method="POST" action="#" novalidate>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label" for="pNombre">Nombre(s)</label>
+                      <input
+                        type="text"
+                        id="pNombre"
+                        name="nombre"
+                        class="form-input"
+                        value="Artemio"
+                        disabled
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="pApellidos"
+                        >Apellidos</label
+                      >
+                      <input
+                        type="text"
+                        id="pApellidos"
+                        name="apellidos"
+                        class="form-input"
+                        value="Hurtado Reyes"
+                        disabled
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="pEmail"
+                        >Correo Institucional</label
+                      >
+                      <div class="form-input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input
+                          type="email"
+                          id="pEmail"
+                          name="email"
+                          class="form-input"
+                          value="artemio@macuin.mx"
+                          disabled
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="pTelefono">Teléfono</label>
+                      <div class="form-input-icon">
+                        <i class="fas fa-phone"></i>
+                        <input
+                          type="tel"
+                          id="pTelefono"
+                          name="telefono"
+                          class="form-input"
+                          value="614-123-4567"
+                          disabled
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="pArea">Área</label>
+                      <input
+                        type="text"
+                        id="pArea"
+                        name="area"
+                        class="form-input"
+                        value="Ventas"
+                        disabled
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="pPuesto">Puesto</label>
+                      <input
+                        type="text"
+                        id="pPuesto"
+                        name="puesto"
+                        class="form-input"
+                        value="Ejecutivo de Ventas"
+                        disabled
+                      />
+                    </div>
+                  </div>
+
+                  <div id="personal-actions" class="form-actions">
+                    <button type="submit" class="btn-save">
+                      <i class="fas fa-floppy-disk"></i> Guardar Cambios
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-cancel"
+                      onclick="toggleEdit('personal-form', true)"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Sección: Cambiar Contraseña -->
+            <div id="password" class="profile-card">
+              <div class="profile-card__header">
+                <h2 class="profile-card__title">
+                  <i class="fas fa-lock"></i> Cambiar Contraseña
+                </h2>
+              </div>
+              <div class="profile-card__body">
+                <form method="POST" action="#" novalidate>
+                  <div
+                    style="
+                      max-width: 400px;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 16px;
+                    "
+                  >
+                    <div class="form-group">
+                      <label class="form-label" for="cpActual"
+                        >Contraseña Actual</label
+                      >
+                      <div class="form-input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input
+                          type="password"
+                          id="cpActual"
+                          name="current_password"
+                          class="form-input"
+                          placeholder="••••••••"
+                        />
+                        <button
+                          type="button"
+                          class="eye-toggle"
+                          onclick="togglePass('cpActual', this)"
+                          aria-label="Mostrar contraseña"
+                        >
+                          <i class="fas fa-eye"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="cpNueva"
+                        >Nueva Contraseña</label
+                      >
+                      <div class="form-input-icon">
+                        <i class="fas fa-key"></i>
+                        <input
+                          type="password"
+                          id="cpNueva"
+                          name="password"
+                          class="form-input"
+                          placeholder="••••••••"
+                        />
+                        <button
+                          type="button"
+                          class="eye-toggle"
+                          onclick="togglePass('cpNueva', this)"
+                          aria-label="Mostrar contraseña"
+                        >
+                          <i class="fas fa-eye"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="cpConfirmar"
+                        >Confirmar Nueva Contraseña</label
+                      >
+                      <div class="form-input-icon">
+                        <i class="fas fa-key"></i>
+                        <input
+                          type="password"
+                          id="cpConfirmar"
+                          name="password_confirmation"
+                          class="form-input"
+                          placeholder="••••••••"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <button type="submit" class="btn-save">
+                        <i class="fas fa-key"></i> Actualizar Contraseña
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Sección: Actividad Reciente (pedidos gestionados) -->
+            <div id="actividad" class="profile-card">
+              <div class="profile-card__header">
+                <h2 class="profile-card__title">
+                  <i class="fas fa-clipboard-list"></i> Actividad Reciente
+                </h2>
+                <a href="/gestion-pedidos" class="btn-edit"
+                  >Ver todos los pedidos</a
+                >
+              </div>
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-info">
+                    <a href="/detalle-pedido" class="activity-folio"
+                      >#PED-001</a
+                    >
+                    <div class="activity-meta">
+                      05/03/2026 · 1 artículo · Artemio Hurtado
+                    </div>
+                  </div>
+                  <span class="activity-badge activity-badge--warn"
+                    >Pendiente</span
+                  >
+                  <span class="activity-total">$2.00</span>
+                  <a href="/detalle-pedido" class="btn-detail">Ver →</a>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-info">
+                    <span class="activity-folio">#PED-002</span>
+                    <div class="activity-meta">
+                      04/03/2026 · 3 artículos · Refaccionaria El Paisa
+                    </div>
+                  </div>
+                  <span class="activity-badge activity-badge--ok"
+                    >Entregado</span
+                  >
+                  <span class="activity-total">$4,580.00</span>
+                  <a href="#" class="btn-detail">Ver →</a>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-info">
+                    <span class="activity-folio">#PED-003</span>
+                    <div class="activity-meta">
+                      03/03/2026 · 2 artículos · Taller Mecánico Rápido
+                    </div>
+                  </div>
+                  <span class="activity-badge activity-badge--info"
+                    >Enviado</span
+                  >
+                  <span class="activity-total">$1,890.00</span>
+                  <a href="#" class="btn-detail">Ver →</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección: Zona de peligro -->
+            <div id="zona-peligro" class="profile-card danger-zone">
+              <div class="profile-card__header">
+                <h2 class="profile-card__title">
+                  <i class="fas fa-triangle-exclamation"></i> Zona de Peligro
+                </h2>
+              </div>
+              <div class="profile-card__body">
+                <p class="danger-text">
+                  Desactivar tu cuenta impedirá el acceso al panel
+                  administrativo. Esta acción requiere aprobación del
+                  administrador del sistema para revertirse.
+                </p>
+                <button type="button" class="btn-danger">
+                  <i class="fas fa-user-slash"></i> Desactivar mi cuenta
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- /contenido principal -->
+        </div>
+        <!-- /profile-layout -->
+      </div>
+      <!-- /container -->
+    </main>
+
+    <script>
+      function togglePass(id, btn) {
+        var input = document.getElementById(id);
+        var icon = btn.querySelector("i");
+        if (!input) return;
+        input.type = input.type === "password" ? "text" : "password";
+        icon.className =
+          input.type === "password" ? "fas fa-eye" : "fas fa-eye-slash";
+      }
+
+      function toggleEdit(formId, cancel) {
+        var form = document.getElementById(formId);
+        var inputs = form.querySelectorAll("input, select, textarea");
+        var actions = document.getElementById(
+          formId.replace("-form", "-actions"),
+        );
+        if (cancel) {
+          inputs.forEach(function (i) {
+            i.disabled = true;
+          });
+          if (actions) actions.classList.remove("visible");
+        } else {
+          inputs.forEach(function (i) {
+            i.disabled = false;
+          });
+          if (actions) actions.classList.add("visible");
+        }
+      }
+    </script>
+  </body>
+</html>
