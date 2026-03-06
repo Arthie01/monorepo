@@ -161,14 +161,14 @@ Route::get('/perfil', fn() => view('perfil'));
 
 | Fase | Descripción | Vistas | Estado |
 |------|-------------|--------|--------|
-| 1 | Setup y sistema de diseño | Layout + CSS | ⬜ Pendiente |
-| 2 | Autenticación | login, register | ⬜ Pendiente |
-| 3 | Dashboard | dashboard | ⬜ Pendiente |
-| 4 | Catálogo y detalle | catalogo, detalle-producto | ⬜ Pendiente |
-| 5 | Flujo de compra | carrito, checkout | ⬜ Pendiente |
-| 6 | Pedidos | pedidos, pedido-detalle | ⬜ Pendiente |
-| 7 | Perfil | perfil | ⬜ Pendiente |
-| 8 | Rutas web.php | — | ⬜ Pendiente |
+| 1 | Setup y sistema de diseño | Layout + CSS | ✅ Completado |
+| 2 | Autenticación | login, register | ✅ Completado |
+| 3 | Dashboard | dashboard | ✅ Completado |
+| 4 | Catálogo y detalle | catalogo, detalle-producto | ✅ Completado |
+| 5 | Flujo de compra | carrito, checkout | ✅ Completado |
+| 6 | Pedidos | pedidos, pedido-detalle | ✅ Completado |
+| 7 | Perfil | perfil | ✅ Completado |
+| 8 | Rutas web.php | — | ✅ Completado |
 
 ---
 

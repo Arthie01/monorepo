@@ -1,0 +1,150 @@
+/* ============================================
+   PRELOADER - Shopping Cart Animation
+   ============================================ */
+
+/* Wrapper del preloader - pantalla completa */
+.preloader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.preloader-wrapper.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Contenedor del preloader */
+.preloader-new {
+    text-align: center;
+    max-width: 20em;
+    width: 100%;
+}
+
+/* SVG del carrito de compras */
+.cart_preloader {
+    display: block;
+    margin: 0px auto 1.5em;
+    width: 8em;
+    height: 8em;
+}
+
+/* Líneas animadas del carrito */
+.cart__lines,
+.cart__top,
+.cart__wheel1,
+.cart__wheel2,
+.cart__wheel-stroke {
+    animation: 2s ease-in-out 0s infinite normal none running cartLines;
+}
+
+/* Color de las líneas del carrito */
+.cart__lines {
+    stroke: #ee403d;
+}
+
+/* Animación de la parte superior del carrito */
+.cart__top {
+    animation-name: cartTop;
+}
+
+/* Animación de la rueda 1 */
+.cart__wheel1 {
+    animation-name: cartWheel1;
+    transform: rotate(-0.25turn);
+    transform-origin: 43px 111px;
+}
+
+/* Animación de la rueda 2 */
+.cart__wheel2 {
+    animation-name: cartWheel2;
+    transform: rotate(0.25turn);
+    transform-origin: 102px 111px;
+}
+
+/* Animación del trazo de las ruedas */
+.cart__wheel-stroke {
+    animation-name: cartWheelStroke;
+}
+
+/* Trazos de fondo del carrito */
+.cart__track {
+    stroke: hsla(0, 10%, 10%, 0.1);
+    transition: stroke 0.4s;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .preloader-wrapper {
+        background-color: #1a1a1a;
+    }
+
+    .cart__track {
+        stroke: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* ============================================
+   KEYFRAMES - Animaciones del preloader
+   ============================================ */
+
+/* Animación general de opacidad */
+@keyframes cartLines {
+    0%, 100% {
+        opacity: 0;
+    }
+    8%, 92% {
+        opacity: 1;
+    }
+}
+
+/* Animación de la parte superior del carrito */
+@keyframes cartTop {
+    0% {
+        stroke-dashoffset: -338;
+    }
+    50% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: 338;
+    }
+}
+
+/* Animación de rotación de la rueda 1 */
+@keyframes cartWheel1 {
+    0% {
+        transform: rotate(-0.25turn);
+    }
+    100% {
+        transform: rotate(2.75turn);
+    }
+}
+
+/* Animación de rotación de la rueda 2 */
+@keyframes cartWheel2 {
+    0% {
+        transform: rotate(0.25turn);
+    }
+    100% {
+        transform: rotate(3.25turn);
+    }
+}
+
+/* Animación del trazo de las ruedas */
+@keyframes cartWheelStroke {
+    0%, 100% {
+        stroke-dashoffset: 81.68;
+    }
+    50% {
+        stroke-dashoffset: 40.84;
+    }
+}
