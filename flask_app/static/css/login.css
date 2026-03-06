@@ -27,10 +27,188 @@ body { font-family: var(--font-body); background: var(--macuin-dark); color: var
 .auth-left {
   background: var(--macuin-red);
   position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 32px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 64px 68px 60px;
+  width: 100%;
+  max-width: 620px;
+  border-top: 3px solid var(--red);
+}
+
+/* ================================================
+   Header — Logo + Title
+   ================================================ */
+.login-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.login-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.login-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ================================================
+   Form
+   ================================================ */
+.login-form {
   display: flex;
   flex-direction: column;
+  gap: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+/* Label */
+.form-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-body);
+  letter-spacing: 0.01em;
+}
+
+/* Input wrapper: positions icon + input together */
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 60px 56px;
+  pointer-events: none;
+}
+
+.input-icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 3px;
+  opacity: 0.38;
+  filter: grayscale(20%);
+  transition:
+    opacity var(--dur) var(--ease),
+    filter var(--dur) var(--ease);
+}
+
+/* Icon brightens when the sibling input is focused */
+.input-wrapper:focus-within .input-icon img {
+  opacity: 0.78;
+  filter: grayscale(0%);
+}
+
+/* Input field */
+.form-input {
+  width: 100%;
+  padding: 15px 18px 15px 50px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-strong);
+  background: var(--input-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-input);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    border-color var(--dur) var(--ease),
+    background var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.form-input::placeholder {
+  color: var(--text-faint);
+  font-size: 0.9375rem;
+}
+
+.form-input:hover:not(:focus) {
+  border-color: var(--border-hover);
+  background: #f4f5f7;
+}
+
+.form-input:focus {
+  border-color: var(--red);
+  background: var(--surface);
+  box-shadow: 0 0 0 3.5px var(--red-glow);
+}
+
+/* ================================================
+   Row — Remember me + Forgot password
+   ================================================ */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+/* Custom Checkbox */
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Visually hidden native checkbox (still accessible to keyboard/AT) */
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
   overflow: hidden;
 }
 
