@@ -148,38 +148,7 @@ body {
 }
 .hdr-action-link:hover { color:#fff; background:rgba(255,255,255,.08); }
 
-.hdr-cart-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #C41230;
-  color: #fff;
-  text-decoration: none;
-  padding: 9px 16px;
-  border-radius: 4px;
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  transition: background .2s;
-}
-.hdr-cart-btn:hover { background: #8B0D21; }
-.hdr-cart-badge {
-  position: absolute;
-  top: -6px; right: -6px;
-  background: #fff;
-  color: #C41230;
-  font-size: 10px;
-  font-weight: 700;
-  font-family: var(--font-body);
-  border-radius: 50%;
-  width: 18px; height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 /* ═══════════════════════════════════════════════
    BG CORNER DECORATION
