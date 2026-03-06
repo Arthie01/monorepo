@@ -4,28 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Autopartes — Macuin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion_autopartes.css') }}">
 </head>
 <body>
 
   <!-- ══ SITE HEADER ══ -->
   <header class="site-header" role="banner">
-    <div class="hdr-decor" aria-hidden="true">
-      <span class="hd1"></span>
-      <span class="hd2"></span>
-    </div>
     <div class="hdr-inner">
       <a href="#" class="site-logo" aria-label="Macuin — Inicio">
-        <img src="{{ url_for('static', filename='images/logo2.jpeg') }}" alt="Macuin Autopartes y Distribución">
+        <span class="logo-block">MACUIN</span>
+        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
       </a>
-      <div class="hdr-actions" role="toolbar" aria-label="Acciones de usuario">
-        <button class="hdr-btn" aria-label="Ver perfil">
-          <span class="hdr-icon hdr-icon--user" aria-hidden="true"></span>
-        </button>
-        <button class="hdr-btn" aria-label="Notificaciones">
-          <span class="hdr-icon hdr-icon--bell" aria-hidden="true"></span>
-          <span class="hdr-badge" aria-label="2 notificaciones">2</span>
-        </button>
+      <nav class="hdr-nav" aria-label="Navegación principal">
+        <a href="/gestion-autopartes" class="hdr-nav__link hdr-nav__link--active">Autopartes</a>
+        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+      </nav>
+      <div class="hdr-actions">
+        <a href="#" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
       </div>
     </div>
   </header>
@@ -37,7 +36,7 @@
   <main class="page-main" role="main">
     <div class="container">
 
-      <!-- Breadcrumb + heading row -->
+      <!-- Breadcrumb + heading row + KPIs -->
       <div class="page-toprow">
         <div>
           <nav class="breadcrumb" aria-label="Ruta de navegación">
@@ -47,7 +46,23 @@
           </nav>
           <div class="page-heading">
             <h1 class="page-title">Gestión de Autopartes</h1>
-            <p class="page-subtitle">Administra tu inventario y gestión de autopartes.</p>
+            <p class="page-subtitle">estión de autopartes.</p>
+          </div>
+        </div>
+
+        <!-- Summary KPI cards -->
+        <div class="page-kpis" aria-label="Resumen del inventario">
+          <div class="kpi-card">
+            <span class="kpi-val">1</span>
+            <span class="kpi-lbl">Total</span>
+          </div>
+          <div class="kpi-card kpi-card--ok">
+            <span class="kpi-val">1</span>
+            <span class="kpi-lbl">En Stock</span>
+          </div>
+          <div class="kpi-card kpi-card--warn">
+            <span class="kpi-val">&mdash;</span>
+            <span class="kpi-lbl">Sin Stock</span>
           </div>
         </div>
       </div>
@@ -101,6 +116,12 @@
           <p class="tbar-count" aria-live="polite">
             <span class="count-range">1 a 7</span> de <span class="count-total">&mdash;</span> autopartes
           </p>
+          <div class="tbar-center">
+            <div class="tbar-search-wrap">
+              <img src="{{ url_for('static', filename='images/search.png') }}" alt="" class="tbar-search-icon" aria-hidden="true">
+              <input type="search" class="tbar-search-input" placeholder="Buscar por nombre, ID o categoría…" aria-label="Buscar autopartes">
+            </div>
+          </div>
           <div class="tbar-right">
             <button type="button" class="btn-add">
               <img src="{{ url_for('static', filename='images/plus.png') }}" alt="" class="btn-icon" aria-hidden="true">
@@ -148,9 +169,9 @@
                 <td><span class="badge badge--neutral">&mdash;</span></td>
                 <td>
                   <div class="tbl-actions">
-                    <button type="button" class="act-btn act-btn--edit" aria-label="Editar autoparte">
+                    <a href="/editar-autoparte" class="act-btn act-btn--edit" aria-label="Editar autoparte">
                       <img src="{{ url_for('static', filename='images/edit.png') }}" alt="" aria-hidden="true">
-                    </button>
+                    </a>
                     <button type="button" class="act-btn act-btn--del" aria-label="Eliminar autoparte">
                       <img src="{{ url_for('static', filename='images/trash.png') }}" alt="" aria-hidden="true">
                     </button>
