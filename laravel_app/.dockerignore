@@ -1,0 +1,27 @@
+# Dependencias de PHP y Node
+vendor/
+node_modules/
+
+# Variables de entorno locales (se pasan por docker-compose)
+.env
+
+# Git
+.git/
+.gitignore
+
+# Logs y cache
+storage/logs/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+bootstrap/cache/
+
+# Assets sin compilar (los compila el stage de Node)
+# No excluimos resources/ porque lo necesita el build stage
+
+# Documentación
+README.md
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
