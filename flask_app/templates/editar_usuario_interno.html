@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Usuario Interno — Macuin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_usuario.css') }}">
+</head>
+<body>
+
+  {# Sección: Header #}
+  <header class="site-header" role="banner">
+    <div class="hdr-inner">
+      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+        <span class="logo-block">MACUIN</span>
+        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
+      </a>
+      <nav class="hdr-nav" aria-label="Navegación principal">
+        <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+        <a href="/gestion-usuarios-internos" class="hdr-nav__link hdr-nav__link--active">Usuarios</a>
+        <a href="/reportes" class="hdr-nav__link">Reportes</a>
+      </nav>
+      <div class="hdr-actions">
+        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
+      </div>
+    </div>
+  </header>
+
+  {# Sección: Contenido principal #}
+  <main class="page-main" role="main">
+    <div class="container">
+
+      {# Breadcrumb #}
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="#" class="bc-link">Inicio</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <a href="/gestion-usuarios-internos" class="bc-link">Usuarios Internos</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <span class="bc-current" aria-current="page">Editar Usuario</span>
+      </nav>
+
+      {# Encabezado de página #}
+      <div class="page-heading">
+        <div class="page-heading__left">
+          <h1 class="page-title">Editar Usuario Interno</h1>
+          <p class="page-subtitle">Modifica la información y permisos del colaborador.</p>
+        </div>
+        <div class="page-heading__badge">
+          <span class="id-badge">USR-001</span>
+        </div>
+      </div>
+
+      {# Formulario de edición #}
+      <form class="edit-card" action="/gestion-usuarios-internos" method="get" novalidate>
+
+        {# Columna izquierda: perfil #}
+        <aside class="edit-profile-col">
+
+          <div class="profile-avatar-wrap">
+            <span class="profile-avatar-initials">AH</span>
+            <div class="profile-avatar-overlay">
+              <i class="fas fa-camera"></i>
+              <span>Cambiar</span>
+            </div>
+          </div>
+
+          <p class="profile-name">Artemio Hurtado</p>
+          <p class="profile-email">artemio@macuin.mx</p>
+
+          {# Info rápida #}
+          <div class="profile-info-block">
+            <div class="profile-info-item">
+              <i class="fas fa-building"></i>
+              <span class="profile-info-item__label">Depto.</span>
+              <span class="profile-info-item__val">Ventas</span>
+            </div>
+            <div class="profile-info-item">
+              <i class="fas fa-shield-halved"></i>
+              <span class="profile-info-item__label">Rol</span>
+              <span class="profile-info-item__val">Administrador</span>
+            </div>
+            <div class="profile-info-item">
+              <i class="fas fa-clock"></i>
+              <span class="profile-info-item__label">Acceso</span>
+              <span class="profile-info-item__val">06/03/2026</span>
+            </div>
+            <div class="profile-info-item">
+              <i class="fas fa-calendar-plus"></i>
+              <span class="profile-info-item__label">Alta</span>
+              <span class="profile-info-item__val">15/01/2024</span>
+            </div>
+          </div>
+
+          {# Estado del usuario #}
+          <div class="status-block">
+            <p class="status-block__label">Estado de la cuenta</p>
+            <div class="status-options">
+              <label class="status-opt">
+                <input type="radio" name="estado" value="activo" checked>
+                <span class="status-pill status-pill--ok">Activo</span>
+              </label>
+              <label class="status-opt">
+                <input type="radio" name="estado" value="suspendido">
+                <span class="status-pill status-pill--warn">Suspendido</span>
+              </label>
+              <label class="status-opt">
+                <input type="radio" name="estado" value="inactivo">
+                <span class="status-pill status-pill--err">Inactivo</span>
+              </label>
+            </div>
+          </div>
+
+        </aside>
+
+        {# Columna derecha: campos de edición #}
+        <div class="edit-fields-col">
+
+          {# Sección: Información personal #}
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-user"></i> Información Personal</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fNombre">Nombre(s) <span class="req">*</span></label>
+                <input type="text" id="fNombre" name="nombre" class="field-input" value="Artemio" required>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fApellidos">Apellidos <span class="req">*</span></label>
+                <input type="text" id="fApellidos" name="apellidos" class="field-input" value="Hurtado" required>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fEmail">Correo electrónico <span class="req">*</span></label>
+                <div class="field-input-icon-wrap">
+                  <i class="fas fa-envelope field-input-icon"></i>
+                  <input type="email" id="fEmail" name="email" class="field-input field-input--icon" value="artemio@macuin.mx" required>
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fTelefono">Teléfono</label>
+                <div class="field-input-icon-wrap">
+                  <i class="fas fa-phone field-input-icon"></i>
+                  <input type="tel" id="fTelefono" name="telefono" class="field-input field-input--icon" value="81 1234 5678" placeholder="Ej. 81 1234 5678">
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {# Sección: Rol y departamento #}
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-briefcase"></i> Rol y Departamento</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fDepto">Departamento <span class="req">*</span></label>
+                <div class="field-select-wrap">
+                  <select id="fDepto" name="departamento" class="field-select" required>
+                    <option value="">— Seleccionar —</option>
+                    <option value="ventas" selected>Ventas</option>
+                    <option value="almacen">Almacén</option>
+                    <option value="logistica">Logística</option>
+                    <option value="administracion">Administración</option>
+                  </select>
+                  <i class="fas fa-chevron-down field-arrow"></i>
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fRol">Rol del sistema <span class="req">*</span></label>
+                <div class="field-select-wrap">
+                  <select id="fRol" name="rol" class="field-select" required>
+                    <option value="">— Seleccionar —</option>
+                    <option value="admin" selected>Administrador</option>
+                    <option value="ventas">Ventas</option>
+                    <option value="almacen">Almacén</option>
+                    <option value="logistica">Logística</option>
+                  </select>
+                  <i class="fas fa-chevron-down field-arrow"></i>
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fCargo">Cargo / Puesto</label>
+                <input type="text" id="fCargo" name="cargo" class="field-input" value="Gerente de Ventas" placeholder="Ej. Jefe de almacén">
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fSucursal">Sucursal</label>
+                <div class="field-select-wrap">
+                  <select id="fSucursal" name="sucursal" class="field-select">
+                    <option value="monterrey" selected>Monterrey — Central</option>
+                    <option value="guadalupe">Guadalupe</option>
+                    <option value="apodaca">Apodaca</option>
+                    <option value="san_nicolas">San Nicolás</option>
+                  </select>
+                  <i class="fas fa-chevron-down field-arrow"></i>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {# Sección: Permisos #}
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-lock"></i> Permisos del Sistema</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--full">
+                <div class="toggle-group">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="perm_autopartes" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">Gestión de autopartes (agregar, editar, eliminar)</span>
+                </div>
+              </div>
+
+              <div class="field-group field-group--full">
+                <div class="toggle-group">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="perm_pedidos" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">Gestión de pedidos (ver, cambiar estado)</span>
+                </div>
+              </div>
+
+              <div class="field-group field-group--full">
+                <div class="toggle-group">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="perm_usuarios" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">Gestión de usuarios (crear, editar, desactivar)</span>
+                </div>
+              </div>
+
+              <div class="field-group field-group--full">
+                <div class="toggle-group">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="perm_reportes" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">Acceso a reportes y analíticas</span>
+                </div>
+              </div>
+
+              <div class="field-group field-group--full">
+                <div class="toggle-group">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="perm_config">
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">Configuración del sistema</span>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {# Sección: Seguridad #}
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-shield-halved"></i> Seguridad</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fPassword">Nueva contraseña</label>
+                <div class="field-input-icon-wrap">
+                  <i class="fas fa-key field-input-icon"></i>
+                  <input type="password" id="fPassword" name="password" class="field-input field-input--icon" placeholder="Dejar vacío para no cambiar">
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fPasswordConfirm">Confirmar contraseña</label>
+                <div class="field-input-icon-wrap">
+                  <i class="fas fa-key field-input-icon"></i>
+                  <input type="password" id="fPasswordConfirm" name="password_confirm" class="field-input field-input--icon" placeholder="Repetir contraseña">
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {# Sección: Actividad reciente #}
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-clock-rotate-left"></i> Actividad Reciente</h2>
+            <ul class="activity-log">
+              <li class="activity-item">
+                <div class="activity-icon"><i class="fas fa-right-to-bracket"></i></div>
+                <div>
+                  <p class="activity-text">Inició sesión desde 189.203.xx.xx</p>
+                  <p class="activity-date">06/03/2026 — 09:14</p>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-icon"><i class="fas fa-pen"></i></div>
+                <div>
+                  <p class="activity-text">Editó autoparte AUT-045 (cambio de precio)</p>
+                  <p class="activity-date">05/03/2026 — 16:30</p>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-icon"><i class="fas fa-truck"></i></div>
+                <div>
+                  <p class="activity-text">Cambió estado del pedido PED-1032 a "Enviado"</p>
+                  <p class="activity-date">05/03/2026 — 11:22</p>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                <div>
+                  <p class="activity-text">Registró al usuario CLI-008 (Daniel Mora)</p>
+                  <p class="activity-date">04/03/2026 — 14:05</p>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          {# Sección: Zona peligrosa #}
+          <section class="fields-section fields-section--last">
+            <h2 class="section-title"><i class="fas fa-triangle-exclamation"></i> Zona de Riesgo</h2>
+            <div class="danger-zone">
+              <div class="danger-zone__info">
+                <p class="danger-zone__title">Desactivar cuenta</p>
+                <p class="danger-zone__desc">El usuario perderá acceso al sistema. Esta acción se puede revertir.</p>
+              </div>
+              <button type="button" class="btn-danger">
+                <i class="fas fa-user-slash"></i>
+                Desactivar
+              </button>
+            </div>
+          </section>
+
+        </div>
+
+        {# Footer del formulario #}
+        <footer class="edit-footer">
+          <a href="/gestion-usuarios-internos" class="btn-cancel">
+            <i class="fas fa-arrow-left"></i>
+            <span>Cancelar</span>
+          </a>
+          <div class="edit-footer__right">
+            <button type="button" class="btn-secondary">
+              <i class="fas fa-rotate-left"></i>
+              <span>Restablecer</span>
+            </button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-floppy-disk"></i>
+              <span>Guardar cambios</span>
+            </button>
+          </div>
+        </footer>
+
+      </form>
+
+    </div>
+  </main>
+
+</body>
+</html>

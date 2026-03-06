@@ -22,9 +22,11 @@
       <nav class="hdr-nav" aria-label="Navegación principal">
         <a href="/gestion-autopartes" class="hdr-nav__link hdr-nav__link--active">Autopartes</a>
         <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+        <a href="/gestion-usuarios-internos" class="hdr-nav__link">Usuarios</a>
+        <a href="/reportes" class="hdr-nav__link">Reportes</a>
       </nav>
       <div class="hdr-actions">
-        <a href="#" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
+        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
       </div>
     </div>
   </header>
@@ -123,10 +125,10 @@
             </div>
           </div>
           <div class="tbar-right">
-            <button type="button" class="btn-add">
+            <a href="/agregar-autoparte" class="btn-add">
               <img src="{{ url_for('static', filename='images/plus.png') }}" alt="" class="btn-icon" aria-hidden="true">
               <span>Agregar Autoparte</span>
-            </button>
+            </a>
           </div>
         </div>
 

@@ -22,9 +22,11 @@
       <nav class="hdr-nav" aria-label="Navegación principal">
         <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
         <a href="/gestion-pedidos" class="hdr-nav__link hdr-nav__link--active">Pedidos</a>
+        <a href="/gestion-usuarios-internos" class="hdr-nav__link">Usuarios</a>
+        <a href="/reportes" class="hdr-nav__link">Reportes</a>
       </nav>
       <div class="hdr-actions">
-        <a href="#" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
+        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
       </div>
     </div>
   </header>
@@ -150,9 +152,9 @@
                 <td>$2.00</td>
                 <td>
                   <div class="tbl-actions">
-                    <button class="act-btn act-btn--edit" aria-label="Editar pedido #PED-001" title="Editar">
+                    <a href="/detalle-pedido" class="act-btn act-btn--edit" aria-label="Editar pedido #PED-001" title="Editar">
                       <img src="{{ url_for('static', filename='images/edit.png') }}" alt="Editar">
-                    </button>
+                    </a>
                     <button class="act-btn act-btn--del" aria-label="Eliminar pedido #PED-001" title="Eliminar">
                       <img src="{{ url_for('static', filename='images/trash.png') }}" alt="Eliminar">
                     </button>
