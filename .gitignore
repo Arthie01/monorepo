@@ -16,3 +16,6 @@ flask_app/*.pyc
 # IDEs
 .vscode/
 .idea/
+CLAUDE.md
+.CLAUDE/
+.playwright-mcp/
