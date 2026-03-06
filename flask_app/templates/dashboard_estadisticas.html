@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadísticas — Macuin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_estadisticas.css') }}">
+</head>
+<body>
+
+  <!-- ══ SITE HEADER ══ -->
+  <header class="site-header" role="banner">
+    <div class="hdr-inner">
+      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+        <span class="logo-block">MACUIN</span>
+        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
+      </a>
+      <nav class="hdr-nav" aria-label="Navegación principal">
+        <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+        <a href="/estadisticas" class="hdr-nav__link hdr-nav__link--active">Estadísticas</a>
+      </nav>
+      <div class="hdr-actions">
+        <a href="#" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ══ -->
+  <main class="page-main" role="main">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="#" class="bc-link">Inicio</a>
+        <span class="bc-sep">/</span>
+        <span class="bc-current" aria-current="page">Estadísticas</span>
+      </nav>
+
+      <!-- Heading + period selector -->
+      <div class="dash-toprow">
+        <div>
+          <h1 class="page-title">Estadísticas de Ventas</h1>
+          <p class="page-subtitle">Resumen de rendimiento comercial — Marzo 2026</p>
+        </div>
+        <div class="period-tabs" role="group" aria-label="Seleccionar período">
+          <button class="period-tab">Hoy</button>
+          <button class="period-tab">Semana</button>
+          <button class="period-tab period-tab--active">Mes</button>
+          <button class="period-tab">Año</button>
+        </div>
+      </div>
+
+      <!-- ══ KPI ROW ══ -->
+      <div class="kpi-row">
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--red">
+            <i class="fas fa-peso-sign"></i>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Ingresos del mes</p>
+            <p class="stat-card__value">$18,450</p>
+            <p class="stat-card__sub">MXN</p>
+          </div>
+          <div class="stat-card__trend stat-card__trend--up">
+            <i class="fas fa-arrow-trend-up"></i>
+            <span>+12.4%</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--blue">
+            <i class="fas fa-bag-shopping"></i>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Pedidos del mes</p>
+            <p class="stat-card__value">63</p>
+            <p class="stat-card__sub">pedidos</p>
+          </div>
+          <div class="stat-card__trend stat-card__trend--up">
+            <i class="fas fa-arrow-trend-up"></i>
+            <span>+14.5%</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--green">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Ticket promedio</p>
+            <p class="stat-card__value">$292</p>
+            <p class="stat-card__sub">por pedido</p>
+          </div>
+          <div class="stat-card__trend stat-card__trend--up">
+            <i class="fas fa-arrow-trend-up"></i>
+            <span>+3.7%</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--amber">
+            <i class="fas fa-cubes"></i>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__label">Unidades vendidas</p>
+            <p class="stat-card__value">189</p>
+            <p class="stat-card__sub">unidades</p>
+          </div>
+          <div class="stat-card__trend stat-card__trend--down">
+            <i class="fas fa-arrow-trend-down"></i>
+            <span>-2.3%</span>
+          </div>
+        </div>
+
+      </div><!-- /kpi-row -->
+
+      <!-- ══ CHARTS ROW 1: Line + Donut ══ -->
+      <div class="charts-row">
+
+        <div class="chart-panel">
+          <div class="chart-panel__header">
+            <div>
+              <h2 class="chart-title">Ingresos diarios</h2>
+              <p class="chart-sub">Marzo 2026 · en MXN</p>
+            </div>
+            <span class="chart-badge chart-badge--red">$18,450 total</span>
+          </div>
+          <div class="chart-wrap chart-wrap--lg">
+            <canvas id="chartIngresos"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-panel__header">
+            <div>
+              <h2 class="chart-title">Ventas por categoría</h2>
+              <p class="chart-sub">Distribución del mes</p>
+            </div>
+          </div>
+          <div class="chart-wrap chart-wrap--donut">
+            <canvas id="chartCategorias"></canvas>
+          </div>
+          <ul class="donut-legend">
+            <li><span class="dl-dot" style="background:#C41230"></span> Motor <b>35%</b></li>
+            <li><span class="dl-dot" style="background:#3B82F6"></span> Frenos <b>22%</b></li>
+            <li><span class="dl-dot" style="background:#10B981"></span> Suspensión <b>18%</b></li>
+            <li><span class="dl-dot" style="background:#F59E0B"></span> Eléctrico <b>12%</b></li>
+            <li><span class="dl-dot" style="background:#8B5CF6"></span> Transmisión <b>8%</b></li>
+            <li><span class="dl-dot" style="background:#6B7280"></span> Otros <b>5%</b></li>
+          </ul>
+        </div>
+
+      </div><!-- /charts-row -->
+
+      <!-- ══ CHARTS ROW 2: Bar + Horizontal bar ══ -->
+      <div class="charts-row charts-row--half">
+
+        <div class="chart-panel">
+          <div class="chart-panel__header">
+            <div>
+              <h2 class="chart-title">Pedidos por mes</h2>
+              <p class="chart-sub">Últimos 6 meses</p>
+            </div>
+          </div>
+          <div class="chart-wrap chart-wrap--md">
+            <canvas id="chartPedidos"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-panel__header">
+            <div>
+              <h2 class="chart-title">Top 5 Autopartes</h2>
+              <p class="chart-sub">Más vendidas este mes · unidades</p>
+            </div>
+          </div>
+          <div class="chart-wrap chart-wrap--md">
+            <canvas id="chartTop5"></canvas>
+          </div>
+        </div>
+
+      </div><!-- /charts-row -->
+
+      <!-- ══ BOTTOM ROW: Alertas + Últimos pedidos ══ -->
+      <div class="bottom-row">
+
+        <!-- Alertas -->
+        <div class="info-panel">
+          <h2 class="panel-title"><i class="fas fa-triangle-exclamation"></i> Alertas</h2>
+
+          <p class="section-label">Stock crítico</p>
+          <ul class="alert-list">
+            <li class="alert-item alert-item--warn">
+              <i class="fas fa-circle-exclamation"></i>
+              <div>
+                <span class="alert-name">Copa Pistón</span>
+                <span class="alert-detail">3 uds restantes · mín. 5</span>
+              </div>
+              <span class="alert-badge alert-badge--warn">Bajo</span>
+            </li>
+            <li class="alert-item alert-item--warn">
+              <i class="fas fa-circle-exclamation"></i>
+              <div>
+                <span class="alert-name">Balata delantera</span>
+                <span class="alert-detail">2 uds restantes · mín. 5</span>
+              </div>
+              <span class="alert-badge alert-badge--warn">Bajo</span>
+            </li>
+            <li class="alert-item alert-item--err">
+              <i class="fas fa-circle-xmark"></i>
+              <div>
+                <span class="alert-name">Filtro diesel</span>
+                <span class="alert-detail">Sin existencias</span>
+              </div>
+              <span class="alert-badge alert-badge--err">Agotado</span>
+            </li>
+          </ul>
+
+          <p class="section-label" style="margin-top:20px">Meta mensual de pedidos</p>
+          <div class="meta-block">
+            <div class="meta-header">
+              <span class="meta-label">63 de 80 pedidos</span>
+              <span class="meta-pct">78.8%</span>
+            </div>
+            <div class="meta-bar">
+              <div class="meta-bar__fill" style="width:78.8%"></div>
+            </div>
+            <p class="meta-hint">Faltan 17 pedidos para alcanzar la meta</p>
+          </div>
+        </div>
+
+        <!-- Últimos pedidos -->
+        <div class="info-panel">
+          <h2 class="panel-title"><i class="fas fa-clock-rotate-left"></i> Últimos pedidos</h2>
+          <div class="mini-table-wrap">
+            <table class="mini-table">
+              <thead>
+                <tr>
+                  <th># Pedido</th>
+                  <th>Autoparte</th>
+                  <th>Cant.</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">PED-063</td>
+                  <td>Copa Pistón</td>
+                  <td>2</td>
+                  <td class="td-amount">$900</td>
+                  <td><span class="mini-badge mini-badge--ok">Entregado</span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">PED-062</td>
+                  <td>Balata trasera</td>
+                  <td>4</td>
+                  <td class="td-amount">$680</td>
+                  <td><span class="mini-badge mini-badge--info">En camino</span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">PED-061</td>
+                  <td>Filtro de aceite</td>
+                  <td>1</td>
+                  <td class="td-amount">$180</td>
+                  <td><span class="mini-badge mini-badge--ok">Entregado</span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">PED-060</td>
+                  <td>Amortiguador</td>
+                  <td>1</td>
+                  <td class="td-amount">$1,200</td>
+                  <td><span class="mini-badge mini-badge--warn">Pendiente</span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">PED-059</td>
+                  <td>Bujía NGK</td>
+                  <td>6</td>
+                  <td class="td-amount">$420</td>
+                  <td><span class="mini-badge mini-badge--ok">Entregado</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel-footer">
+            <a href="/gestion-pedidos" class="panel-link">
+              Ver todos los pedidos <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /bottom-row -->
+
+    </div><!-- /container -->
+  </main>
+
+  <script>
+    // ── Global Chart.js defaults ──────────────────────────────────────
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    Chart.defaults.font.size   = 12;
+    Chart.defaults.color       = '#6B7280';
+
+    // ── 1. Ingresos diarios — Line chart ─────────────────────────────
+    (function () {
+      const ctx  = document.getElementById('chartIngresos').getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 260);
+      grad.addColorStop(0, 'rgba(196,18,48,0.22)');
+      grad.addColorStop(1, 'rgba(196,18,48,0.00)');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['1 Mar','2 Mar','3 Mar','4 Mar','5 Mar','6 Mar'],
+          datasets: [{
+            label: 'Ingresos (MXN)',
+            data: [2100, 3400, 2800, 4200, 3100, 2850],
+            borderColor: '#C41230',
+            backgroundColor: grad,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#C41230',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: c => ' $' + c.parsed.y.toLocaleString('es-MX') + ' MXN'
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, border: { display: false } },
+            y: {
+              border: { display: false },
+              grid: { color: '#F3F4F6' },
+              ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k' }
+            }
+          }
+        }
+      });
+    })();
+
+    // ── 2. Ventas por categoría — Doughnut ───────────────────────────
+    (function () {
+      const ctx = document.getElementById('chartCategorias').getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Motor','Frenos','Suspensión','Eléctrico','Transmisión','Otros'],
+          datasets: [{
+            data: [35, 22, 18, 12, 8, 5],
+            backgroundColor: ['#C41230','#3B82F6','#10B981','#F59E0B','#8B5CF6','#6B7280'],
+            borderWidth: 2,
+            borderColor: '#FFFFFF',
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '68%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: c => ' ' + c.label + ': ' + c.parsed + '%'
+              }
+            }
+          }
+        }
+      });
+    })();
+
+    // ── 3. Pedidos por mes — Bar chart ───────────────────────────────
+    (function () {
+      const ctx = document.getElementById('chartPedidos').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Oct','Nov','Dic','Ene','Feb','Mar'],
+          datasets: [{
+            label: 'Pedidos',
+            data: [41, 38, 52, 47, 55, 63],
+            backgroundColor: ['#E5E7EB','#E5E7EB','#E5E7EB','#E5E7EB','#E5E7EB','#C41230'],
+            borderRadius: 6,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, border: { display: false } },
+            y: {
+              border: { display: false },
+              grid: { color: '#F3F4F6' },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    })();
+
+    // ── 4. Top 5 autopartes — Horizontal bar ─────────────────────────
+    (function () {
+      const ctx = document.getElementById('chartTop5').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Bujía NGK','Amortiguador','Filtro aceite','Balata trasera','Copa Pistón'],
+          datasets: [{
+            label: 'Unidades',
+            data: [15, 19, 24, 28, 34],
+            backgroundColor: [
+              'rgba(196,18,48,0.15)',
+              'rgba(196,18,48,0.30)',
+              'rgba(196,18,48,0.50)',
+              'rgba(196,18,48,0.70)',
+              '#C41230'
+            ],
+            borderRadius: 4,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              border: { display: false },
+              grid: { color: '#F3F4F6' },
+              beginAtZero: true
+            },
+            y: { grid: { display: false }, border: { display: false } }
+          }
+        }
+      });
+    })();
+
+    // ── Period tab switcher ───────────────────────────────────────────
+    document.querySelectorAll('.period-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('period-tab--active'));
+        btn.classList.add('period-tab--active');
+      });
+    });
+  </script>
+
+</body>
+</html>

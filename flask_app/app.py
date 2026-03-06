@@ -38,5 +38,11 @@ def editar_autoparte():
     return render_template("editar_autoparte.html")
 
 
+@app.route("/estadisticas", methods=["GET"])
+def estadisticas():
+    """Dashboard de estadísticas de ventas (solo UI)."""
+    return render_template("dashboard_estadisticas.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
