@@ -62,12 +62,6 @@ def perfil():
     return render_template("perfil.html")
 
 
-@app.route("/login-admin", methods=["GET"])
-def login_admin():
-    """Pantalla de inicio de sesión administrador (solo UI)."""
-    return render_template("login_admin.html")
-
-
 @app.route("/gestion-usuarios-internos", methods=["GET"])
 def gestion_usuarios_internos():
     """Pantalla de gestión de usuarios internos (solo UI)."""
