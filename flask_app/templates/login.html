@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión — Macuin</title>
+  <title>Acceso Interno — MACUIN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -12,81 +12,127 @@
 </head>
 <body>
   <div class="auth-split">
+
+    {# Sección: Panel Izquierdo — Identidad interna #}
     <div class="auth-left">
       <div class="auth-circle auth-circle--1" aria-hidden="true"></div>
       <div class="auth-circle auth-circle--2" aria-hidden="true"></div>
       <div class="auth-circle auth-circle--3" aria-hidden="true"></div>
+
       <div class="auth-left__content">
-        <div class="brand-block"><span class="brand-name">MACUIN</span></div>
+
+        {# Logo — solo marca #}
+        <div class="brand-block">
+          <span class="brand-name">MACUIN</span>
+        </div>
+
+        {# STAFF — prominente, independiente #}
+        <div class="staff-banner">
+          <span>STAFF</span>
+        </div>
+
+        {# Indicador de acceso — sin ícono, separado #}
+        <p class="internal-note">Solo personal autorizado de MACUIN</p>
+
         <h1 class="auth-headline">
-          Tu distribuidor<br>de autopartes<br>
-          <span class="auth-headline__muted">de confianza</span>
+          Panel de<br>control<br>
+          <span class="auth-headline__muted">administrativo</span>
         </h1>
+
         <p class="auth-desc">
-          Mas de 15,000 referencias para todas las marcas del mercado mexicano.
-          Calidad garantizada para talleres y refaccionarias.
+          Gestiona inventario, pedidos y operaciones de distribución desde el centro de control MACUIN.
         </p>
+
+        {# Stats operacionales (no de venta) #}
         <div class="auth-stats">
           <div class="auth-stat">
-            <span class="auth-stat__value">15K+</span>
-            <span class="auth-stat__label">Referencias</span>
+            <span class="auth-stat__value">148</span>
+            <span class="auth-stat__label">Pedidos activos</span>
           </div>
           <div class="auth-stat">
-            <span class="auth-stat__value">500+</span>
-            <span class="auth-stat__label">Marcas</span>
+            <span class="auth-stat__value">3.2K</span>
+            <span class="auth-stat__label">SKUs en almacén</span>
           </div>
           <div class="auth-stat">
-            <span class="auth-stat__value">24h</span>
-            <span class="auth-stat__label">Entrega</span>
+            <span class="auth-stat__value">24</span>
+            <span class="auth-stat__label">Entregas hoy</span>
           </div>
         </div>
+
+        {# Áreas que acceden #}
+        <div class="auth-areas">
+          <span class="auth-area-pill"><i class="fas fa-briefcase"></i> Ventas</span>
+          <span class="auth-area-pill"><i class="fas fa-boxes-stacked"></i> Almacén</span>
+          <span class="auth-area-pill"><i class="fas fa-truck"></i> Logística</span>
+        </div>
+
       </div>
     </div>
+
+    {# Sección: Panel Derecho — Formulario #}
     <div class="auth-right">
       <div class="auth-form-wrap">
+
         <div class="auth-form-header">
-          <p class="auth-eyebrow">Bienvenido de vuelta</p>
-          <h2 class="auth-title">Iniciar Sesion</h2>
+          <p class="auth-eyebrow">
+            <i class="fas fa-lock"></i>
+            Portal Interno
+          </p>
+          <h2 class="auth-title">Iniciar Sesión</h2>
           <div class="auth-title-line"></div>
         </div>
+
         <form method="POST" action="#" novalidate>
+
           <div class="mac-form-group">
-            <label class="mac-label" for="email">Correo Electronico</label>
+            <label class="mac-label" for="email">Correo Institucional</label>
             <div class="mac-input-icon">
-              <i class="mac-input-icon__icon fas fa-envelope"></i>
+              <i class="mac-input-icon__icon fas fa-id-badge"></i>
               <input type="email" id="email" name="email" class="mac-input"
-                     placeholder="correo@ejemplo.com" autocomplete="email" required>
+                     placeholder="usuario@macuin.mx" autocomplete="email" required>
             </div>
           </div>
+
           <div class="mac-form-group">
             <div class="mac-label-row">
-              <label class="mac-label" for="password">Contrasena</label>
-              <a href="#" class="mac-forgot">Olvidaste tu contrasena?</a>
+              <label class="mac-label" for="password">Contraseña</label>
+              <a href="#" class="mac-forgot">
+                <i class="fas fa-headset"></i> Soporte TI
+              </a>
             </div>
             <div class="mac-input-icon">
-              <i class="mac-input-icon__icon fas fa-lock"></i>
+              <i class="mac-input-icon__icon fas fa-key"></i>
               <input type="password" id="password" name="password" class="mac-input"
-                     placeholder="..." autocomplete="current-password" required>
-              <button type="button" class="mac-eye-btn" onclick="togglePass()" aria-label="Mostrar contrasena">
+                     placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="mac-eye-btn" onclick="togglePass()" aria-label="Mostrar contraseña">
                 <i class="fas fa-eye" id="eye-icon"></i>
               </button>
             </div>
           </div>
+
           <div class="mac-form-group mac-form-group--sm">
             <label class="mac-checkbox">
               <input type="checkbox" name="remember">
-              <span>Mantener sesion iniciada</span>
+              <span>Mantener sesión activa</span>
             </label>
           </div>
+
           <button type="submit" class="mac-btn mac-btn--primary mac-btn--block mac-btn--lg">
-            <i class="fas fa-sign-in-alt"></i>
-            INGRESAR
+            <i class="fas fa-right-to-bracket"></i>
+            INGRESAR AL SISTEMA
           </button>
-          <p class="auth-register-link">No tienes cuenta? <a href="#">Registrate aqui</a></p>
+
+          <p class="auth-support-note">
+            <i class="fas fa-circle-info"></i>
+            Sin credenciales, contacta al área de <a href="#">Sistemas</a>
+          </p>
+
         </form>
       </div>
     </div>
+
   </div>
+
   <script>
     function togglePass() {
       const input = document.getElementById('password');

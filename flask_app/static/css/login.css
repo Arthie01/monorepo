@@ -1,26 +1,29 @@
-/* login.css - MACUIN Auth UI (Flask port) */
+/* login.css — MACUIN Sistema Interno (Flask) */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
 
 :root {
-  --macuin-red:      #C41230;
-  --macuin-red-dark: #8B0D21;
-  --macuin-dark:     #0D0D0D;
-  --macuin-white:    #F5F5F0;
-  --macuin-gray:     #E5E5E0;
-  --macuin-text:     #1A1A1A;
-  --macuin-muted:    #6B7280;
-  --font-display:    'Oswald', sans-serif;
-  --font-body:       'DM Sans', sans-serif;
+  --macuin-red:       #C41230;
+  --macuin-red-dark:  #8B0D21;
+  --macuin-red-light: #E8193D;
+  --macuin-dark:      #0D0D0D;
+  --macuin-navy:      #0A1628;
+  --macuin-steel:     #8B949E;
+  --macuin-white:     #F5F5F0;
+  --macuin-gray:      #E5E5E0;
+  --macuin-text:      #1A1A1A;
+  --macuin-muted:     #6B7280;
+  --font-display:     'Oswald', sans-serif;
+  --font-body:        'DM Sans', sans-serif;
 }
 
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { font-size:16px; -webkit-font-smoothing:antialiased; }
-body { font-family:var(--font-body); background:var(--macuin-dark); color:var(--macuin-text); min-height:100dvh; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-body); background: var(--macuin-dark); color: var(--macuin-text); min-height: 100dvh; }
 
-/* Split layout */
-.auth-split { display:grid; grid-template-columns:1fr 1fr; min-height:100dvh; }
+/* ── Layout split (idéntico a Laravel) ─── */
+.auth-split { display: grid; grid-template-columns: 1fr 1fr; min-height: 100dvh; }
 
-/* Left panel */
+/* ── Panel izquierdo ─────────────────── */
 .auth-left {
   background: var(--macuin-red);
   position: relative;
@@ -30,80 +33,346 @@ body { font-family:var(--font-body); background:var(--macuin-dark); color:var(--
   padding: 60px 56px;
   overflow: hidden;
 }
+
+/* Mismo corte diagonal que Laravel */
 .auth-left::after {
   content: '';
   position: absolute;
-  top:0; right:-1px; bottom:0;
+  top: 0; right: -1px; bottom: 0;
   width: 80px;
   background: var(--macuin-white);
-  clip-path: polygon(80px 0,100% 0,100% 100%,0 100%);
+  clip-path: polygon(80px 0, 100% 0, 100% 100%, 0 100%);
   z-index: 1;
 }
-.auth-circle { position:absolute; border-radius:50%; pointer-events:none; }
-.auth-circle--1 { width:320px;height:320px;border:1px solid rgba(255,255,255,.1);top:-100px;left:-80px; }
-.auth-circle--2 { width:200px;height:200px;border:1px solid rgba(255,255,255,.15);bottom:60px;right:80px; }
-.auth-circle--3 { width:80px;height:80px;border:1px solid rgba(255,255,255,.2);bottom:220px;left:50px; }
-.auth-left__content { position:relative;z-index:1; }
 
-.brand-block { display:inline-block;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);padding:10px 20px;margin-bottom:36px; }
-.brand-name  { font-family:var(--font-display);font-size:28px;font-weight:700;color:#fff;letter-spacing:.1em; }
+/* Overlay oscuro sutil — señal visual de "acceso restringido" */
+.auth-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(10, 22, 40, 0.35) 0%,
+    transparent 55%,
+    rgba(10, 22, 40, 0.20) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
 
-.auth-headline { font-family:var(--font-display);font-size:clamp(26px,3vw,42px);font-weight:700;color:#fff;text-transform:uppercase;line-height:1.15;letter-spacing:.02em;margin-bottom:16px; }
-.auth-headline__muted { color:rgba(255,255,255,.65); }
+/* Círculos decorativos */
+.auth-circle { position: absolute; border-radius: 50%; pointer-events: none; }
+.auth-circle--1 { width: 320px; height: 320px; border: 1px solid rgba(255,255,255,.08); top: -100px; left: -80px; }
+.auth-circle--2 { width: 200px; height: 200px; border: 1px solid rgba(255,255,255,.12); bottom: 60px; right: 80px; }
+.auth-circle--3 { width: 80px;  height: 80px;  border: 1px solid rgba(255,255,255,.18); bottom: 220px; left: 50px; }
 
-.auth-desc { font-size:14px;color:rgba(255,255,255,.8);line-height:1.75;max-width:340px;margin-bottom:40px; }
+.auth-left__content { position: relative; z-index: 1; }
 
-.auth-stats { display:flex;gap:32px; }
-.auth-stat__value { display:block;font-family:var(--font-display);font-size:26px;font-weight:700;color:#fff;line-height:1; }
-.auth-stat__label { display:block;font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;margin-top:4px; }
+/* ── Brand block + tag STAFF ─────────── */
+.brand-block {
+  display: inline-block;
+  background: rgba(255,255,255,.12);
+  border: 2px solid rgba(255,255,255,.25);
+  padding: 10px 20px;
+  margin-bottom: 12px;
+}
 
-/* Right panel */
-.auth-right { background:var(--macuin-white);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 56px; }
-.auth-form-wrap { width:100%;max-width:400px; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .1em;
+}
 
-.auth-form-header  { margin-bottom:32px; }
-.auth-eyebrow { font-family:var(--font-display);font-size:12px;color:var(--macuin-muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px; }
-.auth-title   { font-family:var(--font-display);font-size:30px;font-weight:700;text-transform:uppercase;color:var(--macuin-text);margin-bottom:8px;letter-spacing:.02em; }
-.auth-title-line { width:44px;height:3px;background:var(--macuin-red);border-radius:2px; }
+/* ── STAFF banner — prominente, independiente ── */
+.staff-banner {
+  display: inline-block;
+  background: var(--macuin-navy);
+  border-left: 4px solid rgba(255,255,255,.35);
+  padding: 8px 20px;
+  margin-bottom: 14px;
+}
 
-/* Form components */
-.mac-form-group { margin-bottom:20px; }
-.mac-form-group--sm { margin-bottom:24px; }
+.staff-banner span {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+}
 
-.mac-label { display:block;font-family:var(--font-display);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--macuin-text);margin-bottom:8px; }
-.mac-label-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
-.mac-label-row .mac-label { margin-bottom:0; }
+/* ── Nota de acceso — sin ícono ─────────────── */
+.internal-note {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  letter-spacing: .04em;
+  margin-bottom: 28px;
+  padding-left: 2px;
+}
 
-.mac-forgot { font-size:12px;color:var(--macuin-red);text-decoration:none;font-weight:500;transition:color .2s; }
-.mac-forgot:hover { color:var(--macuin-red-dark);text-decoration:underline; }
+/* ── Headline ────────────────────────── */
+.auth-headline {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3vw, 42px);
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 1.15;
+  letter-spacing: .02em;
+  margin-bottom: 16px;
+}
 
-.mac-input { width:100%;padding:12px 16px;font-family:var(--font-body);font-size:14px;color:var(--macuin-text);background:#fff;border:2px solid var(--macuin-gray);border-radius:4px;outline:none;transition:border-color .2s,box-shadow .2s; }
-.mac-input:focus { border-color:var(--macuin-red);box-shadow:0 0 0 3px rgba(196,18,48,.1); }
-.mac-input::placeholder { color:var(--macuin-muted); }
+.auth-headline__muted { color: rgba(255,255,255,.55); }
 
-.mac-input-icon { position:relative; }
-.mac-input-icon .mac-input { padding-left:44px; }
-.mac-input-icon__icon { position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--macuin-muted);font-size:15px;pointer-events:none; }
+.auth-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+  line-height: 1.75;
+  max-width: 340px;
+  margin-bottom: 36px;
+}
 
-.mac-eye-btn { position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--macuin-muted);font-size:14px;padding:0;line-height:1;transition:color .2s; }
-.mac-eye-btn:hover { color:var(--macuin-text); }
+/* ── Stats operacionales ─────────────── */
+.auth-stats { display: flex; gap: 32px; margin-bottom: 32px; }
 
-.mac-checkbox { display:flex;align-items:center;gap:10px;cursor:pointer; }
-.mac-checkbox input[type=checkbox] { width:16px;height:16px;accent-color:var(--macuin-red);cursor:pointer; }
-.mac-checkbox span { font-size:13px;color:var(--macuin-muted);font-family:var(--font-body); }
+.auth-stat__value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
 
-.mac-btn { display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-display);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;border:none;border-radius:4px;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap; }
-.mac-btn--primary { background:var(--macuin-red);color:#fff;padding:12px 24px; }
-.mac-btn--primary:hover { background:var(--macuin-red-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(196,18,48,.3); }
-.mac-btn--lg { padding:16px 32px;font-size:16px; }
-.mac-btn--block { width:100%;margin-bottom:20px; }
+.auth-stat__label {
+  display: block;
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-top: 4px;
+}
 
-.auth-register-link { text-align:center;font-size:14px;color:var(--macuin-muted); }
-.auth-register-link a { color:var(--macuin-red);font-weight:600;text-decoration:none; }
-.auth-register-link a:hover { text-decoration:underline; }
+/* ── Pills de áreas ──────────────────── */
+.auth-areas { display: flex; gap: 8px; flex-wrap: wrap; }
 
-@media (max-width:768px) {
-  .auth-split { grid-template-columns:1fr; }
-  .auth-left { display:none; }
-  .auth-right { padding:40px 24px; }
+.auth-area-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 2px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,.8);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.auth-area-pill i { font-size: 11px; }
+
+/* ── Panel derecho ───────────────────── */
+.auth-right {
+  background: var(--macuin-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 56px;
+}
+
+.auth-form-wrap { width: 100%; max-width: 400px; }
+
+/* ── Encabezado del formulario ───────── */
+.auth-form-header { margin-bottom: 32px; }
+
+/* Eyebrow con ícono de candado — marca que es acceso interno */
+.auth-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--macuin-muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 8px;
+}
+
+.auth-eyebrow i { font-size: 11px; color: var(--macuin-red); }
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--macuin-text);
+  margin-bottom: 8px;
+  letter-spacing: .02em;
+}
+
+.auth-title-line { width: 44px; height: 3px; background: var(--macuin-red); border-radius: 2px; }
+
+/* ── Componentes de formulario ───────── */
+.mac-form-group { margin-bottom: 20px; }
+.mac-form-group--sm { margin-bottom: 24px; }
+
+.mac-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--macuin-text);
+  margin-bottom: 8px;
+}
+
+.mac-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mac-label-row .mac-label { margin-bottom: 0; }
+
+/* "Soporte TI" — en lugar de "¿Olvidaste tu contraseña?" */
+.mac-forgot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--macuin-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color .2s;
+}
+
+.mac-forgot:hover { color: var(--macuin-red); }
+.mac-forgot i { font-size: 12px; }
+
+.mac-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--macuin-text);
+  background: #fff;
+  border: 2px solid var(--macuin-gray);
+  border-radius: 4px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.mac-input:focus {
+  border-color: var(--macuin-red);
+  box-shadow: 0 0 0 3px rgba(196, 18, 48, .1);
+}
+
+.mac-input::placeholder { color: var(--macuin-muted); }
+
+.mac-input-icon { position: relative; }
+.mac-input-icon .mac-input { padding-left: 44px; }
+.mac-input-icon__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--macuin-muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.mac-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--macuin-muted);
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+  transition: color .2s;
+}
+
+.mac-eye-btn:hover { color: var(--macuin-text); }
+
+.mac-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.mac-checkbox input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--macuin-red);
+  cursor: pointer;
+}
+
+.mac-checkbox span { font-size: 13px; color: var(--macuin-muted); }
+
+/* ── Botón principal ─────────────────── */
+.mac-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mac-btn--primary { background: var(--macuin-red); color: #fff; padding: 12px 24px; }
+.mac-btn--primary:hover {
+  background: var(--macuin-red-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196, 18, 48, .3);
+}
+
+.mac-btn--lg { padding: 16px 32px; font-size: 16px; }
+.mac-btn--block { width: 100%; margin-bottom: 20px; }
+
+/* ── Nota de soporte (en lugar de "Regístrate") ── */
+.auth-support-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--macuin-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.auth-support-note i { font-size: 12px; }
+
+.auth-support-note a {
+  color: var(--macuin-red);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-support-note a:hover { text-decoration: underline; }
+
+/* ── Responsive ──────────────────────── */
+@media (max-width: 768px) {
+  .auth-split { grid-template-columns: 1fr; }
+  .auth-left  { display: none; }
+  .auth-right { padding: 40px 24px; }
 }
