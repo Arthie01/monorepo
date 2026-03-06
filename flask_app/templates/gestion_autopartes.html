@@ -1,259 +1,364 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Autopartes — Macuin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion_autopartes.css') }}">
-</head>
-<body>
-
-  <!-- ══ SITE HEADER ══ -->
-  <header class="site-header" role="banner">
-    <div class="hdr-inner">
-      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
-        <span class="logo-block">MACUIN</span>
-        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
-      </a>
-      <nav class="hdr-nav" aria-label="Navegación principal">
-        <a href="/gestion-autopartes" class="hdr-nav__link hdr-nav__link--active">Autopartes</a>
-        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
-        <a href="/gestion-usuarios-internos" class="hdr-nav__link">Usuarios</a>
-        <a href="/reportes" class="hdr-nav__link">Reportes</a>
-      </nav>
-      <div class="hdr-actions">
-        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
-      </div>
-    </div>
-  </header>
-
-  <!-- ══ BG CORNER DECORATION ══ -->
-  <div class="bg-corner" aria-hidden="true"></div>
-
-  <!-- ══ MAIN ══ -->
-  <main class="page-main" role="main">
-    <div class="container">
-
-      <!-- Breadcrumb + heading row + KPIs -->
-      <div class="page-toprow">
-        <div>
-          <nav class="breadcrumb" aria-label="Ruta de navegación">
-            <a href="#" class="bc-link">Inicio</a>
-            <span class="bc-sep" aria-hidden="true">/</span>
-            <span class="bc-current" aria-current="page">Gestión de Autopartes</span>
-          </nav>
-          <div class="page-heading">
-            <h1 class="page-title">Gestión de Autopartes</h1>
-            <p class="page-subtitle">estión de autopartes.</p>
-          </div>
-        </div>
-
-        <!-- Summary KPI cards -->
-        <div class="page-kpis" aria-label="Resumen del inventario">
-          <div class="kpi-card">
-            <span class="kpi-val">1</span>
-            <span class="kpi-lbl">Total</span>
-          </div>
-          <div class="kpi-card kpi-card--ok">
-            <span class="kpi-val">1</span>
-            <span class="kpi-lbl">En Stock</span>
-          </div>
-          <div class="kpi-card kpi-card--warn">
-            <span class="kpi-val">&mdash;</span>
-            <span class="kpi-lbl">Sin Stock</span>
-          </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Autopartes — Macuin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/gestion_autopartes.css') }}"
+    />
+  </head>
+  <body>
+    <!-- ══ SITE HEADER ══ -->
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
+        </a>
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a
+            href="/gestion-autopartes"
+            class="hdr-nav__link hdr-nav__link--active"
+            >Autopartes</a
+          >
+          <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+          <a href="/gestion-usuarios-internos" class="hdr-nav__link"
+            >Usuarios</a
+          >
+          <a href="/reportes" class="hdr-nav__link">Reportes</a>
+        </nav>
+        <div class="hdr-actions">
+          <a href="/perfil" class="hdr-action-link" aria-label="Perfil"
+            ><i class="fas fa-user"></i
+          ></a>
         </div>
       </div>
+    </header>
 
-      <!-- ── Filter bar ── -->
-      <div class="filter-bar" role="search" aria-label="Filtros de búsqueda">
-        <div class="filter-capsules">
+    <!-- ══ BG CORNER DECORATION ══ -->
+    <div class="bg-corner" aria-hidden="true"></div>
 
-          <div class="capsule">
-            <span class="cap-label" id="lbl-cat">Categoría</span>
-            <div class="cap-select-wrap">
-              <select class="cap-select" aria-labelledby="lbl-cat">
-                <option value="">Todas las categorías</option>
-              </select>
-              <img src="{{ url_for('static', filename='images/chevron-down.png') }}" alt="" class="cap-arrow" aria-hidden="true">
+    <!-- ══ MAIN ══ -->
+    <main class="page-main" role="main">
+      <div class="container">
+        <!-- Breadcrumb + heading row + KPIs -->
+        <div class="page-toprow">
+          <div>
+            <nav class="breadcrumb" aria-label="Ruta de navegación">
+              <a href="#" class="bc-link">Inicio</a>
+              <span class="bc-sep" aria-hidden="true">/</span>
+              <span class="bc-current" aria-current="page"
+                >Gestión de Autopartes</span
+              >
+            </nav>
+            <div class="page-heading">
+              <h1 class="page-title">Gestión de Autopartes</h1>
+              <p class="page-subtitle">estión de autopartes.</p>
             </div>
           </div>
 
-          <div class="capsule">
-            <span class="cap-label" id="lbl-marca">Marca</span>
-            <div class="cap-select-wrap">
-              <select class="cap-select" aria-labelledby="lbl-marca">
-                <option value="">Todas las marcas</option>
-              </select>
-              <img src="{{ url_for('static', filename='images/chevron-down.png') }}" alt="" class="cap-arrow" aria-hidden="true">
+          <!-- Summary KPI cards -->
+          <div class="page-kpis" aria-label="Resumen del inventario">
+            <div class="kpi-card">
+              <span class="kpi-val">1</span>
+              <span class="kpi-lbl">Total</span>
             </div>
-          </div>
-
-          <div class="capsule">
-            <span class="cap-label" id="lbl-estado">Buscar</span>
-            <div class="cap-select-wrap">
-              <select class="cap-select" aria-labelledby="lbl-estado">
-                <option value="">Todos</option>
-              </select>
-              <img src="{{ url_for('static', filename='images/chevron-down.png') }}" alt="" class="cap-arrow" aria-hidden="true">
+            <div class="kpi-card kpi-card--ok">
+              <span class="kpi-val">1</span>
+              <span class="kpi-lbl">En Stock</span>
             </div>
-          </div>
-
-        </div>
-        <button type="button" class="btn-search">
-          <img src="{{ url_for('static', filename='images/search.png') }}" alt="" class="btn-icon" aria-hidden="true">
-          <span>Buscar Autoparte</span>
-        </button>
-      </div>
-
-      <!-- ── Table panel ── -->
-      <div class="table-panel">
-
-        <!-- Top bar -->
-        <div class="tbar">
-          <p class="tbar-count" aria-live="polite">
-            <span class="count-range">1 a 7</span> de <span class="count-total">&mdash;</span> autopartes
-          </p>
-          <div class="tbar-center">
-            <div class="tbar-search-wrap">
-              <img src="{{ url_for('static', filename='images/search.png') }}" alt="" class="tbar-search-icon" aria-hidden="true">
-              <input type="search" class="tbar-search-input" placeholder="Buscar por nombre, ID o categoría…" aria-label="Buscar autopartes">
+            <div class="kpi-card kpi-card--warn">
+              <span class="kpi-val">&mdash;</span>
+              <span class="kpi-lbl">Sin Stock</span>
             </div>
-          </div>
-          <div class="tbar-right">
-            <a href="/agregar-autoparte" class="btn-add">
-              <img src="{{ url_for('static', filename='images/plus.png') }}" alt="" class="btn-icon" aria-hidden="true">
-              <span>Agregar Autoparte</span>
-            </a>
           </div>
         </div>
 
-        <!-- Table -->
-        <div class="tbl-scroll" role="region" aria-label="Tabla de autopartes" tabindex="0">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Imagen</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Categoría</th>
-                <th scope="col">Marca</th>
-                <th scope="col">Stock</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
+        <!-- ── Filter bar ── -->
+        <div class="filter-bar" role="search" aria-label="Filtros de búsqueda">
+          <div class="filter-capsules">
+            <div class="capsule">
+              <span class="cap-label" id="lbl-cat">Categoría</span>
+              <div class="cap-select-wrap">
+                <select class="cap-select" aria-labelledby="lbl-cat">
+                  <option value="">Todas las categorías</option>
+                </select>
+                <img
+                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
+                  alt=""
+                  class="cap-arrow"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
 
-              <!-- Fila de ejemplo con copa_piston -->
-              <tr class="row-example">
-                <td class="td-id">1</td>
-                <td>
-                  <div class="tbl-img-wrap">
-                    <img
-                      src="{{ url_for('static', filename='images/copa_piston.png') }}"
-                      alt="Copa de pistón"
-                      class="tbl-img"
+            <div class="capsule">
+              <span class="cap-label" id="lbl-marca">Marca</span>
+              <div class="cap-select-wrap">
+                <select class="cap-select" aria-labelledby="lbl-marca">
+                  <option value="">Todas las marcas</option>
+                </select>
+                <img
+                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
+                  alt=""
+                  class="cap-arrow"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+
+            <div class="capsule">
+              <span class="cap-label" id="lbl-estado">Buscar</span>
+              <div class="cap-select-wrap">
+                <select class="cap-select" aria-labelledby="lbl-estado">
+                  <option value="">Todos</option>
+                </select>
+                <img
+                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
+                  alt=""
+                  class="cap-arrow"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-search">
+            <img
+              src="{{ url_for('static', filename='images/search.png') }}"
+              alt=""
+              class="btn-icon"
+              aria-hidden="true"
+            />
+            <span>Buscar Autoparte</span>
+          </button>
+        </div>
+
+        <!-- ── Table panel ── -->
+        <div class="table-panel">
+          <!-- Top bar -->
+          <div class="tbar">
+            <p class="tbar-count" aria-live="polite">
+              <span class="count-range">1 a 7</span> de
+              <span class="count-total">&mdash;</span> autopartes
+            </p>
+            <div class="tbar-center">
+              <div class="tbar-search-wrap">
+                <img
+                  src="{{ url_for('static', filename='images/search.png') }}"
+                  alt=""
+                  class="tbar-search-icon"
+                  aria-hidden="true"
+                />
+                <input
+                  type="search"
+                  class="tbar-search-input"
+                  placeholder="Buscar por nombre, ID o categoría…"
+                  aria-label="Buscar autopartes"
+                />
+              </div>
+            </div>
+            <div class="tbar-right">
+              <a href="/agregar-autoparte" class="btn-add">
+                <img
+                  src="{{ url_for('static', filename='images/plus.png') }}"
+                  alt=""
+                  class="btn-icon"
+                  aria-hidden="true"
+                />
+                <span>Agregar Autoparte</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div
+            class="tbl-scroll"
+            role="region"
+            aria-label="Tabla de autopartes"
+            tabindex="0"
+          >
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Imagen</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Categoría</th>
+                  <th scope="col">Marca</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Fila de ejemplo con copa_piston -->
+                <tr class="row-example">
+                  <td class="td-id">1</td>
+                  <td>
+                    <div class="tbl-img-wrap">
+                      <img
+                        src="{{ url_for('static', filename='images/copa_piston.png') }}"
+                        alt="Copa de pistón"
+                        class="tbl-img"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <span class="td-name"
+                      >Copa Piston del Rasho Macuin Cuchau</span
                     >
-                  </div>
-                </td>
-                <td>
-                  <span class="td-name">Copa Piston del Rasho Macuin Cuchau</span>
-                  <span class="td-unit">1 — Unidad</span>
-                </td>
-                <td><span class="td-muted">&mdash;</span></td>
-                <td><span class="td-muted">&mdash;</span></td>
-                <td><span class="td-muted">&mdash;</span></td>
-                <td><span class="badge badge--neutral">&mdash;</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-autoparte" class="act-btn act-btn--edit" aria-label="Editar autoparte">
-                      <img src="{{ url_for('static', filename='images/edit.png') }}" alt="" aria-hidden="true">
-                    </a>
-                    <button type="button" class="act-btn act-btn--del" aria-label="Eliminar autoparte">
-                      <img src="{{ url_for('static', filename='images/trash.png') }}" alt="" aria-hidden="true">
-                    </button>
-                  </div>
-                </td>
-              </tr>
+                    <span class="td-unit">1 — Unidad</span>
+                  </td>
+                  <td><span class="td-muted">&mdash;</span></td>
+                  <td><span class="td-muted">&mdash;</span></td>
+                  <td><span class="td-muted">&mdash;</span></td>
+                  <td><span class="badge badge--neutral">&mdash;</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-autoparte"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar autoparte"
+                      >
+                        <img
+                          src="{{ url_for('static', filename='images/edit.png') }}"
+                          alt=""
+                          aria-hidden="true"
+                        />
+                      </a>
+                      <button
+                        type="button"
+                        class="act-btn act-btn--del"
+                        aria-label="Eliminar autoparte"
+                      >
+                        <img
+                          src="{{ url_for('static', filename='images/trash.png') }}"
+                          alt=""
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
 
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><b class="sk-b sk-thumb"></b></td>
-                <td><b class="sk-b sk-nm"></b><b class="sk-b sk-sub" style="width:50%"></b></td>
-                <td><b class="sk-b" style="width:100px"></b></td>
-                <td><b class="sk-b" style="width:66px"></b></td>
-                <td><b class="sk-b" style="width:28px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td><b class="sk-b sk-thumb"></b></td>
+                  <td>
+                    <b class="sk-b sk-nm"></b
+                    ><b class="sk-b sk-sub" style="width: 50%"></b>
+                  </td>
+                  <td><b class="sk-b" style="width: 100px"></b></td>
+                  <td><b class="sk-b" style="width: 66px"></b></td>
+                  <td><b class="sk-b" style="width: 28px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
 
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><b class="sk-b sk-thumb"></b></td>
-                <td><b class="sk-b sk-nm" style="width:62%"></b><b class="sk-b sk-sub" style="width:38%"></b></td>
-                <td><b class="sk-b" style="width:88px"></b></td>
-                <td><b class="sk-b" style="width:58px"></b></td>
-                <td><b class="sk-b" style="width:28px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td><b class="sk-b sk-thumb"></b></td>
+                  <td>
+                    <b class="sk-b sk-nm" style="width: 62%"></b
+                    ><b class="sk-b sk-sub" style="width: 38%"></b>
+                  </td>
+                  <td><b class="sk-b" style="width: 88px"></b></td>
+                  <td><b class="sk-b" style="width: 58px"></b></td>
+                  <td><b class="sk-b" style="width: 28px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
 
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><b class="sk-b sk-thumb"></b></td>
-                <td><b class="sk-b sk-nm" style="width:78%"></b><b class="sk-b sk-sub" style="width:46%"></b></td>
-                <td><b class="sk-b" style="width:114px"></b></td>
-                <td><b class="sk-b" style="width:74px"></b></td>
-                <td><b class="sk-b" style="width:28px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td><b class="sk-b sk-thumb"></b></td>
+                  <td>
+                    <b class="sk-b sk-nm" style="width: 78%"></b
+                    ><b class="sk-b sk-sub" style="width: 46%"></b>
+                  </td>
+                  <td><b class="sk-b" style="width: 114px"></b></td>
+                  <td><b class="sk-b" style="width: 74px"></b></td>
+                  <td><b class="sk-b" style="width: 28px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
 
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><b class="sk-b sk-thumb"></b></td>
-                <td><b class="sk-b sk-nm" style="width:55%"></b><b class="sk-b sk-sub" style="width:42%"></b></td>
-                <td><b class="sk-b" style="width:96px"></b></td>
-                <td><b class="sk-b" style="width:62px"></b></td>
-                <td><b class="sk-b" style="width:28px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td><b class="sk-b sk-thumb"></b></td>
+                  <td>
+                    <b class="sk-b sk-nm" style="width: 55%"></b
+                    ><b class="sk-b sk-sub" style="width: 42%"></b>
+                  </td>
+                  <td><b class="sk-b" style="width: 96px"></b></td>
+                  <td><b class="sk-b" style="width: 62px"></b></td>
+                  <td><b class="sk-b" style="width: 28px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
 
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><b class="sk-b sk-thumb"></b></td>
-                <td><b class="sk-b sk-nm" style="width:70%"></b><b class="sk-b sk-sub" style="width:34%"></b></td>
-                <td><b class="sk-b" style="width:80px"></b></td>
-                <td><b class="sk-b" style="width:70px"></b></td>
-                <td><b class="sk-b" style="width:28px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td><b class="sk-b sk-thumb"></b></td>
+                  <td>
+                    <b class="sk-b sk-nm" style="width: 70%"></b
+                    ><b class="sk-b sk-sub" style="width: 34%"></b>
+                  </td>
+                  <td><b class="sk-b" style="width: 80px"></b></td>
+                  <td><b class="sk-b" style="width: 70px"></b></td>
+                  <td><b class="sk-b" style="width: 28px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            </tbody>
-          </table>
+          <!-- Bottom pagination -->
+          <div class="tbl-footer">
+            <nav class="pagination" aria-label="Paginación">
+              <button class="pp pp--on" aria-current="page">1</button>
+              <button class="pp">2</button>
+              <button class="pp">3</button>
+              <button class="pp pp--nav" aria-label="Siguiente">&#8250;</button>
+            </nav>
+          </div>
         </div>
-
-        <!-- Bottom pagination -->
-        <div class="tbl-footer">
-          <nav class="pagination" aria-label="Paginación">
-            <button class="pp pp--on" aria-current="page">1</button>
-            <button class="pp">2</button>
-            <button class="pp">3</button>
-            <button class="pp pp--nav" aria-label="Siguiente">&#8250;</button>
-          </nav>
-        </div>
-
-      </div><!-- /table-panel -->
-
-    </div><!-- /container -->
-  </main>
-
-</body>
+        <!-- /table-panel -->
+      </div>
+      <!-- /container -->
+    </main>
+  </body>
 </html>

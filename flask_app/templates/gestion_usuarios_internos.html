@@ -1,349 +1,480 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuarios Internos — Macuin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion_usuarios.css') }}">
-</head>
-<body>
-
-  {# Sección: Header #}
-  <header class="site-header" role="banner">
-    <div class="hdr-inner">
-      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
-        <span class="logo-block">MACUIN</span>
-        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
-      </a>
-      <nav class="hdr-nav" aria-label="Navegación principal">
-        <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
-        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
-        <a href="/gestion-usuarios-internos" class="hdr-nav__link hdr-nav__link--active">Usuarios</a>
-        <a href="/reportes" class="hdr-nav__link">Reportes</a>
-      </nav>
-      <div class="hdr-actions">
-        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
-      </div>
-    </div>
-  </header>
-
-  {# Sección: Decoración fondo #}
-  <div class="bg-corner" aria-hidden="true"></div>
-
-  {# Sección: Contenido principal #}
-  <main class="page-main" role="main">
-    <div class="container">
-
-      {# Breadcrumb + heading + KPIs #}
-      <div class="page-toprow">
-        <div>
-          <nav class="breadcrumb" aria-label="Ruta de navegación">
-            <a href="#" class="bc-link">Inicio</a>
-            <span class="bc-sep" aria-hidden="true">/</span>
-            <span class="bc-current" aria-current="page">Usuarios Internos</span>
-          </nav>
-          <div class="page-heading">
-            <h1 class="page-title">Gestión de Usuarios</h1>
-            <p class="page-subtitle">Administra el personal interno y clientes externos del sistema.</p>
-          </div>
-        </div>
-
-        <div class="page-kpis" aria-label="Resumen de usuarios internos">
-          <div class="kpi-card">
-            <span class="kpi-val">8</span>
-            <span class="kpi-lbl">Total</span>
-          </div>
-          <div class="kpi-card kpi-card--ok">
-            <span class="kpi-val">6</span>
-            <span class="kpi-lbl">Activos</span>
-          </div>
-          <div class="kpi-card kpi-card--warn">
-            <span class="kpi-val">2</span>
-            <span class="kpi-lbl">Inactivos</span>
-          </div>
-        </div>
-      </div>
-
-      {# Tabs: Internos / Externos #}
-      <div class="user-tabs" role="tablist" aria-label="Tipo de usuario">
-        <a href="/gestion-usuarios-internos" class="user-tab user-tab--active" role="tab" aria-selected="true">
-          <i class="fas fa-user-tie"></i> Internos
-          <span class="tab-count">8</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios Internos — Macuin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/gestion_usuarios.css') }}"
+    />
+  </head>
+  <body>
+    {# Sección: Header #}
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
         </a>
-        <a href="/gestion-usuarios-externos" class="user-tab" role="tab" aria-selected="false">
-          <i class="fas fa-users"></i> Externos
-          <span class="tab-count">24</span>
-        </a>
-      </div>
-
-      {# Toolbar #}
-      <div class="toolbar">
-        <div class="tbar-search-wrap">
-          <i class="fas fa-search tbar-search-icon" style="font-size:14px;opacity:.4;left:12px;top:50%;position:absolute;transform:translateY(-50%);pointer-events:none"></i>
-          <input type="search" class="tbar-search-input" placeholder="Buscar por nombre, correo o departamento…" aria-label="Buscar usuarios internos" style="padding-left:38px">
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+          <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+          <a
+            href="/gestion-usuarios-internos"
+            class="hdr-nav__link hdr-nav__link--active"
+            >Usuarios</a
+          >
+          <a href="/reportes" class="hdr-nav__link">Reportes</a>
+        </nav>
+        <div class="hdr-actions">
+          <a href="/perfil" class="hdr-action-link" aria-label="Perfil"
+            ><i class="fas fa-user"></i
+          ></a>
         </div>
-        <div class="tbar-right">
-          <button type="button" class="btn-export">
-            <i class="fas fa-file-export"></i> Exportar
-          </button>
-          <a href="/agregar-usuario-interno" class="btn-add">
-            <i class="fas fa-user-plus"></i> Nuevo Usuario
+      </div>
+    </header>
+
+    {# Sección: Decoración fondo #}
+    <div class="bg-corner" aria-hidden="true"></div>
+
+    {# Sección: Contenido principal #}
+    <main class="page-main" role="main">
+      <div class="container">
+        {# Breadcrumb + heading + KPIs #}
+        <div class="page-toprow">
+          <div>
+            <nav class="breadcrumb" aria-label="Ruta de navegación">
+              <a href="#" class="bc-link">Inicio</a>
+              <span class="bc-sep" aria-hidden="true">/</span>
+              <span class="bc-current" aria-current="page"
+                >Usuarios Internos</span
+              >
+            </nav>
+            <div class="page-heading">
+              <h1 class="page-title">Gestión de Usuarios</h1>
+              <p class="page-subtitle">
+                Administra el personal interno y clientes externos del sistema.
+              </p>
+            </div>
+          </div>
+
+          <div class="page-kpis" aria-label="Resumen de usuarios internos">
+            <div class="kpi-card">
+              <span class="kpi-val">8</span>
+              <span class="kpi-lbl">Total</span>
+            </div>
+            <div class="kpi-card kpi-card--ok">
+              <span class="kpi-val">6</span>
+              <span class="kpi-lbl">Activos</span>
+            </div>
+            <div class="kpi-card kpi-card--warn">
+              <span class="kpi-val">2</span>
+              <span class="kpi-lbl">Inactivos</span>
+            </div>
+          </div>
+        </div>
+
+        {# Tabs: Internos / Externos #}
+        <div class="user-tabs" role="tablist" aria-label="Tipo de usuario">
+          <a
+            href="/gestion-usuarios-internos"
+            class="user-tab user-tab--active"
+            role="tab"
+            aria-selected="true"
+          >
+            <i class="fas fa-user-tie"></i> Internos
+            <span class="tab-count">8</span>
+          </a>
+          <a
+            href="/gestion-usuarios-externos"
+            class="user-tab"
+            role="tab"
+            aria-selected="false"
+          >
+            <i class="fas fa-users"></i> Externos
+            <span class="tab-count">24</span>
           </a>
         </div>
-      </div>
 
-      {# Tabla de usuarios internos #}
-      <div class="table-panel">
-        <div class="tbl-scroll" role="region" aria-label="Tabla de usuarios internos" tabindex="0">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Usuario</th>
-                <th scope="col">Departamento</th>
-                <th scope="col">Rol</th>
-                <th scope="col">Último acceso</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              {# Usuario 1 #}
-              <tr>
-                <td class="td-id">USR-001</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--red">AH</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Artemio Hurtado</span>
-                      <span class="user-cell__email">artemio@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Ventas</td>
-                <td><span class="badge badge--admin">Administrador</span></td>
-                <td>06/03/2026 — 09:14</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 2 #}
-              <tr>
-                <td class="td-id">USR-002</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--navy">ML</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">María López</span>
-                      <span class="user-cell__email">maria.lopez@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Almacén</td>
-                <td><span class="badge badge--almacen">Almacén</span></td>
-                <td>05/03/2026 — 17:42</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 3 #}
-              <tr>
-                <td class="td-id">USR-003</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--blue">RG</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Roberto García</span>
-                      <span class="user-cell__email">r.garcia@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Logística</td>
-                <td><span class="badge badge--logistica">Logística</span></td>
-                <td>06/03/2026 — 08:30</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 4 #}
-              <tr>
-                <td class="td-id">USR-004</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--green">EM</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Emiliano Martínez</span>
-                      <span class="user-cell__email">emiliano@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Ventas</td>
-                <td><span class="badge badge--ventas">Ventas</span></td>
-                <td>04/03/2026 — 14:18</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 5 #}
-              <tr>
-                <td class="td-id">USR-005</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--amber">CR</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Carla Reyes</span>
-                      <span class="user-cell__email">carla.r@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Almacén</td>
-                <td><span class="badge badge--almacen">Almacén</span></td>
-                <td>03/03/2026 — 11:05</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 6 #}
-              <tr>
-                <td class="td-id">USR-006</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--steel">JV</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Jorge Villanueva</span>
-                      <span class="user-cell__email">j.villanueva@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Logística</td>
-                <td><span class="badge badge--logistica">Logística</span></td>
-                <td>01/03/2026 — 09:50</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 7 — Inactivo #}
-              <tr>
-                <td class="td-id">USR-007</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--steel">PN</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Patricia Navarro</span>
-                      <span class="user-cell__email">p.navarro@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Ventas</td>
-                <td><span class="badge badge--ventas">Ventas</span></td>
-                <td>15/02/2026 — 16:30</td>
-                <td><span class="badge badge--inactivo">Inactivo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Usuario 8 — Inactivo #}
-              <tr>
-                <td class="td-id">USR-008</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--steel">DS</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Daniel Soto</span>
-                      <span class="user-cell__email">d.soto@macuin.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Almacén</td>
-                <td><span class="badge badge--almacen">Almacén</span></td>
-                <td>20/01/2026 — 10:12</td>
-                <td><span class="badge badge--inactivo">Inactivo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-interno" class="act-btn act-btn--edit" aria-label="Editar usuario" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar usuario" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
+        {# Toolbar #}
+        <div class="toolbar">
+          <div class="tbar-search-wrap">
+            <i
+              class="fas fa-search tbar-search-icon"
+              style="
+                font-size: 14px;
+                opacity: 0.4;
+                left: 12px;
+                top: 50%;
+                position: absolute;
+                transform: translateY(-50%);
+                pointer-events: none;
+              "
+            ></i>
+            <input
+              type="search"
+              class="tbar-search-input"
+              placeholder="Buscar por nombre, correo o departamento…"
+              aria-label="Buscar usuarios internos"
+              style="padding-left: 38px"
+            />
+          </div>
+          <div class="tbar-right">
+            <button type="button" class="btn-export">
+              <i class="fas fa-file-export"></i> Exportar
+            </button>
+            <a href="/agregar-usuario-interno" class="btn-add">
+              <i class="fas fa-user-plus"></i> Nuevo Usuario
+            </a>
+          </div>
         </div>
 
-        {# Footer paginación #}
-        <div class="tbl-footer">
-          <span class="tbl-count">Mostrando 1–8 de 8 usuarios</span>
-          <nav class="pagination" aria-label="Paginación">
-            <button class="pp pp--on" aria-current="page">1</button>
-          </nav>
+        {# Tabla de usuarios internos #}
+        <div class="table-panel">
+          <div
+            class="tbl-scroll"
+            role="region"
+            aria-label="Tabla de usuarios internos"
+            tabindex="0"
+          >
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Departamento</th>
+                  <th scope="col">Rol</th>
+                  <th scope="col">Último acceso</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {# Usuario 1 #}
+                <tr>
+                  <td class="td-id">USR-001</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--red">AH</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Artemio Hurtado</span>
+                        <span class="user-cell__email">artemio@macuin.mx</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Ventas</td>
+                  <td><span class="badge badge--admin">Administrador</span></td>
+                  <td>06/03/2026 — 09:14</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 2 #}
+                <tr>
+                  <td class="td-id">USR-002</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--navy">ML</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">María López</span>
+                        <span class="user-cell__email"
+                          >maria.lopez@macuin.mx</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Almacén</td>
+                  <td><span class="badge badge--almacen">Almacén</span></td>
+                  <td>05/03/2026 — 17:42</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 3 #}
+                <tr>
+                  <td class="td-id">USR-003</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--blue">RG</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Roberto García</span>
+                        <span class="user-cell__email">r.garcia@macuin.mx</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Logística</td>
+                  <td><span class="badge badge--logistica">Logística</span></td>
+                  <td>06/03/2026 — 08:30</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 4 #}
+                <tr>
+                  <td class="td-id">USR-004</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--green">EM</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Emiliano Martínez</span>
+                        <span class="user-cell__email">emiliano@macuin.mx</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Ventas</td>
+                  <td><span class="badge badge--ventas">Ventas</span></td>
+                  <td>04/03/2026 — 14:18</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 5 #}
+                <tr>
+                  <td class="td-id">USR-005</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--amber">CR</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Carla Reyes</span>
+                        <span class="user-cell__email">carla.r@macuin.mx</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Almacén</td>
+                  <td><span class="badge badge--almacen">Almacén</span></td>
+                  <td>03/03/2026 — 11:05</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 6 #}
+                <tr>
+                  <td class="td-id">USR-006</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--steel">JV</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Jorge Villanueva</span>
+                        <span class="user-cell__email"
+                          >j.villanueva@macuin.mx</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Logística</td>
+                  <td><span class="badge badge--logistica">Logística</span></td>
+                  <td>01/03/2026 — 09:50</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 7 — Inactivo #}
+                <tr>
+                  <td class="td-id">USR-007</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--steel">PN</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Patricia Navarro</span>
+                        <span class="user-cell__email"
+                          >p.navarro@macuin.mx</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Ventas</td>
+                  <td><span class="badge badge--ventas">Ventas</span></td>
+                  <td>15/02/2026 — 16:30</td>
+                  <td><span class="badge badge--inactivo">Inactivo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Usuario 8 — Inactivo #}
+                <tr>
+                  <td class="td-id">USR-008</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--steel">DS</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Daniel Soto</span>
+                        <span class="user-cell__email">d.soto@macuin.mx</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Almacén</td>
+                  <td><span class="badge badge--almacen">Almacén</span></td>
+                  <td>20/01/2026 — 10:12</td>
+                  <td><span class="badge badge--inactivo">Inactivo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-interno"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar usuario"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar usuario"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {# Footer paginación #}
+          <div class="tbl-footer">
+            <span class="tbl-count">Mostrando 1–8 de 8 usuarios</span>
+            <nav class="pagination" aria-label="Paginación">
+              <button class="pp pp--on" aria-current="page">1</button>
+            </nav>
+          </div>
         </div>
       </div>
-
-    </div>
-  </main>
-
-</body>
+    </main>
+  </body>
 </html>

@@ -1,106 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso Administrador — MACUIN</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login_admin.css') }}">
-</head>
-<body>
-
-  {# Sección: Fondo decorativo #}
-  <div class="login-bg" aria-hidden="true">
-    <div class="bg-stripe"></div>
-    <div class="bg-stripe bg-stripe--2"></div>
-    <div class="bg-orb"></div>
-    <div class="bg-corner-mark bg-corner-mark--tl"></div>
-    <div class="bg-corner-mark bg-corner-mark--br"></div>
-  </div>
-
-  {# Sección: Card central de login #}
-  <div class="login-wrapper">
-    <div class="login-card">
-
-      {# Header — marca + título #}
-      <div class="lc-header">
-        <div class="lc-brand">
-          <span class="lc-logo">MACUIN</span>
-          <div class="lc-system-label">
-            Sistema de gestión
-            <span>ADMINISTRADOR</span>
-          </div>
-        </div>
-        <h1 class="lc-title">Acceso Admin</h1>
-        <p class="lc-subtitle">Panel de control y gestión de usuarios del sistema MACUIN.</p>
-        <div class="lc-divider"></div>
-      </div>
-
-      {# Formulario #}
-      <form class="lc-form" method="POST" action="#" novalidate>
-
-        <div class="lc-field">
-          <label class="lc-label" for="admin-email">Correo electrónico</label>
-          <div class="lc-input-wrap">
-            <input type="email" id="admin-email" name="email" class="lc-input"
-                   placeholder="admin@macuin.mx" autocomplete="email" required>
-            <i class="fas fa-shield-halved lc-input-icon"></i>
-          </div>
-        </div>
-
-        <div class="lc-field">
-          <div class="lc-label-row">
-            <label class="lc-label" for="admin-pass">Contraseña</label>
-            <a href="#" class="lc-forgot"><i class="fas fa-headset"></i> Soporte TI</a>
-          </div>
-          <div class="lc-input-wrap">
-            <input type="password" id="admin-pass" name="password" class="lc-input"
-                   placeholder="••••••••" autocomplete="current-password" required>
-            <i class="fas fa-key lc-input-icon"></i>
-            <button type="button" class="lc-eye" onclick="togglePass()" aria-label="Mostrar contraseña">
-              <i class="fas fa-eye" id="eye-icon"></i>
-            </button>
-          </div>
-        </div>
-
-        <label class="lc-checkbox">
-          <input type="checkbox" name="remember">
-          <span>Mantener sesión activa</span>
-        </label>
-
-        <button type="submit" class="lc-submit">
-          <i class="fas fa-right-to-bracket"></i>
-          Ingresar al panel
-        </button>
-
-      </form>
-
-      <div class="lc-footer">
-        <i class="fas fa-circle-info"></i>
-        Acceso exclusivo para administradores — <a href="/login">Acceso staff</a>
-      </div>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso Administrador — MACUIN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login_admin.css') }}"
+    />
+  </head>
+  <body>
+    {# Sección: Fondo decorativo #}
+    <div class="login-bg" aria-hidden="true">
+      <div class="bg-stripe"></div>
+      <div class="bg-stripe bg-stripe--2"></div>
+      <div class="bg-orb"></div>
+      <div class="bg-corner-mark bg-corner-mark--tl"></div>
+      <div class="bg-corner-mark bg-corner-mark--br"></div>
     </div>
 
-    {# Barra de estado debajo del card #}
-    <div class="login-status-bar" aria-label="Estado del sistema">
-      <span class="lsb-item"><span class="lsb-dot"></span> Servidor activo</span>
-      <span class="lsb-item"><span class="lsb-dot lsb-dot--amber"></span> v2.4.1</span>
-      <span class="lsb-item">Último acceso: 06/03/2026 — 09:14</span>
+    {# Sección: Card central de login #}
+    <div class="login-wrapper">
+      <div class="login-card">
+        {# Header — marca + título #}
+        <div class="lc-header">
+          <div class="lc-brand">
+            <span class="lc-logo">MACUIN</span>
+            <div class="lc-system-label">
+              Sistema de gestión
+              <span>ADMINISTRADOR</span>
+            </div>
+          </div>
+          <h1 class="lc-title">Acceso Admin</h1>
+          <p class="lc-subtitle">
+            Panel de control y gestión de usuarios del sistema MACUIN.
+          </p>
+          <div class="lc-divider"></div>
+        </div>
+
+        {# Formulario #}
+        <form class="lc-form" method="POST" action="#" novalidate>
+          <div class="lc-field">
+            <label class="lc-label" for="admin-email">Correo electrónico</label>
+            <div class="lc-input-wrap">
+              <input
+                type="email"
+                id="admin-email"
+                name="email"
+                class="lc-input"
+                placeholder="admin@macuin.mx"
+                autocomplete="email"
+                required
+              />
+              <i class="fas fa-shield-halved lc-input-icon"></i>
+            </div>
+          </div>
+
+          <div class="lc-field">
+            <div class="lc-label-row">
+              <label class="lc-label" for="admin-pass">Contraseña</label>
+              <a href="#" class="lc-forgot"
+                ><i class="fas fa-headset"></i> Soporte TI</a
+              >
+            </div>
+            <div class="lc-input-wrap">
+              <input
+                type="password"
+                id="admin-pass"
+                name="password"
+                class="lc-input"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <i class="fas fa-key lc-input-icon"></i>
+              <button
+                type="button"
+                class="lc-eye"
+                onclick="togglePass()"
+                aria-label="Mostrar contraseña"
+              >
+                <i class="fas fa-eye" id="eye-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <label class="lc-checkbox">
+            <input type="checkbox" name="remember" />
+            <span>Mantener sesión activa</span>
+          </label>
+
+          <button type="submit" class="lc-submit">
+            <i class="fas fa-right-to-bracket"></i>
+            Ingresar al panel
+          </button>
+        </form>
+
+        <div class="lc-footer">
+          <i class="fas fa-circle-info"></i>
+          Acceso exclusivo para administradores —
+          <a href="/login">Acceso staff</a>
+        </div>
+      </div>
+
+      {# Barra de estado debajo del card #}
+      <div class="login-status-bar" aria-label="Estado del sistema">
+        <span class="lsb-item"
+          ><span class="lsb-dot"></span> Servidor activo</span
+        >
+        <span class="lsb-item"
+          ><span class="lsb-dot lsb-dot--amber"></span> v2.4.1</span
+        >
+        <span class="lsb-item">Último acceso: 06/03/2026 — 09:14</span>
+      </div>
     </div>
-  </div>
 
-  <script>
-  function togglePass() {
-    const input = document.getElementById('admin-pass');
-    const icon = document.getElementById('eye-icon');
-    input.type = input.type === 'password' ? 'text' : 'password';
-    icon.className = input.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
-  }
-  </script>
-
-</body>
+    <script>
+      function togglePass() {
+        const input = document.getElementById("admin-pass");
+        const icon = document.getElementById("eye-icon");
+        input.type = input.type === "password" ? "text" : "password";
+        icon.className =
+          input.type === "password" ? "fas fa-eye" : "fas fa-eye-slash";
+      }
+    </script>
+  </body>
 </html>

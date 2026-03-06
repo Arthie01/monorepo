@@ -1,388 +1,563 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuarios Externos — Macuin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion_usuarios.css') }}">
-</head>
-<body>
-
-  {# Sección: Header #}
-  <header class="site-header" role="banner">
-    <div class="hdr-inner">
-      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
-        <span class="logo-block">MACUIN</span>
-        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
-      </a>
-      <nav class="hdr-nav" aria-label="Navegación principal">
-        <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
-        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
-        <a href="/gestion-usuarios-internos" class="hdr-nav__link hdr-nav__link--active">Usuarios</a>
-        <a href="/reportes" class="hdr-nav__link">Reportes</a>
-      </nav>
-      <div class="hdr-actions">
-        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
-      </div>
-    </div>
-  </header>
-
-  {# Sección: Decoración fondo #}
-  <div class="bg-corner" aria-hidden="true"></div>
-
-  {# Sección: Contenido principal #}
-  <main class="page-main" role="main">
-    <div class="container">
-
-      {# Breadcrumb + heading + KPIs #}
-      <div class="page-toprow">
-        <div>
-          <nav class="breadcrumb" aria-label="Ruta de navegación">
-            <a href="#" class="bc-link">Inicio</a>
-            <span class="bc-sep" aria-hidden="true">/</span>
-            <span class="bc-current" aria-current="page">Usuarios Externos</span>
-          </nav>
-          <div class="page-heading">
-            <h1 class="page-title">Gestión de Usuarios</h1>
-            <p class="page-subtitle">Clientes registrados: talleres, refaccionarias y compradores finales.</p>
-          </div>
-        </div>
-
-        <div class="page-kpis" aria-label="Resumen de usuarios externos">
-          <div class="kpi-card">
-            <span class="kpi-val">24</span>
-            <span class="kpi-lbl">Total</span>
-          </div>
-          <div class="kpi-card kpi-card--ok">
-            <span class="kpi-val">19</span>
-            <span class="kpi-lbl">Activos</span>
-          </div>
-          <div class="kpi-card kpi-card--warn">
-            <span class="kpi-val">3</span>
-            <span class="kpi-lbl">Pendientes</span>
-          </div>
-          <div class="kpi-card kpi-card--red">
-            <span class="kpi-val">2</span>
-            <span class="kpi-lbl">Inactivos</span>
-          </div>
-        </div>
-      </div>
-
-      {# Tabs: Internos / Externos #}
-      <div class="user-tabs" role="tablist" aria-label="Tipo de usuario">
-        <a href="/gestion-usuarios-internos" class="user-tab" role="tab" aria-selected="false">
-          <i class="fas fa-user-tie"></i> Internos
-          <span class="tab-count">8</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios Externos — Macuin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/gestion_usuarios.css') }}"
+    />
+  </head>
+  <body>
+    {# Sección: Header #}
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
         </a>
-        <a href="/gestion-usuarios-externos" class="user-tab user-tab--active" role="tab" aria-selected="true">
-          <i class="fas fa-users"></i> Externos
-          <span class="tab-count">24</span>
-        </a>
-      </div>
-
-      {# Toolbar #}
-      <div class="toolbar">
-        <div class="tbar-search-wrap">
-          <i class="fas fa-search tbar-search-icon" style="font-size:14px;opacity:.4;left:12px;top:50%;position:absolute;transform:translateY(-50%);pointer-events:none"></i>
-          <input type="search" class="tbar-search-input" placeholder="Buscar por nombre, empresa o RFC…" aria-label="Buscar usuarios externos" style="padding-left:38px">
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+          <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+          <a
+            href="/gestion-usuarios-internos"
+            class="hdr-nav__link hdr-nav__link--active"
+            >Usuarios</a
+          >
+          <a href="/reportes" class="hdr-nav__link">Reportes</a>
+        </nav>
+        <div class="hdr-actions">
+          <a href="/perfil" class="hdr-action-link" aria-label="Perfil"
+            ><i class="fas fa-user"></i
+          ></a>
         </div>
-        <div class="tbar-right">
-          <button type="button" class="btn-export">
-            <i class="fas fa-file-export"></i> Exportar
-          </button>
-          <a href="/agregar-usuario-externo" class="btn-add">
-            <i class="fas fa-user-plus"></i> Nuevo Cliente
+      </div>
+    </header>
+
+    {# Sección: Decoración fondo #}
+    <div class="bg-corner" aria-hidden="true"></div>
+
+    {# Sección: Contenido principal #}
+    <main class="page-main" role="main">
+      <div class="container">
+        {# Breadcrumb + heading + KPIs #}
+        <div class="page-toprow">
+          <div>
+            <nav class="breadcrumb" aria-label="Ruta de navegación">
+              <a href="#" class="bc-link">Inicio</a>
+              <span class="bc-sep" aria-hidden="true">/</span>
+              <span class="bc-current" aria-current="page"
+                >Usuarios Externos</span
+              >
+            </nav>
+            <div class="page-heading">
+              <h1 class="page-title">Gestión de Usuarios</h1>
+              <p class="page-subtitle">
+                Clientes registrados: talleres, refaccionarias y compradores
+                finales.
+              </p>
+            </div>
+          </div>
+
+          <div class="page-kpis" aria-label="Resumen de usuarios externos">
+            <div class="kpi-card">
+              <span class="kpi-val">24</span>
+              <span class="kpi-lbl">Total</span>
+            </div>
+            <div class="kpi-card kpi-card--ok">
+              <span class="kpi-val">19</span>
+              <span class="kpi-lbl">Activos</span>
+            </div>
+            <div class="kpi-card kpi-card--warn">
+              <span class="kpi-val">3</span>
+              <span class="kpi-lbl">Pendientes</span>
+            </div>
+            <div class="kpi-card kpi-card--red">
+              <span class="kpi-val">2</span>
+              <span class="kpi-lbl">Inactivos</span>
+            </div>
+          </div>
+        </div>
+
+        {# Tabs: Internos / Externos #}
+        <div class="user-tabs" role="tablist" aria-label="Tipo de usuario">
+          <a
+            href="/gestion-usuarios-internos"
+            class="user-tab"
+            role="tab"
+            aria-selected="false"
+          >
+            <i class="fas fa-user-tie"></i> Internos
+            <span class="tab-count">8</span>
+          </a>
+          <a
+            href="/gestion-usuarios-externos"
+            class="user-tab user-tab--active"
+            role="tab"
+            aria-selected="true"
+          >
+            <i class="fas fa-users"></i> Externos
+            <span class="tab-count">24</span>
           </a>
         </div>
-      </div>
 
-      {# Tabla de usuarios externos #}
-      <div class="table-panel">
-        <div class="tbl-scroll" role="region" aria-label="Tabla de usuarios externos" tabindex="0">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Empresa / Negocio</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Pedidos</th>
-                <th scope="col">Registro</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              {# Cliente 1 #}
-              <tr>
-                <td class="td-id">CLI-001</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--blue">JR</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Juan Ramírez</span>
-                      <span class="user-cell__email">j.ramirez@tallercentral.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Taller Central Monterrey</td>
-                <td><span class="badge badge--taller">Taller</span></td>
-                <td>42</td>
-                <td>12/01/2025</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 2 #}
-              <tr>
-                <td class="td-id">CLI-002</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--green">LM</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Laura Mendoza</span>
-                      <span class="user-cell__email">laura@refacmendoza.com</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Refaccionaria Mendoza</td>
-                <td><span class="badge badge--refaccionaria">Refaccionaria</span></td>
-                <td>87</td>
-                <td>03/11/2024</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 3 #}
-              <tr>
-                <td class="td-id">CLI-003</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--navy">CF</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Carlos Fuentes</span>
-                      <span class="user-cell__email">carlos.f@gmail.com</span>
-                    </div>
-                  </div>
-                </td>
-                <td>—</td>
-                <td><span class="badge badge--particular">Particular</span></td>
-                <td>3</td>
-                <td>28/02/2026</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 4 #}
-              <tr>
-                <td class="td-id">CLI-004</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--amber">AP</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Andrea Paredes</span>
-                      <span class="user-cell__email">a.paredes@distrimotors.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>DistriMotors del Norte</td>
-                <td><span class="badge badge--distribuidor">Distribuidor</span></td>
-                <td>156</td>
-                <td>15/06/2024</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 5 #}
-              <tr>
-                <td class="td-id">CLI-005</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--blue">MH</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Miguel Hernández</span>
-                      <span class="user-cell__email">migue.h@tallersureste.com</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Taller Sureste</td>
-                <td><span class="badge badge--taller">Taller</span></td>
-                <td>28</td>
-                <td>20/09/2024</td>
-                <td><span class="badge badge--activo">Activo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 6 — Pendiente #}
-              <tr>
-                <td class="td-id">CLI-006</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--steel">ST</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Sandra Torres</span>
-                      <span class="user-cell__email">s.torres@refacnorte.mx</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Refaccionaria del Norte</td>
-                <td><span class="badge badge--refaccionaria">Refaccionaria</span></td>
-                <td>0</td>
-                <td>04/03/2026</td>
-                <td><span class="badge badge--pendiente">Pendiente</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 7 — Pendiente #}
-              <tr>
-                <td class="td-id">CLI-007</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--steel">RD</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Raúl Delgado</span>
-                      <span class="user-cell__email">raul.d@hotmail.com</span>
-                    </div>
-                  </div>
-                </td>
-                <td>—</td>
-                <td><span class="badge badge--particular">Particular</span></td>
-                <td>0</td>
-                <td>05/03/2026</td>
-                <td><span class="badge badge--pendiente">Pendiente</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Cliente 8 — Inactivo #}
-              <tr>
-                <td class="td-id">CLI-008</td>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar avatar--steel">FO</div>
-                    <div class="user-cell__info">
-                      <span class="user-cell__name">Fernando Ortiz</span>
-                      <span class="user-cell__email">f.ortiz@tallerortiz.com</span>
-                    </div>
-                  </div>
-                </td>
-                <td>Taller Ortiz</td>
-                <td><span class="badge badge--taller">Taller</span></td>
-                <td>11</td>
-                <td>08/04/2024</td>
-                <td><span class="badge badge--inactivo">Inactivo</span></td>
-                <td>
-                  <div class="tbl-actions">
-                    <a href="/editar-usuario-externo" class="act-btn act-btn--edit" aria-label="Editar cliente" title="Editar">
-                      <i class="fas fa-pen-to-square"></i></a>
-                    <button class="act-btn act-btn--del" aria-label="Desactivar cliente" title="Desactivar">
-                      <i class="fas fa-user-slash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Skeleton rows #}
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><div style="display:flex;gap:12px;align-items:center"><b class="sk-b sk-avatar"></b><div><b class="sk-b sk-nm"></b><b class="sk-b sk-sub"></b></div></div></td>
-                <td><b class="sk-b sk-md"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><b class="sk-b sk-sm"></b></td>
-                <td><b class="sk-b sk-sm" style="width:72px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
-
-              <tr class="sk" aria-hidden="true">
-                <td><b class="sk-b sk-id"></b></td>
-                <td><div style="display:flex;gap:12px;align-items:center"><b class="sk-b sk-avatar"></b><div><b class="sk-b sk-nm" style="width:100px"></b><b class="sk-b sk-sub" style="width:140px"></b></div></div></td>
-                <td><b class="sk-b sk-md" style="width:110px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><b class="sk-b sk-sm"></b></td>
-                <td><b class="sk-b sk-sm" style="width:68px"></b></td>
-                <td><b class="sk-b sk-badge"></b></td>
-                <td><span class="sk-acts"><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b></span></td>
-              </tr>
-
-            </tbody>
-          </table>
+        {# Toolbar #}
+        <div class="toolbar">
+          <div class="tbar-search-wrap">
+            <i
+              class="fas fa-search tbar-search-icon"
+              style="
+                font-size: 14px;
+                opacity: 0.4;
+                left: 12px;
+                top: 50%;
+                position: absolute;
+                transform: translateY(-50%);
+                pointer-events: none;
+              "
+            ></i>
+            <input
+              type="search"
+              class="tbar-search-input"
+              placeholder="Buscar por nombre, empresa o RFC…"
+              aria-label="Buscar usuarios externos"
+              style="padding-left: 38px"
+            />
+          </div>
+          <div class="tbar-right">
+            <button type="button" class="btn-export">
+              <i class="fas fa-file-export"></i> Exportar
+            </button>
+            <a href="/agregar-usuario-externo" class="btn-add">
+              <i class="fas fa-user-plus"></i> Nuevo Cliente
+            </a>
+          </div>
         </div>
 
-        {# Footer paginación #}
-        <div class="tbl-footer">
-          <span class="tbl-count">Mostrando 1–10 de 24 clientes</span>
-          <nav class="pagination" aria-label="Paginación">
-            <button class="pp pp--on" aria-current="page">1</button>
-            <button class="pp">2</button>
-            <button class="pp">3</button>
-            <button class="pp pp--nav" aria-label="Siguiente">&#8250;</button>
-          </nav>
+        {# Tabla de usuarios externos #}
+        <div class="table-panel">
+          <div
+            class="tbl-scroll"
+            role="region"
+            aria-label="Tabla de usuarios externos"
+            tabindex="0"
+          >
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Empresa / Negocio</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Pedidos</th>
+                  <th scope="col">Registro</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {# Cliente 1 #}
+                <tr>
+                  <td class="td-id">CLI-001</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--blue">JR</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Juan Ramírez</span>
+                        <span class="user-cell__email"
+                          >j.ramirez@tallercentral.mx</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Taller Central Monterrey</td>
+                  <td><span class="badge badge--taller">Taller</span></td>
+                  <td>42</td>
+                  <td>12/01/2025</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 2 #}
+                <tr>
+                  <td class="td-id">CLI-002</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--green">LM</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Laura Mendoza</span>
+                        <span class="user-cell__email"
+                          >laura@refacmendoza.com</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Refaccionaria Mendoza</td>
+                  <td>
+                    <span class="badge badge--refaccionaria"
+                      >Refaccionaria</span
+                    >
+                  </td>
+                  <td>87</td>
+                  <td>03/11/2024</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 3 #}
+                <tr>
+                  <td class="td-id">CLI-003</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--navy">CF</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Carlos Fuentes</span>
+                        <span class="user-cell__email">carlos.f@gmail.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <span class="badge badge--particular">Particular</span>
+                  </td>
+                  <td>3</td>
+                  <td>28/02/2026</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 4 #}
+                <tr>
+                  <td class="td-id">CLI-004</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--amber">AP</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Andrea Paredes</span>
+                        <span class="user-cell__email"
+                          >a.paredes@distrimotors.mx</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>DistriMotors del Norte</td>
+                  <td>
+                    <span class="badge badge--distribuidor">Distribuidor</span>
+                  </td>
+                  <td>156</td>
+                  <td>15/06/2024</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 5 #}
+                <tr>
+                  <td class="td-id">CLI-005</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--blue">MH</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Miguel Hernández</span>
+                        <span class="user-cell__email"
+                          >migue.h@tallersureste.com</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Taller Sureste</td>
+                  <td><span class="badge badge--taller">Taller</span></td>
+                  <td>28</td>
+                  <td>20/09/2024</td>
+                  <td><span class="badge badge--activo">Activo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 6 — Pendiente #}
+                <tr>
+                  <td class="td-id">CLI-006</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--steel">ST</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Sandra Torres</span>
+                        <span class="user-cell__email"
+                          >s.torres@refacnorte.mx</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Refaccionaria del Norte</td>
+                  <td>
+                    <span class="badge badge--refaccionaria"
+                      >Refaccionaria</span
+                    >
+                  </td>
+                  <td>0</td>
+                  <td>04/03/2026</td>
+                  <td><span class="badge badge--pendiente">Pendiente</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 7 — Pendiente #}
+                <tr>
+                  <td class="td-id">CLI-007</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--steel">RD</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Raúl Delgado</span>
+                        <span class="user-cell__email">raul.d@hotmail.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <span class="badge badge--particular">Particular</span>
+                  </td>
+                  <td>0</td>
+                  <td>05/03/2026</td>
+                  <td><span class="badge badge--pendiente">Pendiente</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Cliente 8 — Inactivo #}
+                <tr>
+                  <td class="td-id">CLI-008</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar avatar--steel">FO</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">Fernando Ortiz</span>
+                        <span class="user-cell__email"
+                          >f.ortiz@tallerortiz.com</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td>Taller Ortiz</td>
+                  <td><span class="badge badge--taller">Taller</span></td>
+                  <td>11</td>
+                  <td>08/04/2024</td>
+                  <td><span class="badge badge--inactivo">Inactivo</span></td>
+                  <td>
+                    <div class="tbl-actions">
+                      <a
+                        href="/editar-usuario-externo"
+                        class="act-btn act-btn--edit"
+                        aria-label="Editar cliente"
+                        title="Editar"
+                      >
+                        <i class="fas fa-pen-to-square"></i
+                      ></a>
+                      <button
+                        class="act-btn act-btn--del"
+                        aria-label="Desactivar cliente"
+                        title="Desactivar"
+                      >
+                        <i class="fas fa-user-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                {# Skeleton rows #}
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td>
+                    <div style="display: flex; gap: 12px; align-items: center">
+                      <b class="sk-b sk-avatar"></b>
+                      <div>
+                        <b class="sk-b sk-nm"></b><b class="sk-b sk-sub"></b>
+                      </div>
+                    </div>
+                  </td>
+                  <td><b class="sk-b sk-md"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td><b class="sk-b sk-sm"></b></td>
+                  <td><b class="sk-b sk-sm" style="width: 72px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
+
+                <tr class="sk" aria-hidden="true">
+                  <td><b class="sk-b sk-id"></b></td>
+                  <td>
+                    <div style="display: flex; gap: 12px; align-items: center">
+                      <b class="sk-b sk-avatar"></b>
+                      <div>
+                        <b class="sk-b sk-nm" style="width: 100px"></b
+                        ><b class="sk-b sk-sub" style="width: 140px"></b>
+                      </div>
+                    </div>
+                  </td>
+                  <td><b class="sk-b sk-md" style="width: 110px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td><b class="sk-b sk-sm"></b></td>
+                  <td><b class="sk-b sk-sm" style="width: 68px"></b></td>
+                  <td><b class="sk-b sk-badge"></b></td>
+                  <td>
+                    <span class="sk-acts"
+                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
+                    ></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {# Footer paginación #}
+          <div class="tbl-footer">
+            <span class="tbl-count">Mostrando 1–10 de 24 clientes</span>
+            <nav class="pagination" aria-label="Paginación">
+              <button class="pp pp--on" aria-current="page">1</button>
+              <button class="pp">2</button>
+              <button class="pp">3</button>
+              <button class="pp pp--nav" aria-label="Siguiente">&#8250;</button>
+            </nav>
+          </div>
         </div>
       </div>
-
-    </div>
-  </main>
-
-</body>
+    </main>
+  </body>
 </html>

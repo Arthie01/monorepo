@@ -1,349 +1,524 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Editar Cliente Externo — Macuin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_usuario.css') }}">
-</head>
-<body>
-
-  {# Sección: Header #}
-  <header class="site-header" role="banner">
-    <div class="hdr-inner">
-      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
-        <span class="logo-block">MACUIN</span>
-        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
-      </a>
-      <nav class="hdr-nav" aria-label="Navegación principal">
-        <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
-        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
-        <a href="/gestion-usuarios-internos" class="hdr-nav__link hdr-nav__link--active">Usuarios</a>
-        <a href="/reportes" class="hdr-nav__link">Reportes</a>
-      </nav>
-      <div class="hdr-actions">
-        <a href="/perfil" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
-      </div>
-    </div>
-  </header>
-
-  {# Sección: Contenido principal #}
-  <main class="page-main" role="main">
-    <div class="container">
-
-      {# Breadcrumb #}
-      <nav class="breadcrumb" aria-label="Ruta de navegación">
-        <a href="#" class="bc-link">Inicio</a>
-        <span class="bc-sep" aria-hidden="true">/</span>
-        <a href="/gestion-usuarios-externos" class="bc-link">Usuarios Externos</a>
-        <span class="bc-sep" aria-hidden="true">/</span>
-        <span class="bc-current" aria-current="page">Editar Cliente</span>
-      </nav>
-
-      {# Encabezado de página #}
-      <div class="page-heading">
-        <div class="page-heading__left">
-          <h1 class="page-title">Editar Cliente Externo</h1>
-          <p class="page-subtitle">Modifica la información del cliente y su empresa.</p>
-        </div>
-        <div class="page-heading__badge">
-          <span class="id-badge">CLI-001</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Cliente Externo — Macuin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/editar_usuario.css') }}"
+    />
+  </head>
+  <body>
+    {# Sección: Header #}
+    <header class="site-header" role="banner">
+      <div class="hdr-inner">
+        <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+          <span class="logo-block">MACUIN</span>
+          <span class="logo-sub">Autopartes<br />&amp; Distribución</span>
+        </a>
+        <nav class="hdr-nav" aria-label="Navegación principal">
+          <a href="/gestion-autopartes" class="hdr-nav__link">Autopartes</a>
+          <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+          <a
+            href="/gestion-usuarios-internos"
+            class="hdr-nav__link hdr-nav__link--active"
+            >Usuarios</a
+          >
+          <a href="/reportes" class="hdr-nav__link">Reportes</a>
+        </nav>
+        <div class="hdr-actions">
+          <a href="/perfil" class="hdr-action-link" aria-label="Perfil"
+            ><i class="fas fa-user"></i
+          ></a>
         </div>
       </div>
+    </header>
 
-      {# Formulario de edición #}
-      <form class="edit-card" action="/gestion-usuarios-externos" method="get" novalidate>
+    {# Sección: Contenido principal #}
+    <main class="page-main" role="main">
+      <div class="container">
+        {# Breadcrumb #}
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="#" class="bc-link">Inicio</a>
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <a href="/gestion-usuarios-externos" class="bc-link"
+            >Usuarios Externos</a
+          >
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <span class="bc-current" aria-current="page">Editar Cliente</span>
+        </nav>
 
-        {# Columna izquierda: perfil #}
-        <aside class="edit-profile-col">
+        {# Encabezado de página #}
+        <div class="page-heading">
+          <div class="page-heading__left">
+            <h1 class="page-title">Editar Cliente Externo</h1>
+            <p class="page-subtitle">
+              Modifica la información del cliente y su empresa.
+            </p>
+          </div>
+          <div class="page-heading__badge">
+            <span class="id-badge">CLI-001</span>
+          </div>
+        </div>
 
-          <div class="profile-avatar-wrap">
-            <span class="profile-avatar-initials">JR</span>
-            <div class="profile-avatar-overlay">
-              <i class="fas fa-camera"></i>
-              <span>Cambiar</span>
+        {# Formulario de edición #}
+        <form
+          class="edit-card"
+          action="/gestion-usuarios-externos"
+          method="get"
+          novalidate
+        >
+          {# Columna izquierda: perfil #}
+          <aside class="edit-profile-col">
+            <div class="profile-avatar-wrap">
+              <span class="profile-avatar-initials">JR</span>
+              <div class="profile-avatar-overlay">
+                <i class="fas fa-camera"></i>
+                <span>Cambiar</span>
+              </div>
             </div>
+
+            <p class="profile-name">Juan Ramírez</p>
+            <p class="profile-email">j.ramirez@tallercentral.mx</p>
+
+            {# Info rápida #}
+            <div class="profile-info-block">
+              <div class="profile-info-item">
+                <i class="fas fa-store"></i>
+                <span class="profile-info-item__label">Tipo</span>
+                <span class="profile-info-item__val">Taller</span>
+              </div>
+              <div class="profile-info-item">
+                <i class="fas fa-building"></i>
+                <span class="profile-info-item__label">Empresa</span>
+                <span class="profile-info-item__val">Taller Central</span>
+              </div>
+              <div class="profile-info-item">
+                <i class="fas fa-box"></i>
+                <span class="profile-info-item__label">Pedidos</span>
+                <span class="profile-info-item__val">42</span>
+              </div>
+              <div class="profile-info-item">
+                <i class="fas fa-calendar-plus"></i>
+                <span class="profile-info-item__label">Registro</span>
+                <span class="profile-info-item__val">12/01/2025</span>
+              </div>
+            </div>
+
+            {# Estado del cliente #}
+            <div class="status-block">
+              <p class="status-block__label">Estado de la cuenta</p>
+              <div class="status-options">
+                <label class="status-opt">
+                  <input type="radio" name="estado" value="activo" checked />
+                  <span class="status-pill status-pill--ok">Activo</span>
+                </label>
+                <label class="status-opt">
+                  <input type="radio" name="estado" value="pendiente" />
+                  <span class="status-pill status-pill--warn">Pendiente</span>
+                </label>
+                <label class="status-opt">
+                  <input type="radio" name="estado" value="inactivo" />
+                  <span class="status-pill status-pill--err">Inactivo</span>
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          {# Columna derecha: campos de edición #}
+          <div class="edit-fields-col">
+            {# Sección: Información personal #}
+            <section class="fields-section">
+              <h2 class="section-title">
+                <i class="fas fa-user"></i> Información del Contacto
+              </h2>
+              <div class="fields-grid">
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fNombre"
+                    >Nombre(s) <span class="req">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="fNombre"
+                    name="nombre"
+                    class="field-input"
+                    value="Juan"
+                    required
+                  />
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fApellidos"
+                    >Apellidos <span class="req">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="fApellidos"
+                    name="apellidos"
+                    class="field-input"
+                    value="Ramírez"
+                    required
+                  />
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fEmail"
+                    >Correo electrónico <span class="req">*</span></label
+                  >
+                  <div class="field-input-icon-wrap">
+                    <i class="fas fa-envelope field-input-icon"></i>
+                    <input
+                      type="email"
+                      id="fEmail"
+                      name="email"
+                      class="field-input field-input--icon"
+                      value="j.ramirez@tallercentral.mx"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fTelefono"
+                    >Teléfono <span class="req">*</span></label
+                  >
+                  <div class="field-input-icon-wrap">
+                    <i class="fas fa-phone field-input-icon"></i>
+                    <input
+                      type="tel"
+                      id="fTelefono"
+                      name="telefono"
+                      class="field-input field-input--icon"
+                      value="81 9876 5432"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {# Sección: Empresa / Negocio #}
+            <section class="fields-section">
+              <h2 class="section-title">
+                <i class="fas fa-building"></i> Empresa / Negocio
+              </h2>
+              <div class="fields-grid">
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fEmpresa"
+                    >Nombre de la empresa <span class="req">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="fEmpresa"
+                    name="empresa"
+                    class="field-input"
+                    value="Taller Central Monterrey"
+                    required
+                  />
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fTipo"
+                    >Tipo de cliente <span class="req">*</span></label
+                  >
+                  <div class="field-select-wrap">
+                    <select
+                      id="fTipo"
+                      name="tipo_cliente"
+                      class="field-select"
+                      required
+                    >
+                      <option value="">— Seleccionar —</option>
+                      <option value="taller" selected>Taller mecánico</option>
+                      <option value="refaccionaria">Refaccionaria</option>
+                      <option value="particular">Particular</option>
+                      <option value="distribuidor">Distribuidor</option>
+                    </select>
+                    <i class="fas fa-chevron-down field-arrow"></i>
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fRFC">RFC</label>
+                  <div class="field-input-icon-wrap">
+                    <i class="fas fa-file-invoice field-input-icon"></i>
+                    <input
+                      type="text"
+                      id="fRFC"
+                      name="rfc"
+                      class="field-input field-input--icon"
+                      value="TCM850101XX1"
+                      placeholder="Ej. XAXX010101000"
+                      maxlength="13"
+                      style="text-transform: uppercase"
+                    />
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fGiro"
+                    >Giro del negocio</label
+                  >
+                  <div class="field-select-wrap">
+                    <select id="fGiro" name="giro" class="field-select">
+                      <option value="">— Seleccionar —</option>
+                      <option value="servicio_automotriz" selected>
+                        Servicio automotriz
+                      </option>
+                      <option value="venta_refacciones">
+                        Venta de refacciones
+                      </option>
+                      <option value="distribucion">
+                        Distribución mayorista
+                      </option>
+                      <option value="particular">Uso personal</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                    <i class="fas fa-chevron-down field-arrow"></i>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {# Sección: Dirección #}
+            <section class="fields-section">
+              <h2 class="section-title">
+                <i class="fas fa-location-dot"></i> Dirección de Envío
+              </h2>
+              <div class="fields-grid">
+                <div class="field-group field-group--full">
+                  <label class="field-label" for="fCalle">Calle y número</label>
+                  <input
+                    type="text"
+                    id="fCalle"
+                    name="calle"
+                    class="field-input"
+                    value="Av. Constitución #2450, Col. Centro"
+                    placeholder="Ej. Av. Revolución #123, Col. Centro"
+                  />
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fCiudad">Ciudad</label>
+                  <input
+                    type="text"
+                    id="fCiudad"
+                    name="ciudad"
+                    class="field-input"
+                    value="Monterrey"
+                    placeholder="Ej. Monterrey"
+                  />
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fEstado">Estado</label>
+                  <div class="field-select-wrap">
+                    <select id="fEstado" name="estado_geo" class="field-select">
+                      <option value="">— Seleccionar —</option>
+                      <option value="NL" selected>Nuevo León</option>
+                      <option value="COAH">Coahuila</option>
+                      <option value="TAM">Tamaulipas</option>
+                      <option value="CHIH">Chihuahua</option>
+                      <option value="SON">Sonora</option>
+                      <option value="CDMX">Ciudad de México</option>
+                      <option value="JAL">Jalisco</option>
+                    </select>
+                    <i class="fas fa-chevron-down field-arrow"></i>
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fCP">Código postal</label>
+                  <input
+                    type="text"
+                    id="fCP"
+                    name="cp"
+                    class="field-input"
+                    value="64000"
+                    placeholder="Ej. 64000"
+                    maxlength="5"
+                  />
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fReferencia"
+                    >Referencia de entrega</label
+                  >
+                  <input
+                    type="text"
+                    id="fReferencia"
+                    name="referencia"
+                    class="field-input"
+                    value="Frente al parque"
+                    placeholder="Ej. Entre calles X y Y"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {# Sección: Condiciones comerciales #}
+            <section class="fields-section">
+              <h2 class="section-title">
+                <i class="fas fa-handshake"></i> Condiciones Comerciales
+              </h2>
+              <div class="fields-grid">
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fListaPrecio"
+                    >Lista de precios</label
+                  >
+                  <div class="field-select-wrap">
+                    <select
+                      id="fListaPrecio"
+                      name="lista_precio"
+                      class="field-select"
+                    >
+                      <option value="publico">Público general</option>
+                      <option value="taller" selected>Taller / Mayoreo</option>
+                      <option value="distribuidor">Distribuidor</option>
+                      <option value="especial">Precio especial</option>
+                    </select>
+                    <i class="fas fa-chevron-down field-arrow"></i>
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fCredito"
+                    >Crédito (días)</label
+                  >
+                  <div class="field-input-icon-wrap">
+                    <i class="fas fa-calendar-days field-input-icon"></i>
+                    <input
+                      type="number"
+                      id="fCredito"
+                      name="dias_credito"
+                      class="field-input field-input--icon"
+                      value="30"
+                      min="0"
+                      max="120"
+                    />
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fLimiteCredito"
+                    >Límite de crédito</label
+                  >
+                  <div class="field-input-icon-wrap">
+                    <span
+                      class="field-input-icon"
+                      style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        font-family: var(--font-body);
+                      "
+                      >$</span
+                    >
+                    <input
+                      type="number"
+                      id="fLimiteCredito"
+                      name="limite_credito"
+                      class="field-input field-input--icon"
+                      value="50000"
+                      min="0"
+                      step="1000"
+                    />
+                  </div>
+                </div>
+
+                <div class="field-group field-group--half">
+                  <label class="field-label" for="fDescuento"
+                    >Descuento fijo (%)</label
+                  >
+                  <div class="field-input-icon-wrap">
+                    <i class="fas fa-percent field-input-icon"></i>
+                    <input
+                      type="number"
+                      id="fDescuento"
+                      name="descuento"
+                      class="field-input field-input--icon"
+                      value="10"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {# Sección: Notas #}
+            <section class="fields-section">
+              <h2 class="section-title">
+                <i class="fas fa-note-sticky"></i> Notas Internas
+              </h2>
+              <div class="fields-grid">
+                <div class="field-group field-group--full">
+                  <label class="field-label" for="fNotas"
+                    >Observaciones (solo visibles para personal MACUIN)</label
+                  >
+                  <textarea
+                    id="fNotas"
+                    name="notas"
+                    class="field-textarea"
+                    rows="3"
+                    placeholder="Notas sobre el cliente, acuerdos especiales, historial…"
+                  >
+Cliente frecuente desde 2025. Pedidos grandes los lunes. Contactar por WhatsApp.</textarea
+                  >
+                </div>
+              </div>
+            </section>
+
+            {# Sección: Zona peligrosa #}
+            <section class="fields-section fields-section--last">
+              <h2 class="section-title">
+                <i class="fas fa-triangle-exclamation"></i> Zona de Riesgo
+              </h2>
+              <div class="danger-zone">
+                <div class="danger-zone__info">
+                  <p class="danger-zone__title">Desactivar cuenta de cliente</p>
+                  <p class="danger-zone__desc">
+                    El cliente no podrá iniciar sesión ni realizar pedidos. Esta
+                    acción se puede revertir.
+                  </p>
+                </div>
+                <button type="button" class="btn-danger">
+                  <i class="fas fa-user-slash"></i>
+                  Desactivar
+                </button>
+              </div>
+            </section>
           </div>
 
-          <p class="profile-name">Juan Ramírez</p>
-          <p class="profile-email">j.ramirez@tallercentral.mx</p>
-
-          {# Info rápida #}
-          <div class="profile-info-block">
-            <div class="profile-info-item">
-              <i class="fas fa-store"></i>
-              <span class="profile-info-item__label">Tipo</span>
-              <span class="profile-info-item__val">Taller</span>
-            </div>
-            <div class="profile-info-item">
-              <i class="fas fa-building"></i>
-              <span class="profile-info-item__label">Empresa</span>
-              <span class="profile-info-item__val">Taller Central</span>
-            </div>
-            <div class="profile-info-item">
-              <i class="fas fa-box"></i>
-              <span class="profile-info-item__label">Pedidos</span>
-              <span class="profile-info-item__val">42</span>
-            </div>
-            <div class="profile-info-item">
-              <i class="fas fa-calendar-plus"></i>
-              <span class="profile-info-item__label">Registro</span>
-              <span class="profile-info-item__val">12/01/2025</span>
-            </div>
-          </div>
-
-          {# Estado del cliente #}
-          <div class="status-block">
-            <p class="status-block__label">Estado de la cuenta</p>
-            <div class="status-options">
-              <label class="status-opt">
-                <input type="radio" name="estado" value="activo" checked>
-                <span class="status-pill status-pill--ok">Activo</span>
-              </label>
-              <label class="status-opt">
-                <input type="radio" name="estado" value="pendiente">
-                <span class="status-pill status-pill--warn">Pendiente</span>
-              </label>
-              <label class="status-opt">
-                <input type="radio" name="estado" value="inactivo">
-                <span class="status-pill status-pill--err">Inactivo</span>
-              </label>
-            </div>
-          </div>
-
-        </aside>
-
-        {# Columna derecha: campos de edición #}
-        <div class="edit-fields-col">
-
-          {# Sección: Información personal #}
-          <section class="fields-section">
-            <h2 class="section-title"><i class="fas fa-user"></i> Información del Contacto</h2>
-            <div class="fields-grid">
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fNombre">Nombre(s) <span class="req">*</span></label>
-                <input type="text" id="fNombre" name="nombre" class="field-input" value="Juan" required>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fApellidos">Apellidos <span class="req">*</span></label>
-                <input type="text" id="fApellidos" name="apellidos" class="field-input" value="Ramírez" required>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fEmail">Correo electrónico <span class="req">*</span></label>
-                <div class="field-input-icon-wrap">
-                  <i class="fas fa-envelope field-input-icon"></i>
-                  <input type="email" id="fEmail" name="email" class="field-input field-input--icon" value="j.ramirez@tallercentral.mx" required>
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fTelefono">Teléfono <span class="req">*</span></label>
-                <div class="field-input-icon-wrap">
-                  <i class="fas fa-phone field-input-icon"></i>
-                  <input type="tel" id="fTelefono" name="telefono" class="field-input field-input--icon" value="81 9876 5432" required>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          {# Sección: Empresa / Negocio #}
-          <section class="fields-section">
-            <h2 class="section-title"><i class="fas fa-building"></i> Empresa / Negocio</h2>
-            <div class="fields-grid">
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fEmpresa">Nombre de la empresa <span class="req">*</span></label>
-                <input type="text" id="fEmpresa" name="empresa" class="field-input" value="Taller Central Monterrey" required>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fTipo">Tipo de cliente <span class="req">*</span></label>
-                <div class="field-select-wrap">
-                  <select id="fTipo" name="tipo_cliente" class="field-select" required>
-                    <option value="">— Seleccionar —</option>
-                    <option value="taller" selected>Taller mecánico</option>
-                    <option value="refaccionaria">Refaccionaria</option>
-                    <option value="particular">Particular</option>
-                    <option value="distribuidor">Distribuidor</option>
-                  </select>
-                  <i class="fas fa-chevron-down field-arrow"></i>
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fRFC">RFC</label>
-                <div class="field-input-icon-wrap">
-                  <i class="fas fa-file-invoice field-input-icon"></i>
-                  <input type="text" id="fRFC" name="rfc" class="field-input field-input--icon" value="TCM850101XX1" placeholder="Ej. XAXX010101000" maxlength="13" style="text-transform:uppercase">
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fGiro">Giro del negocio</label>
-                <div class="field-select-wrap">
-                  <select id="fGiro" name="giro" class="field-select">
-                    <option value="">— Seleccionar —</option>
-                    <option value="servicio_automotriz" selected>Servicio automotriz</option>
-                    <option value="venta_refacciones">Venta de refacciones</option>
-                    <option value="distribucion">Distribución mayorista</option>
-                    <option value="particular">Uso personal</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                  <i class="fas fa-chevron-down field-arrow"></i>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          {# Sección: Dirección #}
-          <section class="fields-section">
-            <h2 class="section-title"><i class="fas fa-location-dot"></i> Dirección de Envío</h2>
-            <div class="fields-grid">
-
-              <div class="field-group field-group--full">
-                <label class="field-label" for="fCalle">Calle y número</label>
-                <input type="text" id="fCalle" name="calle" class="field-input" value="Av. Constitución #2450, Col. Centro" placeholder="Ej. Av. Revolución #123, Col. Centro">
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fCiudad">Ciudad</label>
-                <input type="text" id="fCiudad" name="ciudad" class="field-input" value="Monterrey" placeholder="Ej. Monterrey">
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fEstado">Estado</label>
-                <div class="field-select-wrap">
-                  <select id="fEstado" name="estado_geo" class="field-select">
-                    <option value="">— Seleccionar —</option>
-                    <option value="NL" selected>Nuevo León</option>
-                    <option value="COAH">Coahuila</option>
-                    <option value="TAM">Tamaulipas</option>
-                    <option value="CHIH">Chihuahua</option>
-                    <option value="SON">Sonora</option>
-                    <option value="CDMX">Ciudad de México</option>
-                    <option value="JAL">Jalisco</option>
-                  </select>
-                  <i class="fas fa-chevron-down field-arrow"></i>
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fCP">Código postal</label>
-                <input type="text" id="fCP" name="cp" class="field-input" value="64000" placeholder="Ej. 64000" maxlength="5">
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fReferencia">Referencia de entrega</label>
-                <input type="text" id="fReferencia" name="referencia" class="field-input" value="Frente al parque" placeholder="Ej. Entre calles X y Y">
-              </div>
-
-            </div>
-          </section>
-
-          {# Sección: Condiciones comerciales #}
-          <section class="fields-section">
-            <h2 class="section-title"><i class="fas fa-handshake"></i> Condiciones Comerciales</h2>
-            <div class="fields-grid">
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fListaPrecio">Lista de precios</label>
-                <div class="field-select-wrap">
-                  <select id="fListaPrecio" name="lista_precio" class="field-select">
-                    <option value="publico">Público general</option>
-                    <option value="taller" selected>Taller / Mayoreo</option>
-                    <option value="distribuidor">Distribuidor</option>
-                    <option value="especial">Precio especial</option>
-                  </select>
-                  <i class="fas fa-chevron-down field-arrow"></i>
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fCredito">Crédito (días)</label>
-                <div class="field-input-icon-wrap">
-                  <i class="fas fa-calendar-days field-input-icon"></i>
-                  <input type="number" id="fCredito" name="dias_credito" class="field-input field-input--icon" value="30" min="0" max="120">
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fLimiteCredito">Límite de crédito</label>
-                <div class="field-input-icon-wrap">
-                  <span class="field-input-icon" style="font-size:14px;font-weight:600;font-family:var(--font-body)">$</span>
-                  <input type="number" id="fLimiteCredito" name="limite_credito" class="field-input field-input--icon" value="50000" min="0" step="1000">
-                </div>
-              </div>
-
-              <div class="field-group field-group--half">
-                <label class="field-label" for="fDescuento">Descuento fijo (%)</label>
-                <div class="field-input-icon-wrap">
-                  <i class="fas fa-percent field-input-icon"></i>
-                  <input type="number" id="fDescuento" name="descuento" class="field-input field-input--icon" value="10" min="0" max="100">
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          {# Sección: Notas #}
-          <section class="fields-section">
-            <h2 class="section-title"><i class="fas fa-note-sticky"></i> Notas Internas</h2>
-            <div class="fields-grid">
-              <div class="field-group field-group--full">
-                <label class="field-label" for="fNotas">Observaciones (solo visibles para personal MACUIN)</label>
-                <textarea id="fNotas" name="notas" class="field-textarea" rows="3" placeholder="Notas sobre el cliente, acuerdos especiales, historial…">Cliente frecuente desde 2025. Pedidos grandes los lunes. Contactar por WhatsApp.</textarea>
-              </div>
-            </div>
-          </section>
-
-          {# Sección: Zona peligrosa #}
-          <section class="fields-section fields-section--last">
-            <h2 class="section-title"><i class="fas fa-triangle-exclamation"></i> Zona de Riesgo</h2>
-            <div class="danger-zone">
-              <div class="danger-zone__info">
-                <p class="danger-zone__title">Desactivar cuenta de cliente</p>
-                <p class="danger-zone__desc">El cliente no podrá iniciar sesión ni realizar pedidos. Esta acción se puede revertir.</p>
-              </div>
-              <button type="button" class="btn-danger">
-                <i class="fas fa-user-slash"></i>
-                Desactivar
+          {# Footer del formulario #}
+          <footer class="edit-footer">
+            <a href="/gestion-usuarios-externos" class="btn-cancel">
+              <i class="fas fa-arrow-left"></i>
+              <span>Cancelar</span>
+            </a>
+            <div class="edit-footer__right">
+              <button type="button" class="btn-secondary">
+                <i class="fas fa-rotate-left"></i>
+                <span>Restablecer</span>
+              </button>
+              <button type="submit" class="btn-save">
+                <i class="fas fa-floppy-disk"></i>
+                <span>Guardar cambios</span>
               </button>
             </div>
-          </section>
-
-        </div>
-
-        {# Footer del formulario #}
-        <footer class="edit-footer">
-          <a href="/gestion-usuarios-externos" class="btn-cancel">
-            <i class="fas fa-arrow-left"></i>
-            <span>Cancelar</span>
-          </a>
-          <div class="edit-footer__right">
-            <button type="button" class="btn-secondary">
-              <i class="fas fa-rotate-left"></i>
-              <span>Restablecer</span>
-            </button>
-            <button type="submit" class="btn-save">
-              <i class="fas fa-floppy-disk"></i>
-              <span>Guardar cambios</span>
-            </button>
-          </div>
-        </footer>
-
-      </form>
-
-    </div>
-  </main>
-
-</body>
+          </footer>
+        </form>
+      </div>
+    </main>
+  </body>
 </html>
