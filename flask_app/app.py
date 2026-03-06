@@ -32,5 +32,11 @@ def gestion_pedidos():
     return render_template("gestion_pedidos.html")
 
 
+@app.route("/editar-autoparte", methods=["GET"])
+def editar_autoparte():
+    """Pantalla de edición de autoparte (solo UI)."""
+    return render_template("editar_autoparte.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)

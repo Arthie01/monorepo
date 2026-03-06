@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Autoparte — Macuin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_autoparte.css') }}">
+</head>
+<body>
+
+  <!-- ══ SITE HEADER ══ -->
+  <header class="site-header" role="banner">
+    <div class="hdr-inner">
+      <a href="#" class="site-logo" aria-label="Macuin — Inicio">
+        <span class="logo-block">MACUIN</span>
+        <span class="logo-sub">Autopartes<br>&amp; Distribución</span>
+      </a>
+      <nav class="hdr-nav" aria-label="Navegación principal">
+        <a href="/gestion-autopartes" class="hdr-nav__link hdr-nav__link--active">Autopartes</a>
+        <a href="/gestion-pedidos" class="hdr-nav__link">Pedidos</a>
+      </nav>
+      <div class="hdr-actions">
+        <a href="#" class="hdr-action-link" aria-label="Perfil"><i class="fas fa-user"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ══ -->
+  <main class="page-main" role="main">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="#" class="bc-link">Inicio</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <a href="/gestion-autopartes" class="bc-link">Gestión de Autopartes</a>
+        <span class="bc-sep" aria-hidden="true">/</span>
+        <span class="bc-current" aria-current="page">Editar Autoparte</span>
+      </nav>
+
+      <!-- Page heading -->
+      <div class="page-heading">
+        <div class="page-heading__left">
+          <h1 class="page-title">Editar Autoparte</h1>
+          <p class="page-subtitle">Modifica los datos de la pieza seleccionada.</p>
+        </div>
+        <div class="page-heading__badge">
+          <span class="id-badge"># 1</span>
+        </div>
+      </div>
+
+      <!-- ═══ FORM CARD ═══ -->
+      <form class="edit-card" action="#" method="post" enctype="multipart/form-data" novalidate>
+
+        <!-- ── Left column: image ── -->
+        <aside class="edit-img-col">
+
+          <div class="img-preview-wrap">
+            <img
+              src="{{ url_for('static', filename='images/copa_piston.png') }}"
+              alt="Copa de pistón"
+              class="img-preview"
+              id="imgPreview"
+            >
+            <div class="img-overlay">
+              <i class="fas fa-camera"></i>
+              <span>Cambiar imagen</span>
+            </div>
+          </div>
+
+          <label class="img-upload-btn" for="imgFile">
+            <i class="fas fa-upload"></i>
+            <span>Subir nueva imagen</span>
+            <input type="file" id="imgFile" name="imagen" accept="image/*" class="img-file-input" tabindex="-1">
+          </label>
+
+          <p class="img-hint">JPG, PNG o WEBP · Máx. 5 MB</p>
+
+          <!-- Estado rápido -->
+          <div class="status-block">
+            <p class="status-block__label">Estado actual</p>
+            <div class="status-options">
+              <label class="status-opt">
+                <input type="radio" name="estado" value="en_stock" checked>
+                <span class="status-pill status-pill--ok">En stock</span>
+              </label>
+              <label class="status-opt">
+                <input type="radio" name="estado" value="bajo_stock">
+                <span class="status-pill status-pill--warn">Bajo stock</span>
+              </label>
+              <label class="status-opt">
+                <input type="radio" name="estado" value="sin_stock">
+                <span class="status-pill status-pill--err">Sin stock</span>
+              </label>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- ── Right column: fields ── -->
+        <div class="edit-fields-col">
+
+          <!-- Section: Identificación -->
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-tag"></i> Identificación</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fCodigo">Código / SKU</label>
+                <input type="text" id="fCodigo" name="codigo" class="field-input" value="AUT-001" placeholder="Ej. AUT-001">
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fNombre">Nombre de la pieza <span class="req">*</span></label>
+                <input type="text" id="fNombre" name="nombre" class="field-input" value="Copa Piston del Rasho Macuin Cuchau" required>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fCategoria">Categoría</label>
+                <div class="field-select-wrap">
+                  <select id="fCategoria" name="categoria" class="field-select">
+                    <option value="">— Seleccionar —</option>
+                    <option value="motor" selected>Motor</option>
+                    <option value="frenos">Frenos</option>
+                    <option value="suspension">Suspensión</option>
+                    <option value="electrico">Eléctrico</option>
+                    <option value="transmision">Transmisión</option>
+                    <option value="carroceria">Carrocería</option>
+                  </select>
+                  <i class="fas fa-chevron-down field-arrow"></i>
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fMarca">Marca</label>
+                <div class="field-select-wrap">
+                  <select id="fMarca" name="marca" class="field-select">
+                    <option value="">— Seleccionar —</option>
+                    <option value="macuin" selected>Macuin</option>
+                    <option value="bosch">Bosch</option>
+                    <option value="ngk">NGK</option>
+                    <option value="gates">Gates</option>
+                    <option value="monroe">Monroe</option>
+                  </select>
+                  <i class="fas fa-chevron-down field-arrow"></i>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Section: Inventario -->
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-boxes-stacked"></i> Inventario y Precio</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--third">
+                <label class="field-label" for="fStock">Stock <span class="req">*</span></label>
+                <div class="field-input-icon-wrap">
+                  <i class="fas fa-cubes field-input-icon"></i>
+                  <input type="number" id="fStock" name="stock" class="field-input field-input--icon" value="24" min="0" required>
+                </div>
+              </div>
+
+              <div class="field-group field-group--third">
+                <label class="field-label" for="fPrecio">Precio unitario <span class="req">*</span></label>
+                <div class="field-input-icon-wrap">
+                  <span class="field-prefix">$</span>
+                  <input type="number" id="fPrecio" name="precio" class="field-input field-input--prefix" value="450.00" min="0" step="0.01" required>
+                </div>
+              </div>
+
+              <div class="field-group field-group--third">
+                <label class="field-label" for="fUnidad">Unidad de medida</label>
+                <div class="field-select-wrap">
+                  <select id="fUnidad" name="unidad" class="field-select">
+                    <option value="pieza" selected>Pieza</option>
+                    <option value="par">Par</option>
+                    <option value="juego">Juego</option>
+                    <option value="litro">Litro</option>
+                    <option value="metro">Metro</option>
+                  </select>
+                  <i class="fas fa-chevron-down field-arrow"></i>
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fStockMin">Stock mínimo</label>
+                <input type="number" id="fStockMin" name="stock_min" class="field-input" value="5" min="0">
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fUbicacion">Ubicación en almacén</label>
+                <input type="text" id="fUbicacion" name="ubicacion" class="field-input" value="A-03" placeholder="Ej. A-03, Estante 2">
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Section: Compatibilidad -->
+          <section class="fields-section">
+            <h2 class="section-title"><i class="fas fa-car"></i> Compatibilidad</h2>
+            <div class="fields-grid">
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fMarcaVeh">Marca de vehículo</label>
+                <input type="text" id="fMarcaVeh" name="marca_vehiculo" class="field-input" value="" placeholder="Ej. Nissan, Chevrolet">
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="fModelo">Modelo(s)</label>
+                <input type="text" id="fModelo" name="modelo" class="field-input" value="" placeholder="Ej. Tsuru, Sentra 2010-2015">
+              </div>
+
+              <div class="field-group field-group--full">
+                <label class="field-label" for="fAplicacion">Aplicación / Descripción técnica</label>
+                <textarea id="fAplicacion" name="aplicacion" class="field-textarea" rows="3" placeholder="Describe la aplicación específica, notas de instalación, compatibilidades adicionales…"></textarea>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Section: Notas -->
+          <section class="fields-section fields-section--last">
+            <h2 class="section-title"><i class="fas fa-note-sticky"></i> Notas internas</h2>
+            <div class="fields-grid">
+              <div class="field-group field-group--full">
+                <label class="field-label" for="fNotas">Observaciones</label>
+                <textarea id="fNotas" name="notas" class="field-textarea" rows="2" placeholder="Notas visibles solo para el personal del almacén…"></textarea>
+              </div>
+            </div>
+          </section>
+
+        </div><!-- /edit-fields-col -->
+
+        <!-- ══ FORM FOOTER ══ -->
+        <footer class="edit-footer">
+          <a href="/gestion-autopartes" class="btn-cancel">
+            <i class="fas fa-arrow-left"></i>
+            <span>Cancelar</span>
+          </a>
+          <div class="edit-footer__right">
+            <button type="button" class="btn-secondary">
+              <i class="fas fa-eye"></i>
+              <span>Vista previa</span>
+            </button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-floppy-disk"></i>
+              <span>Guardar cambios</span>
+            </button>
+          </div>
+        </footer>
+
+      </form>
+
+    </div><!-- /container -->
+  </main>
+
+</body>
+</html>
