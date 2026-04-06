@@ -38,7 +38,7 @@ services:
       dockerfile: dockerfile
     container_name: monorepo_fastapi
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - DATABASE_URL=postgresql://admin:123456@postgres:5432/DB_macuin
     depends_on:
