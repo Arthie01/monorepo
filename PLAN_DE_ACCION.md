@@ -1,182 +1,203 @@
-# Plan de Acción — MACUIN Frontend (Laravel)
+# Plan de Acción — MACUIN 3er Parcial
 
-## Dirección de Diseño
-
-**Estética: Industrial-Refinada**
-Inspirada en la precisión automotriz. No tan ruidosa como AutoZone, más profesional.
-Cortes diagonales en rojo, tipografía condensada, cards técnicas con badges de stock.
-
-| Elemento | Decisión |
-|----------|----------|
-| **Display font** | `Oswald` — condensed, industrial |
-| **Body font** | `DM Sans` — limpio, moderno |
-| **Color primario** | `#C41230` — Rojo MACUIN |
-| **Color oscuro** | `#0D0D0D` — Negro hero |
-| **Acento metálico** | `#8B949E` — Plata/acero |
-| **Fondo claro** | `#F5F5F0` — Blanco cálido |
-| **Elemento memorable** | Selector de vehículo (Año → Marca → Modelo) como entrada principal al catálogo |
+## Estado General
+| Componente | Estado |
+|------------|--------|
+| Laravel (Frontend Externo) | ✅ Terminado — 10 vistas Blade estáticas |
+| Flask (Panel Interno) | ✅ Terminado — 14 vistas Jinja2 estáticas |
+| FastAPI (API Central) | 🔄 En progreso — M1 completo, faltan routers |
+| PostgreSQL (Base de Datos) | ✅ Lista — ddl.sql + dml.sql + modelos SQLAlchemy |
+| Docker (Todos los servicios) | ✅ Completo — 4 servicios con healthcheck en docker-compose.yml |
+| Integración Frontends ↔ API | ⬜ Por conectar |
 
 ---
 
-## Fase 1 — Setup y Sistema de Diseño
+## Arquitectura Final Objetivo
 
-> **Objetivo**: Base sólida antes de tocar ninguna vista.
-
-- [ ] Copiar CSS base de Seals Edition → `laravel_app/public/css/`
-  - `style.css`
-  - `weiboo-design-system.css`
-  - `footer.css`
-  - `preloader.css`
-- [ ] Crear `resources/css/macuin.css` con variables de color, tipografía y componentes MACUIN
-- [ ] Crear `layouts/app.blade.php` con:
-  - Google Fonts: Oswald + DM Sans
-  - Font Awesome CDN
-  - Swiper.js CDN
-  - Sistema de Toast notifications
-  - Preloader animado
-- [ ] Crear `layouts/navbar.blade.php` — header sticky con logo MACUIN + selector de vehículo + ícono carrito
-- [ ] Crear `layouts/footer.blade.php`
-
----
-
-## Fase 2 — Vistas de Autenticación
-
-> **Base**: Seals `auth/login.blade.php` y `auth/register.blade.php`
-
-- [ ] **`login.blade.php`** → `/login`
-  - Layout split-screen
-  - Panel izquierdo: fondo rojo `#C41230` con diagonal + logo MACUIN + tagline
-  - Panel derecho: formulario blanco (email, contraseña, recuérdame, olvidé contraseña)
-
-- [ ] **`register.blade.php`** → `/registro`
-  - Misma estructura split-screen
-  - Campos: nombre, apellidos, email, contraseña, confirmar contraseña, teléfono
-  - Checkbox de términos y condiciones
-  - Link a login
-
----
-
-## Fase 3 — Dashboard del Cliente
-
-> **Base**: Nueva vista inspirada en AutoZone home + wireframe del PDF
-
-- [ ] **`dashboard.blade.php`** → `/dashboard`
-  - Banner hero con selector Año → Marca → Modelo (como AutoZone)
-  - Grid de categorías destacadas: Motor, Suspensión, Frenos, Eléctrico, Transmisión, Filtros
-  - Carousel Swiper de productos destacados
-  - Banner promocional con corte diagonal rojo
-
----
-
-## Fase 4 — Catálogo y Detalle de Producto
-
-> **Base**: Seals `shop/index.blade.php` y `products/show.blade.php`
-
-- [ ] **`catalogo.blade.php`** → `/catalogo`
-  - Sidebar de filtros: Categoría, Marca de auto, rango de precio, estado de stock
-  - Grid de productos (3 col desktop / 2 tablet / 1 mobile)
-  - Cards con: imagen, nombre, precio, badge de stock (Verde/Amarillo/Rojo)
-  - Ordenar por: precio, nombre, disponibilidad
-  - Paginación
-
-- [ ] **`detalle-producto.blade.php`** → `/catalogo/{id}`
-  - Galería de imágenes con thumbnails
-  - Info: nombre, SKU, precio, badge stock, descripción
-  - Especificaciones técnicas (tabla)
-  - Compatibilidad de vehículo
-  - Selector de cantidad + botón Agregar al carrito
-
----
-
-## Fase 5 — Flujo de Compra
-
-> **Base**: Seals `cart.blade.php` y `checkout.blade.php`
-
-- [ ] **`carrito.blade.php`** → `/carrito`
-  - Tabla: imagen, nombre autoparte, precio unitario, cantidad (- n +), total, eliminar
-  - Validación visual de stock disponible
-  - Resumen sticky: subtotal, envío, total
-  - Botones: Continuar comprando / Proceder al checkout
-
-- [ ] **`checkout.blade.php`** → `/checkout`
-  - Columna izquierda: datos del cliente + dirección de envío
-  - Columna derecha: resumen del pedido (items, subtotal, total)
-  - Botón "Confirmar Pedido"
-  - Sin pasarela de pago real por ahora
-
----
-
-## Fase 6 — Gestión de Pedidos
-
-> **Base**: Seals `track-order.blade.php` y `orders/show.blade.php`
-
-- [ ] **`pedidos.blade.php`** → `/pedidos`
-  - Filtros: Estado (Todos / Pendiente / Completado / Cancelado), rango de fechas
-  - Tabla: folio, fecha, estado (pill badge con color), total, acciones
-  - Link a detalle por folio
-
-- [ ] **`pedido-detalle.blade.php`** → `/pedido/{id}`
-  - Timeline visual de estado del pedido
-  - Tabla de autopartes incluidas (imagen, nombre, cantidad, precio unitario, subtotal)
-  - Datos de envío
-  - Botón "Cancelar Pedido" (solo si estado = Pendiente)
-  - Botón "Descargar PDF"
-
----
-
-## Fase 7 — Perfil de Usuario
-
-> **Base**: Seals `mi-cuenta/index.blade.php`
-
-- [ ] **`perfil.blade.php`** → `/perfil`
-  - Info personal: nombre, apellidos, email, teléfono (editable)
-  - Sección cambio de contraseña
-  - Resumen de últimos 3 pedidos con link al historial completo
-
----
-
-## Fase 8 — Rutas en `web.php`
-
-> Registrar las 10 rutas en Laravel apuntando a vistas estáticas (sin controlador real aún).
-
-```php
-// Autenticación
-Route::get('/login', fn() => view('login'));
-Route::get('/registro', fn() => view('register'));
-
-// Portal cliente (protegidas en el futuro)
-Route::get('/dashboard', fn() => view('dashboard'));
-Route::get('/catalogo', fn() => view('catalogo'));
-Route::get('/catalogo/{id}', fn() => view('detalle-producto'));
-Route::get('/carrito', fn() => view('carrito'));
-Route::get('/checkout', fn() => view('checkout'));
-Route::get('/pedidos', fn() => view('pedidos'));
-Route::get('/pedido/{id}', fn() => view('pedido-detalle'));
-Route::get('/perfil', fn() => view('perfil'));
 ```
+docker-compose.yml
+├── laravel   → http://localhost:8080  (Frontend externo)
+├── flask     → http://localhost:5001  (Panel interno)
+├── fastapi   → http://localhost:8000  (API Central)
+└── postgres  → localhost:5432         (Base de datos)
+```
+
+Patrón de carpetas FastAPI — **igual que miAPI**:
+```
+fastapi_app/
+├── requirements.txt
+├── dockerfile
+└── app/
+    ├── main.py
+    ├── data/
+    │   ├── db.py                  ← Conexión SQLAlchemy + get_db()
+    │   ├── ddl.sql                ← DDL PostgreSQL (CREATE TABLE)
+    │   ├── dml.sql                ← DML PostgreSQL (INSERT datos prueba)
+    │   ├── usuario_externo.py     ← Modelo SQLAlchemy tb_usuarios_externos
+    │   ├── usuario_interno.py     ← Modelo SQLAlchemy tb_usuarios_internos
+    │   ├── autoparte.py           ← Modelo SQLAlchemy tb_autopartes
+    │   ├── pedido.py              ← Modelo SQLAlchemy tb_pedidos
+    │   └── detalle_pedido.py      ← Modelo SQLAlchemy tb_detalle_pedido
+    ├── models/
+    │   ├── usuarios.py            ← Pydantic: Crear_UsuarioExterno, Actualizar_UsuarioExterno
+    │   ├── usuarios_internos.py   ← Pydantic: Crear_UsuarioInterno, Actualizar_UsuarioInterno
+    │   ├── autopartes.py          ← Pydantic: Crear_Autoparte, Actualizar_Autoparte
+    │   └── pedidos.py             ← Pydantic: Crear_Pedido (con lista de productos)
+    ├── routers/
+    │   ├── auth.py                ← POST /v1/auth/registro
+    │   ├── usuarios_internos.py   ← CRUD /v1/usuarios-internos
+    │   ├── autopartes.py          ← CRUD /v1/autopartes
+    │   ├── pedidos.py             ← POST+GET /v1/pedidos
+    │   └── reportes.py            ← GET /v1/reportes/{tipo}/{formato}
+    └── security/
+        └── auth.py                ← HTTPBasic (mismo patrón que miAPI)
+```
+
+---
+
+## Milestone 1 — Base FastAPI + Docker + BD
+> **Objetivo**: API levantando con Docker, conectada a PostgreSQL, tablas creadas automáticamente.
+
+- [ ] Crear `fastapi_app/requirements.txt`
+- [ ] Crear `fastapi_app/dockerfile` (igual que miAPI, puerto 8000)
+- [ ] Crear `fastapi_app/app/data/db.py` (ENGINE + sessionLocal + Base + get_db)
+- [x] ~~Crear `fastapi_app/app/data/ddl.sql`~~ ✅ **HECHO** — 5 tablas PostgreSQL completas con todos los campos del frontend
+- [x] ~~Crear `fastapi_app/app/data/dml.sql`~~ ✅ **HECHO** — 8 internos, 8 externos, 18 autopartes, 6 pedidos con líneas
+- [ ] Crear modelos SQLAlchemy: `usuario_externo.py`, `usuario_interno.py`, `autoparte.py`, `pedido.py`, `detalle_pedido.py`
+- [ ] Crear `fastapi_app/app/main.py` con `Base.metadata.create_all()`
+- [ ] Actualizar `docker-compose.yml`: agregar servicios `fastapi` y `postgres` con healthcheck
+- [ ] Verificar: `docker compose up --build` levanta los 4 servicios sin errores
+
+**Rúbrica cubierta**: Criterios 1 (2 frontends), 3 (routers), 4 (SQLAlchemy), 5 (solo API accede BD), 6 (Docker)
+
+---
+
+## Milestone 2 — Endpoint Registro + CRUD Usuarios Internos
+> **Objetivo**: Registro real de clientes + administración de personal interno.
+
+- [ ] Crear `fastapi_app/app/security/auth.py` (HTTPBasic igual que miAPI)
+- [ ] Crear `fastapi_app/app/models/usuarios.py` (Pydantic Crear_UsuarioExterno, Actualizar_UsuarioExterno)
+- [ ] Crear `fastapi_app/app/models/usuarios_internos.py` (Pydantic Crear_UsuarioInterno, Actualizar_UsuarioInterno)
+- [ ] Crear `fastapi_app/app/routers/auth.py`:
+  - `POST /v1/auth/registro` — Crea usuario externo en BD
+- [ ] Crear `fastapi_app/app/routers/usuarios_internos.py`:
+  - `GET    /v1/usuarios-internos/`     — Listar todos
+  - `GET    /v1/usuarios-internos/{id}` — Consultar uno
+  - `POST   /v1/usuarios-internos/`     — Crear
+  - `PUT    /v1/usuarios-internos/{id}` — Actualizar completo
+  - `PATCH  /v1/usuarios-internos/{id}` — Actualizar parcial
+  - `DELETE /v1/usuarios-internos/{id}` — Eliminar (requiere auth)
+- [ ] Registrar ambos routers en `main.py`
+- [ ] Probar con Swagger UI en `http://localhost:8000/docs`
+
+**Rúbrica cubierta**: Criterios 7 (registro), 10 (CRUD usuarios internos)
+
+---
+
+## Milestone 3 — CRUD Autopartes
+> **Objetivo**: Gestión completa del catálogo de autopartes desde la API.
+
+- [ ] Crear `fastapi_app/app/models/autopartes.py` (Pydantic Crear_Autoparte, Actualizar_Autoparte)
+- [ ] Crear `fastapi_app/app/routers/autopartes.py`:
+  - `GET    /v1/autopartes/`       — Listar todas (con filtro por categoría opcional)
+  - `GET    /v1/autopartes/{id}`   — Consultar una
+  - `POST   /v1/autopartes/`       — Crear
+  - `PUT    /v1/autopartes/{id}`   — Actualizar completa
+  - `PATCH  /v1/autopartes/{id}`   — Actualizar parcial (precio, stock)
+  - `DELETE /v1/autopartes/{id}`   — Eliminar (requiere auth)
+- [ ] Registrar router en `main.py`
+
+**Rúbrica cubierta**: Criterio 11 (CRUD autopartes)
+
+---
+
+## Milestone 4 — Pedidos (1 a N productos)
+> **Objetivo**: Crear pedidos con múltiples productos y consultarlos por usuario.
+
+- [ ] Crear `fastapi_app/app/models/pedidos.py`:
+  - `ItemPedido` — (autoparte_id, cantidad)
+  - `Crear_Pedido` — (usuario_externo_id, lista de ItemPedido)
+- [ ] Crear `fastapi_app/app/routers/pedidos.py`:
+  - `POST /v1/pedidos/`                        — Crear pedido con N productos (calcula total automático)
+  - `GET  /v1/pedidos/usuario/{usuario_id}`     — Todos los pedidos de un usuario
+  - `GET  /v1/pedidos/{pedido_id}`              — Detalle de pedido (con líneas)
+  - `PATCH /v1/pedidos/{pedido_id}/estado`      — Cambiar estado (Pendiente→En proceso→Completado)
+- [ ] Registrar router en `main.py`
+
+**Rúbrica cubierta**: Criterios 8 (pedidos 1-N), 9 (consultar pedidos usuario)
+
+---
+
+## Milestone 5 — Reportes (4 tipos + 3 formatos)
+> **Objetivo**: Endpoints que generan reportes descargables en PDF, xlsx y docx.
+
+- [ ] Crear `fastapi_app/app/routers/reportes.py` con 4 tipos de reporte:
+  - `GET /v1/reportes/ventas/{formato}`      — Total de ventas por período
+  - `GET /v1/reportes/inventario/{formato}`  — Stock actual de autopartes
+  - `GET /v1/reportes/pedidos/{formato}`     — Pedidos por estado
+  - `GET /v1/reportes/usuarios/{formato}`    — Usuarios externos registrados
+  - `{formato}` acepta: `pdf`, `xlsx`, `docx`
+- [ ] Usar `reportlab` para PDF, `openpyxl` para xlsx, `python-docx` para docx
+- [ ] Registrar router en `main.py`
+
+**Rúbrica cubierta**: Criterios 12 (4 reportes), 13 (PDF/xlsx/docx)
+
+---
+
+## Milestone 6 — Integración Frontends ↔ API
+> **Objetivo**: Flask y Laravel dejan de usar datos hardcodeados y consumen la API.
+
+### Flask (Panel Interno)
+- [ ] Agregar `requests` a `flask_app/requirements.txt`
+- [ ] Conectar `gestion_autopartes` → `GET /v1/autopartes/`
+- [ ] Conectar `agregar_autoparte` → `POST /v1/autopartes/`
+- [ ] Conectar `editar_autoparte` → `PUT /v1/autopartes/{id}`
+- [ ] Conectar `gestion_usuarios_internos` → `GET /v1/usuarios-internos/`
+- [ ] Conectar `gestion_pedidos` → `GET /v1/pedidos/`
+- [ ] Conectar `reportes` → `GET /v1/reportes/{tipo}/{formato}`
+
+### Laravel (Frontend Externo)
+- [ ] Conectar `POST /registro` → `POST /v1/auth/registro`
+- [ ] Conectar `GET /catalogo` → `GET /v1/autopartes/`
+- [ ] Conectar `POST /checkout` → `POST /v1/pedidos/`
+- [ ] Conectar `GET /pedidos` → `GET /v1/pedidos/usuario/{id}`
 
 ---
 
 ## Resumen de Progreso
 
-| Fase | Descripción | Vistas | Estado |
-|------|-------------|--------|--------|
-| 1 | Setup y sistema de diseño | Layout + CSS | ✅ Completado |
-| 2 | Autenticación | login, register | ✅ Completado |
-| 3 | Dashboard | dashboard | ✅ Completado |
-| 4 | Catálogo y detalle | catalogo, detalle-producto | ✅ Completado |
-| 5 | Flujo de compra | carrito, checkout | ✅ Completado |
-| 6 | Pedidos | pedidos, pedido-detalle | ✅ Completado |
-| 7 | Perfil | perfil | ✅ Completado |
-| 8 | Rutas web.php | — | ✅ Completado |
+| Milestone | Descripción | Rúbrica | Estado |
+|-----------|-------------|---------|--------|
+| 1 | Base FastAPI + Docker + BD | 1, 3, 4, 5, 6 | 🔄 DDL/DML listos |
+| 2 | Registro + CRUD Usuarios Internos | 7, 10 | ⬜ |
+| 3 | CRUD Autopartes | 11 | ⬜ |
+| 4 | Pedidos (1 a N productos) | 8, 9 | ⬜ |
+| 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ⬜ |
+| 6 | Integración Frontends ↔ API | 2 | ⬜ |
+
+---
+
+## Convenciones FastAPI (basadas en miAPI)
+
+| Patrón | Ejemplo |
+|--------|---------|
+| Prefix de router | `/v1/autopartes` |
+| Tag de router | `CRUD HTTP` o nombre del módulo |
+| Respuesta estándar | `{"status": "200", "total": n, "data": [...]}` |
+| Modelo SQLAlchemy | clase en `data/`, hereda de `Base`, tabla `tb_nombre` |
+| Pydantic schema | clase `Crear_X` y `Actualizar_X` con `Field(...)` |
+| Auth | HTTPBasic solo en DELETE — `Depends(verificar_peticion)` |
+| DB session | `db: Session = Depends(get_db)` |
+| Passwords | Texto plano — proyecto institucional |
 
 ---
 
 ## Archivos de Referencia
 
-| Recurso | Ubicación |
-|---------|-----------|
-| Seals Edition (base de código) | `C:\Users\Emiliano\Documents\UPQ_SISTEMAS\7mo_Cuatrimestre\Programación Web\ML2 Seals Edition\MercadoLibre2` |
-| Wireframes oficiales (PDF) | `C:\Users\Emiliano\Downloads\Entregable 1er parcial (1).pdf` |
-| Inspiración AutoZone | `autozone.com.mx` |
-| Directrices del proyecto | `CLAUDE.md` (raíz del repo) |
+| Recurso | Ubicación | Para qué usarlo |
+|---------|-----------|-----------------|
+| **miAPI** | `C:\Users\Emiliano\Documents\UPQ_SISTEMAS\8vo_Cuatrimestre\Isay\TAI204\miAPI\` | Patrón exacto de estructura, convenciones y estilo de código |
+| **SWAY POO** | `C:\Users\Emiliano\Videos\SWAY POO\` | Referencia de pedidos con N productos (`routers/pedidos.py`), reportes, docker-compose con healthcheck |
+| **Rúbrica 3er Parcial** | `C:\Users\Emiliano\Downloads\Rubrica 3P.pdf` | 13 criterios de evaluación, 100 pts total |
+| **SQL original (con errores)** | `C:\Users\Emiliano\Downloads\DBAUTOMACUIN - copia.sql` | Solo referencia — usar el ddl.sql corregido en fastapi_app/ |
+| **CLAUDE.md** | Raíz del repo | Directrices, esquema BD, convenciones completas |

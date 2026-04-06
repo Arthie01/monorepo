@@ -1,12 +1,52 @@
 # ─────────────────────────────────────────────
-#  docker-compose.yml — Monorepo
+#  docker-compose.yml — Monorepo MACUIN
 #
 #  Servicios:
-#    • flask   → http://localhost:5000
-#    • laravel → http://localhost:8080
+#    • postgres  → localhost:5432
+#    • fastapi   → http://localhost:8000
+#    • flask     → http://localhost:5001
+#    • laravel   → http://localhost:8080
 # ─────────────────────────────────────────────
 
 services:
+
+  # ── PostgreSQL ────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: monorepo_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: DB_macuin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d DB_macuin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - monorepo-network
+
+  # ── FastAPI ───────────────────────────────
+  fastapi:
+    build:
+      context: ./fastapi_app
+      dockerfile: dockerfile
+    container_name: monorepo_fastapi
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://admin:123456@postgres:5432/DB_macuin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - monorepo-network
 
   # ── Flask App ─────────────────────────────
   flask:
@@ -15,9 +55,12 @@ services:
       dockerfile: Dockerfile
     container_name: monorepo_flask
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - FLASK_ENV=production
+      - API_URL=http://fastapi:8000
+    depends_on:
+      - fastapi
     restart: unless-stopped
     networks:
       - monorepo-network
@@ -38,9 +81,16 @@ services:
       - DB_DATABASE=/var/www/html/database/database.sqlite
       - SESSION_DRIVER=file
       - CACHE_STORE=file
+      - API_URL=http://fastapi:8000
+    depends_on:
+      - fastapi
     restart: unless-stopped
     networks:
       - monorepo-network
+
+# ── Volúmenes ─────────────────────────────────
+volumes:
+  postgres_data:
 
 # ── Red compartida ────────────────────────────
 networks:
