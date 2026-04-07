@@ -74,37 +74,37 @@ VALUES
 -- ------------------------------------------------------------
 INSERT INTO tb_autopartes
     (nombre, sku, categoria, marca, precio, precio_original, stock, stock_minimo,
-     unidad, ubicacion, marca_vehiculo, modelo_vehiculo, descripcion, estado)
+     unidad, ubicacion, marca_vehiculo, modelo_vehiculo, descripcion, estado, activo)
 VALUES
     -- Motor (4)
-    ('Filtro de aceite FRAM PH3614',        'MAC-MOT-001', 'Motor',       'FRAM',    85.00,   NULL,   120, 10,  'Pieza', 'A-01', 'Nissan,Chevrolet,Ford',  'Versa,Aveo,Fiesta',         'Filtro de aceite para motores 4 cilindros, compatibilidad amplia',     'en_stock'),
-    ('Bujía NGK Iridium BKR6EIX',           'MAC-MOT-002', 'Motor',       'NGK',    145.00,  180.00,  80,  8,  'Pieza', 'A-02', 'Toyota,Honda,Nissan',    'Corolla,Civic,Sentra',      'Bujía de iridio, mayor rendimiento y menor consumo de combustible',    'en_stock'),
-    ('Empaque de cabeza motor 2.0L',         'MAC-MOT-003', 'Motor',       'VICTOR',  650.00,  NULL,   15,  5,  'Juego', 'A-03', 'Volkswagen,Audi',        'Jetta,Golf,A3',             'Empaque completo de cabeza para motores 2.0L DOHC',                    'en_stock'),
-    ('Bomba de agua GATES 42018',            'MAC-MOT-004', 'Motor',       'GATES',   480.00,  550.00, 25,  5,  'Pieza', 'A-04', 'Ford,Chevrolet',         'Focus,Cruze',               'Bomba de agua de aluminio, alta resistencia a la corrosión',            'en_stock'),
+    ('Filtro de aceite FRAM PH3614',        'MAC-MOT-001', 'Motor',       'FRAM',    85.00,   NULL,   120, 10,  'Pieza', 'A-01', 'Nissan,Chevrolet,Ford',  'Versa,Aveo,Fiesta',         'Filtro de aceite para motores 4 cilindros, compatibilidad amplia',     'en_stock',   TRUE),
+    ('Bujía NGK Iridium BKR6EIX',           'MAC-MOT-002', 'Motor',       'NGK',    145.00,  180.00,  80,  8,  'Pieza', 'A-02', 'Toyota,Honda,Nissan',    'Corolla,Civic,Sentra',      'Bujía de iridio, mayor rendimiento y menor consumo de combustible',    'en_stock',   TRUE),
+    ('Empaque de cabeza motor 2.0L',         'MAC-MOT-003', 'Motor',       'VICTOR',  650.00,  NULL,   15,  5,  'Juego', 'A-03', 'Volkswagen,Audi',        'Jetta,Golf,A3',             'Empaque completo de cabeza para motores 2.0L DOHC',                    'en_stock',   TRUE),
+    ('Bomba de agua GATES 42018',            'MAC-MOT-004', 'Motor',       'GATES',   480.00,  550.00, 25,  5,  'Pieza', 'A-04', 'Ford,Chevrolet',         'Focus,Cruze',               'Bomba de agua de aluminio, alta resistencia a la corrosión',            'en_stock',   TRUE),
 
     -- Suspensión (3)
-    ('Amortiguador delantero MONROE 71671',  'MAC-SUS-001', 'Suspensión',  'MONROE',  750.00,  900.00, 40,  8,  'Pieza', 'B-01', 'Nissan',                 'Tsuru,Sentra,Versa',        'Amortiguador gas-presión eje delantero, control de rodadura suave',    'en_stock'),
-    ('Resorte espiral delantero MOOG',       'MAC-SUS-002', 'Suspensión',  'MOOG',    420.00,  NULL,   30,  6,  'Pieza', 'B-02', 'Volkswagen',             'Jetta,Golf,Vento',          'Resorte de suspensión delantera acero alta resistencia',               'en_stock'),
-    ('Rótula inferior MOOG K80462',          'MAC-SUS-003', 'Suspensión',  'MOOG',    285.00,  320.00,  6,  8,  'Pieza', 'B-03', 'Chevrolet',              'Aveo,Beat,Trax',            'Rótula de suspensión inferior lado izquierdo',                         'bajo_stock'),
+    ('Amortiguador delantero MONROE 71671',  'MAC-SUS-001', 'Suspensión',  'MONROE',  750.00,  900.00, 40,  8,  'Pieza', 'B-01', 'Nissan',                 'Tsuru,Sentra,Versa',        'Amortiguador gas-presión eje delantero, control de rodadura suave',    'en_stock',   TRUE),
+    ('Resorte espiral delantero MOOG',       'MAC-SUS-002', 'Suspensión',  'MOOG',    420.00,  NULL,   30,  6,  'Pieza', 'B-02', 'Volkswagen',             'Jetta,Golf,Vento',          'Resorte de suspensión delantera acero alta resistencia',               'en_stock',   TRUE),
+    ('Rótula inferior MOOG K80462',          'MAC-SUS-003', 'Suspensión',  'MOOG',    285.00,  320.00,  6,  8,  'Pieza', 'B-03', 'Chevrolet',              'Aveo,Beat,Trax',            'Rótula de suspensión inferior lado izquierdo',                         'bajo_stock', TRUE),
 
     -- Frenos (3)
-    ('Balatas delanteras BENDIX CFC1404',    'MAC-FRE-001', 'Frenos',      'BENDIX',  320.00,  420.00, 90, 15,  'Juego', 'C-01', 'Honda,Toyota',           'Civic,Corolla,HRV,RAV4',   'Balatas delanteras cerámicas, bajo nivel de polvo y ruido',            'en_stock'),
-    ('Disco de freno ventilado BREMBO 09',   'MAC-FRE-002', 'Frenos',      'BREMBO',  680.00,  NULL,   35,  6,  'Pieza', 'C-02', 'Volkswagen,Seat',        'Golf,León,Tiguan',          'Disco ventilado de alto rendimiento, diámetro 280mm',                  'en_stock'),
-    ('Líquido de frenos DOT4 CASTROL 500ml', 'MAC-FRE-003', 'Frenos',      'CASTROL',  95.00,  NULL,  200, 30,  'Pieza', 'C-03', NULL,                     NULL,                        'Líquido de frenos sintético DOT4, punto de ebullición 265°C',          'en_stock'),
+    ('Balatas delanteras BENDIX CFC1404',    'MAC-FRE-001', 'Frenos',      'BENDIX',  320.00,  420.00, 90, 15,  'Juego', 'C-01', 'Honda,Toyota',           'Civic,Corolla,HRV,RAV4',   'Balatas delanteras cerámicas, bajo nivel de polvo y ruido',            'en_stock',   TRUE),
+    ('Disco de freno ventilado BREMBO 09',   'MAC-FRE-002', 'Frenos',      'BREMBO',  680.00,  NULL,   35,  6,  'Pieza', 'C-02', 'Volkswagen,Seat',        'Golf,León,Tiguan',          'Disco ventilado de alto rendimiento, diámetro 280mm',                  'en_stock',   TRUE),
+    ('Líquido de frenos DOT4 CASTROL 500ml', 'MAC-FRE-003', 'Frenos',      'CASTROL',  95.00,  NULL,  200, 30,  'Pieza', 'C-03', NULL,                     NULL,                        'Líquido de frenos sintético DOT4, punto de ebullición 265°C',          'en_stock',   TRUE),
 
     -- Eléctrico (3)
-    ('Batería BOSCH S4 45Ah 400A',           'MAC-ELE-001', 'Eléctrico',   'BOSCH',  1350.00, 1500.00, 20,  4,  'Pieza', 'D-01', 'Chevrolet,Nissan,Ford',  'Aveo,Versa,Fiesta',         'Batería libre de mantenimiento 45Ah 400A arranque en frío',            'en_stock'),
-    ('Alternador BOSCH 90A reconstruido',    'MAC-ELE-002', 'Eléctrico',   'BOSCH',  1800.00,  NULL,    3,  4,  'Pieza', 'D-02', 'Nissan',                 'Tsuru,Sentra',              'Alternador reconstruido 90A, garantía 6 meses',                       'bajo_stock'),
-    ('Sensor de oxígeno BOSCH 13958',        'MAC-ELE-003', 'Eléctrico',   'BOSCH',   450.00,  520.00, 45,  8,  'Pieza', 'D-03', 'Ford,Chevrolet,Nissan',  'Focus,Cruze,Versa',         'Sensor O2 banda ancha, compatible OBD2',                              'en_stock'),
+    ('Batería BOSCH S4 45Ah 400A',           'MAC-ELE-001', 'Eléctrico',   'BOSCH',  1350.00, 1500.00, 20,  4,  'Pieza', 'D-01', 'Chevrolet,Nissan,Ford',  'Aveo,Versa,Fiesta',         'Batería libre de mantenimiento 45Ah 400A arranque en frío',            'en_stock',   TRUE),
+    ('Alternador BOSCH 90A reconstruido',    'MAC-ELE-002', 'Eléctrico',   'BOSCH',  1800.00,  NULL,    3,  4,  'Pieza', 'D-02', 'Nissan',                 'Tsuru,Sentra',              'Alternador reconstruido 90A, garantía 6 meses',                       'bajo_stock', TRUE),
+    ('Sensor de oxígeno BOSCH 13958',        'MAC-ELE-003', 'Eléctrico',   'BOSCH',   450.00,  520.00, 45,  8,  'Pieza', 'D-03', 'Ford,Chevrolet,Nissan',  'Focus,Cruze,Versa',         'Sensor O2 banda ancha, compatible OBD2',                              'en_stock',   TRUE),
 
     -- Transmisión (2)
-    ('Kit clutch LUK 1.6L completo',         'MAC-TRA-001', 'Transmisión', 'LUK',    2200.00, 2500.00, 10,  3,  'Juego', 'E-01', 'Volkswagen',             'Jetta,Golf,Vento',          'Kit completo: disco, prensaplato y collarín',                          'en_stock'),
-    ('Aceite ATF MOBIL Dexron VI 1L',        'MAC-TRA-002', 'Transmisión', 'MOBIL',   185.00,  NULL,   60, 15,  'Litro', 'E-02', NULL,                     NULL,                        'Aceite transmisión automática ATF Dexron VI, 1 litro',                 'en_stock'),
+    ('Kit clutch LUK 1.6L completo',         'MAC-TRA-001', 'Transmisión', 'LUK',    2200.00, 2500.00, 10,  3,  'Juego', 'E-01', 'Volkswagen',             'Jetta,Golf,Vento',          'Kit completo: disco, prensaplato y collarín',                          'en_stock',   TRUE),
+    ('Aceite ATF MOBIL Dexron VI 1L',        'MAC-TRA-002', 'Transmisión', 'MOBIL',   185.00,  NULL,   60, 15,  'Litro', 'E-02', NULL,                     NULL,                        'Aceite transmisión automática ATF Dexron VI, 1 litro',                 'en_stock',   TRUE),
 
     -- Filtros (3)
-    ('Filtro de aire K&N 33-2887',           'MAC-FIL-001', 'Filtros',     'K&N',     320.00,  380.00, 55, 10,  'Pieza', 'F-01', 'Dodge,Chrysler',         'Attitude,Journey',          'Filtro de alto flujo lavable y reutilizable',                          'en_stock'),
-    ('Filtro de combustible MANN WK6',       'MAC-FIL-002', 'Filtros',     'MANN',    125.00,  NULL,   70, 12,  'Pieza', 'F-02', 'Volkswagen',             'Jetta,Passat,Golf',         'Filtro de combustible en línea, capacidad 10 micras',                  'en_stock'),
-    ('Filtro de cabina BOSCH M2003',         'MAC-FIL-003', 'Filtros',     'BOSCH',   180.00,  220.00,  2, 10,  'Pieza', 'F-03', 'Toyota,Honda',           'Corolla,Civic,Prius',       'Filtro de habitáculo con carbón activado, elimina olores y alérgenos', 'bajo_stock');
+    ('Filtro de aire K&N 33-2887',           'MAC-FIL-001', 'Filtros',     'K&N',     320.00,  380.00, 55, 10,  'Pieza', 'F-01', 'Dodge,Chrysler',         'Attitude,Journey',          'Filtro de alto flujo lavable y reutilizable',                          'en_stock',   TRUE),
+    ('Filtro de combustible MANN WK6',       'MAC-FIL-002', 'Filtros',     'MANN',    125.00,  NULL,   70, 12,  'Pieza', 'F-02', 'Volkswagen',             'Jetta,Passat,Golf',         'Filtro de combustible en línea, capacidad 10 micras',                  'en_stock',   TRUE),
+    ('Filtro de cabina BOSCH M2003',         'MAC-FIL-003', 'Filtros',     'BOSCH',   180.00,  220.00,  2, 10,  'Pieza', 'F-03', 'Toyota,Honda',           'Corolla,Civic,Prius',       'Filtro de habitáculo con carbón activado, elimina olores y alérgenos', 'bajo_stock', TRUE);
 
 -- ------------------------------------------------------------
 -- 4. Pedidos (cabecera)

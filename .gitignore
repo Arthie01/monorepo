@@ -13,9 +13,15 @@ flask_app/venv/
 flask_app/__pycache__/
 flask_app/*.pyc
 
+# FastAPI
+fastapi_app/__pycache__/
+fastapi_app/**/__pycache__/
+fastapi_app/**/*.pyc
+
 # IDEs
 .vscode/
 .idea/
 CLAUDE.md
 .CLAUDE/
 .playwright-mcp/
+._pycache_/

@@ -5,7 +5,7 @@
 |------------|--------|
 | Laravel (Frontend Externo) | ✅ Terminado — 10 vistas Blade estáticas |
 | Flask (Panel Interno) | ✅ Terminado — 14 vistas Jinja2 estáticas |
-| FastAPI (API Central) | 🔄 En progreso — M1 completo, faltan routers |
+| FastAPI (API Central) | 🔄 En progreso — M1+M2+M3 completos, faltan pedidos/reportes |
 | PostgreSQL (Base de Datos) | ✅ Lista — ddl.sql + dml.sql + modelos SQLAlchemy |
 | Docker (Todos los servicios) | ✅ Completo — 4 servicios con healthcheck en docker-compose.yml |
 | Integración Frontends ↔ API | ⬜ Por conectar |
@@ -72,40 +72,45 @@ fastapi_app/
 
 ---
 
-## Milestone 2 — Endpoint Registro + CRUD Usuarios Internos
-> **Objetivo**: Registro real de clientes + administración de personal interno.
+## Milestone 2 — Autenticación + CRUD Usuarios Internos ✅ COMPLETADO
+> **Objetivo**: Registro real de clientes + login independiente por portal + administración de personal interno.
 
-- [ ] Crear `fastapi_app/app/security/auth.py` (HTTPBasic igual que miAPI)
-- [ ] Crear `fastapi_app/app/models/usuarios.py` (Pydantic Crear_UsuarioExterno, Actualizar_UsuarioExterno)
-- [ ] Crear `fastapi_app/app/models/usuarios_internos.py` (Pydantic Crear_UsuarioInterno, Actualizar_UsuarioInterno)
-- [ ] Crear `fastapi_app/app/routers/auth.py`:
-  - `POST /v1/auth/registro` — Crea usuario externo en BD
-- [ ] Crear `fastapi_app/app/routers/usuarios_internos.py`:
-  - `GET    /v1/usuarios-internos/`     — Listar todos
-  - `GET    /v1/usuarios-internos/{id}` — Consultar uno
-  - `POST   /v1/usuarios-internos/`     — Crear
-  - `PUT    /v1/usuarios-internos/{id}` — Actualizar completo
-  - `PATCH  /v1/usuarios-internos/{id}` — Actualizar parcial
-  - `DELETE /v1/usuarios-internos/{id}` — Eliminar (requiere auth)
-- [ ] Registrar ambos routers en `main.py`
-- [ ] Probar con Swagger UI en `http://localhost:8000/docs`
+- [x] ~~Crear `fastapi_app/app/security/auth.py`~~ ✅ — HTTPBasic `macuin`/`123456`
+- [x] ~~Crear `fastapi_app/app/models/usuarios.py`~~ ✅ — Pydantic `Crear_UsuarioExterno`, `Actualizar_UsuarioExterno`
+- [x] ~~Crear `fastapi_app/app/models/usuarios_internos.py`~~ ✅ — Pydantic `Crear_UsuarioInterno`, `Actualizar_UsuarioInterno`
+- [x] ~~Crear `fastapi_app/app/routers/auth.py`~~ ✅ — 3 endpoints:
+  - `POST /v1/auth/registro` — Crea usuario externo en BD (campos mínimos: nombre, apellidos, email, password)
+  - `POST /v1/auth/login/externo` — Valida credenciales en `tb_usuarios_externos` (para Laravel)
+  - `POST /v1/auth/login/interno` — Valida credenciales en `tb_usuarios_internos` (para Flask)
+- [x] ~~Crear `fastapi_app/app/routers/usuarios_internos.py`~~ ✅ — CRUD completo:
+  - `GET    /v1/usuarios/internos/`     — Listar todos
+  - `GET    /v1/usuarios/internos/{id}` — Consultar uno
+  - `POST   /v1/usuarios/internos/`     — Crear
+  - `PUT    /v1/usuarios/internos/{id}` — Actualizar completo
+  - `PATCH  /v1/usuarios/internos/{id}` — Actualizar parcial
+  - `DELETE /v1/usuarios/internos/{id}` — Eliminar (requiere HTTPBasic `macuin`/`123456`)
+- [x] ~~Registrar ambos routers en `main.py`~~ ✅
+- [ ] Probar con Swagger UI en `http://localhost:8001/docs`
 
 **Rúbrica cubierta**: Criterios 7 (registro), 10 (CRUD usuarios internos)
 
 ---
 
-## Milestone 3 — CRUD Autopartes
+## Milestone 3 — CRUD Autopartes ✅ COMPLETADO
 > **Objetivo**: Gestión completa del catálogo de autopartes desde la API.
 
-- [ ] Crear `fastapi_app/app/models/autopartes.py` (Pydantic Crear_Autoparte, Actualizar_Autoparte)
-- [ ] Crear `fastapi_app/app/routers/autopartes.py`:
-  - `GET    /v1/autopartes/`       — Listar todas (con filtro por categoría opcional)
+- [x] ~~Crear `fastapi_app/app/models/autopartes.py`~~ ✅ — Pydantic `Crear_Autoparte`, `Actualizar_Autoparte`, `PatchAutoparte`
+- [x] ~~Crear `fastapi_app/app/routers/autopartes.py`~~ ✅ — CRUD completo con upload de imagen:
+  - `GET    /v1/autopartes/`       — Listar todas (con filtro `?categoria=` case-insensitive)
   - `GET    /v1/autopartes/{id}`   — Consultar una
-  - `POST   /v1/autopartes/`       — Crear
-  - `PUT    /v1/autopartes/{id}`   — Actualizar completa
-  - `PATCH  /v1/autopartes/{id}`   — Actualizar parcial (precio, stock)
-  - `DELETE /v1/autopartes/{id}`   — Eliminar (requiere auth)
-- [ ] Registrar router en `main.py`
+  - `POST   /v1/autopartes/`       — Crear (multipart/form-data + imagen opcional)
+  - `PUT    /v1/autopartes/{id}`   — Actualizar completa (multipart/form-data + imagen opcional)
+  - `PATCH  /v1/autopartes/{id}`   — Actualizar parcial JSON: precio, stock, stock_minimo, estado, ubicacion
+  - `DELETE /v1/autopartes/{id}`   — Eliminar (requiere HTTPBasic `macuin`/`123456`)
+- [x] ~~Registrar router en `main.py`~~ ✅
+- [x] ~~Agregar `python-multipart` a `requirements.txt`~~ ✅
+- [x] ~~Agregar volumen `uploads` en `docker-compose.yml`~~ ✅ — imágenes en `fastapi_app/uploads/autopartes/`
+- [x] ~~Montar `StaticFiles` en `/uploads` en `main.py`~~ ✅
 
 **Rúbrica cubierta**: Criterio 11 (CRUD autopartes)
 
@@ -168,10 +173,10 @@ fastapi_app/
 
 | Milestone | Descripción | Rúbrica | Estado |
 |-----------|-------------|---------|--------|
-| 1 | Base FastAPI + Docker + BD | 1, 3, 4, 5, 6 | 🔄 DDL/DML listos |
-| 2 | Registro + CRUD Usuarios Internos | 7, 10 | ⬜ |
-| 3 | CRUD Autopartes | 11 | ⬜ |
-| 4 | Pedidos (1 a N productos) | 8, 9 | ⬜ |
+| 1 | Base FastAPI + Docker + BD | 1, 3, 4, 5, 6 | ✅ Completo |
+| 2 | Registro + CRUD Usuarios Internos | 7, 10 | ✅ Completo |
+| 3 | CRUD Autopartes | 11 | ✅ Completo |
+| 4 | Pedidos (1 a N productos) | 8, 9 | ⬜ Siguiente |
 | 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ⬜ |
 | 6 | Integración Frontends ↔ API | 2 | ⬜ |
 
