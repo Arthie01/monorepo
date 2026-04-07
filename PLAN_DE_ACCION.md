@@ -5,7 +5,7 @@
 |------------|--------|
 | Laravel (Frontend Externo) | ✅ Terminado — 10 vistas Blade estáticas |
 | Flask (Panel Interno) | ✅ Terminado — 14 vistas Jinja2 estáticas |
-| FastAPI (API Central) | 🔄 En progreso — M1+M2+M3 completos, faltan pedidos/reportes |
+| FastAPI (API Central) | 🔄 En progreso — M1+M2+M3+M4 completos, falta reportes |
 | PostgreSQL (Base de Datos) | ✅ Lista — ddl.sql + dml.sql + modelos SQLAlchemy |
 | Docker (Todos los servicios) | ✅ Completo — 4 servicios con healthcheck en docker-compose.yml |
 | Integración Frontends ↔ API | ⬜ Por conectar |
@@ -116,18 +116,20 @@ fastapi_app/
 
 ---
 
-## Milestone 4 — Pedidos (1 a N productos)
-> **Objetivo**: Crear pedidos con múltiples productos y consultarlos por usuario.
+## Milestone 4 — Pedidos (1 a N productos) + CRUD Usuarios Externos ✅ COMPLETADO
+> **Objetivo**: Crear pedidos con múltiples productos, consultarlos por usuario, y gestionar clientes externos.
 
-- [ ] Crear `fastapi_app/app/models/pedidos.py`:
-  - `ItemPedido` — (autoparte_id, cantidad)
-  - `Crear_Pedido` — (usuario_externo_id, lista de ItemPedido)
-- [ ] Crear `fastapi_app/app/routers/pedidos.py`:
-  - `POST /v1/pedidos/`                        — Crear pedido con N productos (calcula total automático)
-  - `GET  /v1/pedidos/usuario/{usuario_id}`     — Todos los pedidos de un usuario
-  - `GET  /v1/pedidos/{pedido_id}`              — Detalle de pedido (con líneas)
-  - `PATCH /v1/pedidos/{pedido_id}/estado`      — Cambiar estado (Pendiente→En proceso→Completado)
-- [ ] Registrar router en `main.py`
+- [x] ~~Crear `fastapi_app/app/models/pedidos.py`~~ ✅ — `ItemPedido`, `Crear_Pedido`, `CambiarEstado`
+- [x] ~~Crear `fastapi_app/app/routers/pedidos.py`~~ ✅ — 5 endpoints:
+  - `GET  /v1/pedidos/`                         — Listar todos (`?estado=` opcional)
+  - `GET  /v1/pedidos/usuario/{usuario_id}`      — Pedidos de un cliente externo
+  - `GET  /v1/pedidos/{pedido_id}`               — Detalle con líneas (join autoparte)
+  - `POST /v1/pedidos/`                          — Crear (valida stock, descuento usuario, IVA 16%, folio MACUIN-YYYY-UUID)
+  - `PATCH /v1/pedidos/{pedido_id}/estado`       — Cambiar estado
+- [x] ~~Crear `fastapi_app/app/models/usuarios_externos.py`~~ ✅ — `Crear_UsuarioExterno`, `Actualizar_UsuarioExterno`, `PatchUsuarioExterno`
+- [x] ~~Crear `fastapi_app/app/routers/usuarios_externos.py`~~ ✅ — CRUD completo `/v1/usuarios/externos/`
+- [x] ~~Registrar routers en `main.py`~~ ✅
+- [x] ~~Corregir `flask_app/templates/detalle_pedido.html`~~ ✅ — "Entregado" → "Completado"
 
 **Rúbrica cubierta**: Criterios 8 (pedidos 1-N), 9 (consultar pedidos usuario)
 
@@ -176,8 +178,8 @@ fastapi_app/
 | 1 | Base FastAPI + Docker + BD | 1, 3, 4, 5, 6 | ✅ Completo |
 | 2 | Registro + CRUD Usuarios Internos | 7, 10 | ✅ Completo |
 | 3 | CRUD Autopartes | 11 | ✅ Completo |
-| 4 | Pedidos (1 a N productos) | 8, 9 | ⬜ Siguiente |
-| 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ⬜ |
+| 4 | Pedidos + CRUD Usuarios Externos | 8, 9 | ✅ Completo |
+| 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ⬜ Siguiente |
 | 6 | Integración Frontends ↔ API | 2 | ⬜ |
 
 ---
