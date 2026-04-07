@@ -96,15 +96,20 @@
             <aside class="profile-sidebar">
                 {{-- Avatar --}}
                 <div style="padding:24px;text-align:center;border-bottom:1px solid var(--macuin-gray);">
+                    @php
+                        $iniciales = strtoupper(substr($usuario['nombre'] ?? 'U', 0, 1) . substr($usuario['apellidos'] ?? '', 0, 1));
+                    @endphp
                     <div style="
                         width:80px;height:80px;border-radius:50%;
                         background:var(--macuin-red);
                         font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;
                         color:#fff;display:flex;align-items:center;justify-content:center;
                         margin:0 auto 12px;
-                    ">JG</div>
-                    <div style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--macuin-text);">Juan García</div>
-                    <div style="font-size:12px;color:var(--macuin-muted);margin-top:2px;">juan.garcia@gmail.com</div>
+                    ">{{ $iniciales }}</div>
+                    <div style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--macuin-text);">
+                        {{ $usuario['nombre'] ?? '' }} {{ $usuario['apellidos'] ?? '' }}
+                    </div>
+                    <div style="font-size:12px;color:var(--macuin-muted);margin-top:2px;">{{ $usuario['email'] ?? '' }}</div>
                     <div style="
                         display:inline-flex;align-items:center;gap:4px;
                         margin-top:10px;padding:3px 10px;border-radius:100px;
@@ -149,25 +154,26 @@
                             <div class="form-grid-2">
                                 <div class="mac-form-group">
                                     <label class="mac-label">Nombre(s)</label>
-                                    <input type="text" name="name" class="mac-input" value="Juan" disabled>
+                                    <input type="text" name="nombre" class="mac-input" value="{{ $usuario['nombre'] ?? '' }}" disabled>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Apellidos</label>
-                                    <input type="text" name="apellidos" class="mac-input" value="García López" disabled>
+                                    <input type="text" name="apellidos" class="mac-input" value="{{ $usuario['apellidos'] ?? '' }}" disabled>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Correo Electrónico</label>
                                     <div class="mac-input-icon">
                                         <i class="mac-input-icon__icon fas fa-envelope"></i>
-                                        <input type="email" name="email" class="mac-input" value="juan.garcia@gmail.com" disabled>
+                                        <input type="email" name="email" class="mac-input" value="{{ $usuario['email'] ?? '' }}" disabled>
                                     </div>
                                 </div>
                                 <div class="mac-form-group">
-                                    <label class="mac-label">Teléfono</label>
-                                    <div class="mac-input-icon">
-                                        <i class="mac-input-icon__icon fas fa-phone"></i>
-                                        <input type="tel" name="phone" class="mac-input" value="449-123-4567" disabled>
-                                    </div>
+                                    <label class="mac-label">Tipo de Cliente</label>
+                                    <input type="text" name="tipo_cliente" class="mac-input" value="{{ $usuario['tipo_cliente'] ?? '—' }}" disabled>
+                                </div>
+                                <div class="mac-form-group">
+                                    <label class="mac-label">Empresa</label>
+                                    <input type="text" name="empresa" class="mac-input" value="{{ $usuario['empresa'] ?? '—' }}" disabled>
                                 </div>
                             </div>
                             <div id="personal-actions" style="display:none;gap:12px;margin-top:8px;display:none;">

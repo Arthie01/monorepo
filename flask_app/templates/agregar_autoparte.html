@@ -72,10 +72,21 @@
         </div>
 
         <!-- ═══ FORM CARD ═══ -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="flash flash--{{ category }}" style="
+              position:fixed;top:20px;right:20px;z-index:9999;
+              padding:12px 20px;border-radius:6px;font-size:14px;
+              background:{% if category == 'error' %}#C41230{% else %}#16a34a{% endif %};
+              color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);
+            ">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
         <form
           class="edit-card"
-          action="/gestion-autopartes"
-          method="get"
+          action="/agregar-autoparte"
+          method="post"
+          enctype="multipart/form-data"
           novalidate
         >
           <!-- ── Left column: image ── -->
@@ -133,7 +144,7 @@
                   <input
                     type="text"
                     id="fCodigo"
-                    name="codigo"
+                    name="sku"
                     class="field-input"
                     placeholder="Ej. AUT-001"
                   />
@@ -258,7 +269,7 @@
                   <input
                     type="number"
                     id="fStockMin"
-                    name="stock_min"
+                    name="stock_minimo"
                     class="field-input"
                     placeholder="5"
                     min="0"
@@ -304,7 +315,7 @@
                   <input
                     type="text"
                     id="fModelo"
-                    name="modelo"
+                    name="modelo_vehiculo"
                     class="field-input"
                     placeholder="Ej. Tsuru, Sentra 2010-2015"
                   />

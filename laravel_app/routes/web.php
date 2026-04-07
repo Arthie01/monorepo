@@ -1,26 +1,42 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\PerfilController;
 
-// Redirigir raíz a login
-Route::get('/', fn() => redirect('/login'));
+// ── Raíz ──────────────────────────────────────────────────────────────────────
+Route::get('/', [CatalogoController::class, 'dashboard']);
 
-// ── Autenticación ──────────────────────────────────────
-Route::get('/login',           fn() => view('login'));
-Route::post('/login',          fn() => redirect('/dashboard'));   // placeholder
-Route::get('/registro',        fn() => view('register'));
-Route::post('/registro',       fn() => redirect('/login'));       // placeholder
+// ── Autenticación (públicas) ──────────────────────────────────────────────────
+Route::get('/login',          [AuthController::class, 'showLogin']);
+Route::post('/login',         [AuthController::class, 'login']);
+Route::get('/registro',       [AuthController::class, 'showRegistro']);
+Route::post('/registro',      [AuthController::class, 'registro']);
+Route::get('/logout',         [AuthController::class, 'logout']);
 Route::get('/forgot-password', fn() => view('forgot-password'));
 
-// ── Portal del Cliente (estáticas) ────────────────────
-Route::get('/dashboard',        fn() => view('dashboard'));
-Route::get('/catalogo',         fn() => view('catalogo'));
-Route::get('/catalogo/{id}',    fn() => view('detalle-producto'));
-Route::get('/carrito',          fn() => view('carrito'));
-Route::get('/checkout',         fn() => view('checkout'));
-Route::get('/pedidos',          fn() => view('pedidos'));
-Route::get('/pedido/{id}',      fn() => view('pedido-detalle'));
-Route::get('/perfil',           fn() => view('perfil'));
+// ── Portal del Cliente (protegidas) ───────────────────────────────────────────
+// Dashboard y catálogo son públicos (pueden verse sin login)
+Route::get('/dashboard',           [CatalogoController::class,  'dashboard']);
+Route::get('/catalogo',            [CatalogoController::class,  'index']);
+Route::get('/catalogo/{id}',       [CatalogoController::class,  'show']);
 
-// Legacy (rama Diego)
-Route::get('/register',         fn() => redirect('/registro'));
+Route::middleware('check.session')->group(function () {
+
+    Route::get('/carrito',             [CarritoController::class,   'index']);
+    Route::post('/carrito/agregar',    [CarritoController::class,   'agregar']);
+    Route::post('/carrito/actualizar', [CarritoController::class,   'actualizar']);
+    Route::get('/checkout',            [CarritoController::class,   'showCheckout']);
+    Route::post('/checkout',           [CarritoController::class,   'checkout']);
+
+    Route::get('/pedidos',             [PedidoController::class,    'index']);
+    Route::get('/pedido/{id}',         [PedidoController::class,    'show']);
+
+    Route::get('/perfil',              [PerfilController::class,    'index']);
+});
+
+// Legacy
+Route::get('/register', fn() => redirect('/registro'));

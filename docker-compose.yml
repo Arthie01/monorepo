@@ -62,6 +62,7 @@ services:
     environment:
       - FLASK_ENV=production
       - API_URL=http://fastapi:8000
+      - FLASK_SECRET_KEY=macuin-secret-2026
     depends_on:
       - fastapi
     restart: unless-stopped

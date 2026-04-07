@@ -73,9 +73,9 @@
           <aside class="profile-sidebar">
             <!-- Avatar -->
             <div class="sidebar-avatar">
-              <div class="avatar-circle">AH</div>
-              <div class="avatar-name">Artemio Hurtado</div>
-              <div class="avatar-email">artemio@macuin.mx</div>
+              <div class="avatar-circle">{{ usuario.nombre[0] }}{{ usuario.apellidos[0] if usuario.apellidos else '' }}</div>
+              <div class="avatar-name">{{ usuario.nombre }} {{ usuario.apellidos }}</div>
+              <div class="avatar-email">{{ usuario.email }}</div>
               <span class="avatar-role">Personal Activo</span>
             </div>
 
@@ -113,7 +113,7 @@
                         id="pNombre"
                         name="nombre"
                         class="form-input"
-                        value="Artemio"
+                        value="{{ usuario.nombre }}"
                         disabled
                       />
                     </div>
@@ -127,7 +127,7 @@
                         id="pApellidos"
                         name="apellidos"
                         class="form-input"
-                        value="Hurtado Reyes"
+                        value="{{ usuario.apellidos }}"
                         disabled
                       />
                     </div>
@@ -143,7 +143,7 @@
                           id="pEmail"
                           name="email"
                           class="form-input"
-                          value="artemio@macuin.mx"
+                          value="{{ usuario.email }}"
                           disabled
                         />
                       </div>
@@ -158,7 +158,7 @@
                           id="pTelefono"
                           name="telefono"
                           class="form-input"
-                          value="614-123-4567"
+                          value="{{ usuario.telefono or '' }}"
                           disabled
                         />
                       </div>
@@ -171,7 +171,7 @@
                         id="pArea"
                         name="area"
                         class="form-input"
-                        value="Ventas"
+                        value="{{ usuario.departamento }}"
                         disabled
                       />
                     </div>
@@ -183,7 +183,7 @@
                         id="pPuesto"
                         name="puesto"
                         class="form-input"
-                        value="Ejecutivo de Ventas"
+                        value="{{ usuario.rol }}"
                         disabled
                       />
                     </div>

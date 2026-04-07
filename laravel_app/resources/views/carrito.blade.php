@@ -58,7 +58,7 @@
         </p>
         <h1 style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:#fff;text-transform:uppercase;">
             <i class="fas fa-shopping-cart" style="color:var(--macuin-red);margin-right:10px;"></i>Mi Carrito
-            <span style="font-size:16px;font-weight:400;color:var(--macuin-steel);margin-left:10px;">3 artículos</span>
+            <span style="font-size:16px;font-weight:400;color:var(--macuin-steel);margin-left:10px;">{{ count($carrito) }} {{ count($carrito) === 1 ? 'artículo' : 'artículos' }}</span>
         </h1>
     </div>
 </div>
@@ -81,68 +81,64 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $items = [
-                                ['sku'=>'FRN-001','name'=>'Pastillas de Freno Delanteras Premium Brembo','price'=>485,'qty'=>1,'badge'=>'available','img'=>'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=120&q=80'],
-                                ['sku'=>'MOT-034','name'=>'Filtro de Aceite Universal Bosch','price'=>189,'qty'=>2,'badge'=>'available','img'=>'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=120&q=80'],
-                                ['sku'=>'SUS-112','name'=>'Amortiguador Delantero Gabriel Ultra','price'=>1240,'qty'=>1,'badge'=>'low','img'=>'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=120&q=80'],
-                            ];
-                        @endphp
-                        @foreach($items as $i => $item)
-                        <tr id="row-{{ $i }}">
+                        @forelse($carrito as $id => $item)
+                        <tr>
                             {{-- Producto --}}
                             <td>
                                 <div style="display:flex;align-items:center;gap:14px;">
+                                    @if(!empty($item['imagen']))
                                     <div style="width:72px;height:72px;flex-shrink:0;border:1px solid var(--macuin-gray);border-radius:6px;overflow:hidden;">
-                                        <img src="{{ $item['img'] }}" alt="{{ $item['name'] }}" style="width:100%;height:100%;object-fit:cover;">
+                                        <img src="{{ $item['imagen'] }}" alt="{{ $item['nombre'] }}" style="width:100%;height:100%;object-fit:cover;">
                                     </div>
+                                    @endif
                                     <div>
-                                        <a href="/catalogo/1" style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;text-transform:uppercase;color:var(--macuin-text);text-decoration:none;display:block;margin-bottom:4px;">
-                                            {{ $item['name'] }}
+                                        <a href="/catalogo/{{ $item['id'] }}" style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;text-transform:uppercase;color:var(--macuin-text);text-decoration:none;display:block;margin-bottom:4px;">
+                                            {{ $item['nombre'] }}
                                         </a>
-                                        @php
-                                            $bm = ['available'=>['label'=>'Disponible','class'=>'mac-badge--available'],'low'=>['label'=>'Poco stock','class'=>'mac-badge--low']];
-                                        @endphp
-                                        <span class="mac-badge {{ $bm[$item['badge']]['class'] }}">{{ $bm[$item['badge']]['label'] }}</span>
                                     </div>
                                 </div>
-                            </td>
-                            {{-- SKU --}}
-                            <td>
-                                <span class="mac-mono" style="font-size:12px;color:var(--macuin-muted);">{{ $item['sku'] }}</span>
                             </td>
                             {{-- Precio --}}
                             <td>
                                 <span style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;color:var(--macuin-text);">
-                                    ${{ number_format($item['price'], 0) }}
+                                    ${{ number_format($item['precio'], 2) }}
                                 </span>
                             </td>
                             {{-- Cantidad --}}
                             <td>
-                                <div class="cart-qty">
-                                    <button class="cart-qty-btn" onclick="changeCartQty({{ $i }}, -1)"><i class="fas fa-minus" style="font-size:10px;"></i></button>
-                                    <input type="number" class="cart-qty-inp" id="cqty-{{ $i }}" value="{{ $item['qty'] }}" min="1" max="99">
-                                    <button class="cart-qty-btn" onclick="changeCartQty({{ $i }}, 1)"><i class="fas fa-plus" style="font-size:10px;"></i></button>
-                                </div>
+                                <form action="/carrito/actualizar" method="POST" style="display:inline;">
+                                    @csrf
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <input type="number" name="cantidades[{{ $id }}]"
+                                               value="{{ $item['cantidad'] }}" min="0" style="width:60px;padding:6px;border:1px solid var(--macuin-gray);border-radius:4px;text-align:center;">
+                                        <button type="submit" class="mac-btn mac-btn-ghost mac-btn-sm">Actualizar</button>
+                                    </div>
+                                </form>
                             </td>
                             {{-- Subtotal --}}
                             <td>
-                                <span id="sub-{{ $i }}" style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--macuin-red);">
-                                    ${{ number_format($item['price'] * $item['qty'], 0) }}
+                                <span style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--macuin-red);">
+                                    ${{ number_format($item['precio'] * $item['cantidad'], 2) }}
                                 </span>
                             </td>
                             {{-- Eliminar --}}
                             <td>
-                                <button onclick="removeItem({{ $i }})" style="
-                                    background:none;border:none;cursor:pointer;
-                                    color:var(--macuin-muted);font-size:16px;padding:4px;
-                                    transition:color .2s;
-                                " title="Eliminar" onmouseover="this.style.color='var(--macuin-red)'" onmouseout="this.style.color='var(--macuin-muted)'">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <form action="/carrito/actualizar" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="cantidades[{{ $id }}]" value="0">
+                                    <button type="submit" style="
+                                        background:none;border:none;cursor:pointer;
+                                        color:var(--macuin-muted);font-size:16px;padding:4px;
+                                        transition:color .2s;
+                                    " title="Eliminar" onmouseover="this.style.color='var(--macuin-red)'" onmouseout="this.style.color='var(--macuin-muted)'">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--macuin-muted);">El carrito está vacío.</td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -153,23 +149,29 @@
                     <h3 style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:#fff;text-transform:uppercase;margin:0;">Resumen del Pedido</h3>
                 </div>
                 <div style="padding:20px;">
+                    @if(session('success'))
+                        <div style="background:rgba(22,163,74,.1);color:#16a34a;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if($errors->has('api'))
+                        <div style="background:rgba(196,18,48,.1);color:#C41230;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;">
+                            {{ $errors->first('api') }}
+                        </div>
+                    @endif
                     <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
                         <div style="display:flex;justify-content:space-between;font-size:14px;">
-                            <span style="color:var(--macuin-muted);">Subtotal (4 piezas)</span>
-                            <span style="font-weight:600;color:var(--macuin-text);">$2,103</span>
+                            <span style="color:var(--macuin-muted);">Subtotal</span>
+                            <span style="font-weight:600;color:var(--macuin-text);">${{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:14px;">
                             <span style="color:var(--macuin-muted);">Envío estimado</span>
                             <span style="font-weight:600;color:#16A34A;">Gratis</span>
                         </div>
-                        <div style="display:flex;justify-content:space-between;font-size:14px;">
-                            <span style="color:var(--macuin-muted);">IVA (16%)</span>
-                            <span style="font-weight:600;color:var(--macuin-text);">$336.48</span>
-                        </div>
                     </div>
                     <div style="border-top:2px solid var(--macuin-gray);padding-top:14px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:baseline;">
-                        <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:var(--macuin-text);">Total</span>
-                        <span style="font-family:'Oswald',sans-serif;font-size:26px;font-weight:700;color:var(--macuin-red);">$2,439.48</span>
+                        <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:var(--macuin-text);">Subtotal</span>
+                        <span style="font-family:'Oswald',sans-serif;font-size:26px;font-weight:700;color:var(--macuin-red);">${{ number_format($subtotal, 2) }}</span>
                     </div>
 
                     {{-- Cupón --}}

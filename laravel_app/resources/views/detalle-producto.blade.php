@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pastillas de Freno Delanteras Premium')
+@section('title', isset($autoparte['nombre']) ? $autoparte['nombre'] : 'Detalle de Autoparte')
 
 @push('styles')
 <style>
@@ -99,23 +99,13 @@
                     aspect-ratio:1;background:#fff;border-radius:8px;
                     border:1px solid var(--macuin-gray);overflow:hidden;
                 ">
-                    <img id="main-img-el" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=85" alt="Pastillas de Freno" style="width:100%;height:100%;object-fit:contain;padding:20px;">
-                </div>
-                {{-- Thumbnails --}}
-                <div class="thumb-grid">
-                    @php
-                        $thumbs = [
-                            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=80',
-                            'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=200&q=80',
-                            'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&q=80',
-                            'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=200&q=80',
-                        ];
-                    @endphp
-                    @foreach($thumbs as $i => $t)
-                    <button class="thumb-btn {{ $i===0?'active':'' }}" onclick="setImg(this,'{{ str_replace('200','700',$t) }}')">
-                        <img src="{{ $t }}" alt="Vista {{ $i+1 }}">
-                    </button>
-                    @endforeach
+                    @if(!empty($autoparte['imagen']))
+                        <img id="main-img-el" src="{{ $autoparte['imagen'] }}" alt="{{ $autoparte['nombre'] }}" style="width:100%;height:100%;object-fit:contain;padding:20px;">
+                    @else
+                        <div id="main-img-el" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f5f5f0;">
+                            <i class="fas fa-image" style="font-size:64px;color:#ccc;"></i>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -124,21 +114,24 @@
                 {{-- Encabezado --}}
                 <div style="margin-bottom:20px;">
                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
-                        <span class="mac-badge mac-badge--new">Nuevo</span>
-                        <span class="mac-badge mac-badge--available">Disponible</span>
+                        @php
+                            $estadoBadge = match($autoparte['estado'] ?? '') {
+                                'en_stock'   => ['label' => 'Disponible', 'class' => 'mac-badge--available'],
+                                'bajo_stock' => ['label' => 'Poco stock', 'class' => 'mac-badge--low'],
+                                default      => ['label' => 'Sin stock',  'class' => 'mac-badge--out'],
+                            };
+                        @endphp
+                        <span class="mac-badge {{ $estadoBadge['class'] }}">{{ $estadoBadge['label'] }}</span>
                     </div>
                     <h1 style="font-family:'Oswald',sans-serif;font-size:clamp(20px,3vw,30px);font-weight:700;text-transform:uppercase;color:var(--macuin-text);line-height:1.2;margin-bottom:8px;">
-                        Pastillas de Freno Delanteras Premium Brembo
+                        {{ $autoparte['nombre'] }}
                     </h1>
                     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-                        <span class="mac-mono" style="font-size:13px;color:var(--macuin-muted);">SKU: FRN-001</span>
+                        <span class="mac-mono" style="font-size:13px;color:var(--macuin-muted);">SKU: {{ $autoparte['sku'] }}</span>
                         <span style="width:1px;height:14px;background:var(--macuin-gray);"></span>
-                        <span style="font-size:13px;color:var(--macuin-muted);">Marca: <strong style="color:var(--macuin-text);">Brembo</strong></span>
+                        <span style="font-size:13px;color:var(--macuin-muted);">Marca: <strong style="color:var(--macuin-text);">{{ $autoparte['marca'] ?? '—' }}</strong></span>
                         <span style="width:1px;height:14px;background:var(--macuin-gray);"></span>
-                        <div style="display:flex;gap:2px;">
-                            @for($s=0;$s<5;$s++)<i class="fas fa-star" style="color:#F59E0B;font-size:13px;"></i>@endfor
-                        </div>
-                        <span style="font-size:12px;color:var(--macuin-muted);">(24 reseñas)</span>
+                        <span style="font-size:13px;color:var(--macuin-muted);">Categoría: <strong style="color:var(--macuin-text);">{{ $autoparte['categoria'] }}</strong></span>
                     </div>
                 </div>
 
@@ -148,23 +141,20 @@
                     border-radius:8px;padding:20px;margin-bottom:24px;
                 ">
                     <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:6px;">
-                        <span style="font-family:'Oswald',sans-serif;font-size:36px;font-weight:700;color:var(--macuin-red);">$485</span>
-                        <span style="font-size:18px;color:var(--macuin-muted);text-decoration:line-through;">$620</span>
-                        <span style="
-                            background:rgba(196,18,48,.1);color:var(--macuin-red);
-                            font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;
-                            padding:2px 8px;border-radius:4px;
-                        ">-22%</span>
+                        <span style="font-family:'Oswald',sans-serif;font-size:36px;font-weight:700;color:var(--macuin-red);">
+                            ${{ number_format($autoparte['precio'], 2) }}
+                        </span>
+                        @if(!empty($autoparte['precio_original']))
+                        <span style="font-size:18px;color:var(--macuin-muted);text-decoration:line-through;">
+                            ${{ number_format($autoparte['precio_original'], 2) }}
+                        </span>
+                        @endif
                     </div>
-                    <p style="font-size:12px;color:var(--macuin-muted);">IVA incluido · Stock: <strong style="color:#16A34A;">48 unidades</strong></p>
+                    <p style="font-size:12px;color:var(--macuin-muted);">IVA incluido · Stock: <strong style="color:#16A34A;">{{ $autoparte['stock'] }} unidades</strong></p>
                 </div>
 
-                {{-- Descripción breve --}}
-                <p style="font-size:14px;color:var(--macuin-muted);line-height:1.75;margin-bottom:24px;">
-                    Pastillas de freno de alto rendimiento para uso diario y deportivo. Material cerámico de última generación que garantiza frenado limpio sin polvo, baja temperatura y larga vida útil. Compatible con los modelos indicados en las especificaciones.
-                </p>
-
-                {{-- Compatibilidad --}}
+                {{-- Aplicación / Compatibilidad --}}
+                @if(!empty($autoparte['aplicacion']))
                 <div style="
                     background:rgba(196,18,48,.05);border:1px solid rgba(196,18,48,.15);
                     border-radius:6px;padding:14px 18px;margin-bottom:24px;
@@ -173,27 +163,36 @@
                     <i class="fas fa-car" style="color:var(--macuin-red);font-size:18px;flex-shrink:0;"></i>
                     <div>
                         <div style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--macuin-red);margin-bottom:2px;">Compatibilidad verificada</div>
-                        <div style="font-size:13px;color:var(--macuin-muted);">Chevrolet Aveo 2008–2017 · Spark 2010–2019 · Beat 2020–2024</div>
+                        <div style="font-size:13px;color:var(--macuin-muted);">{{ $autoparte['aplicacion'] }}</div>
                     </div>
                 </div>
+                @endif
 
                 {{-- Cantidad y Agregar --}}
-                <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
-                    <div>
-                        <div style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--macuin-muted);margin-bottom:6px;">Cantidad</div>
-                        <div class="qty-control">
-                            <button class="qty-btn" onclick="changeQty(-1)"><i class="fas fa-minus" style="font-size:12px;"></i></button>
-                            <input type="number" class="qty-input" id="qty" value="1" min="1" max="48">
-                            <button class="qty-btn" onclick="changeQty(1)"><i class="fas fa-plus" style="font-size:12px;"></i></button>
+                <form action="/carrito/agregar" method="POST">
+                    @csrf
+                    <input type="hidden" name="autoparte_id" value="{{ $autoparte['id'] }}">
+                    <input type="hidden" name="nombre" value="{{ $autoparte['nombre'] }}">
+                    <input type="hidden" name="precio" value="{{ $autoparte['precio'] }}">
+                    <input type="hidden" name="imagen" value="{{ $autoparte['imagen'] ?? '' }}">
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+                        <div>
+                            <div style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--macuin-muted);margin-bottom:6px;">Cantidad</div>
+                            <div class="qty-control">
+                                <button type="button" class="qty-btn" onclick="changeQty(-1)"><i class="fas fa-minus" style="font-size:12px;"></i></button>
+                                <input type="number" class="qty-input" id="qty" name="cantidad" value="1" min="1" max="{{ $autoparte['stock'] }}">
+                                <button type="button" class="qty-btn" onclick="changeQty(1)"><i class="fas fa-plus" style="font-size:12px;"></i></button>
+                            </div>
+                        </div>
+                        <div style="flex:1;">
+                            <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="min-width:200px;"
+                                {{ ($autoparte['estado'] ?? '') === 'sin_stock' ? 'disabled' : '' }}>
+                                <i class="fas fa-shopping-cart"></i>
+                                AGREGAR AL CARRITO
+                            </button>
                         </div>
                     </div>
-                    <div style="flex:1;">
-                        <a href="/carrito" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="min-width:200px;">
-                            <i class="fas fa-shopping-cart"></i>
-                            AGREGAR AL CARRITO
-                        </a>
-                    </div>
-                </div>
+                </form>
                 <a href="/checkout" class="mac-btn mac-btn-dark mac-btn-block" style="margin-bottom:20px;">
                     <i class="fas fa-bolt"></i> COMPRAR AHORA
                 </a>
@@ -218,32 +217,27 @@
                 </h2>
                 <div style="background:#fff;border:1px solid var(--macuin-gray);border-radius:8px;overflow:hidden;">
                     <table class="spec-table">
-                        <tr><td>Marca</td><td>Brembo</td></tr>
-                        <tr><td>Material</td><td>Cerámico premium</td></tr>
-                        <tr><td>Posición</td><td>Delantera</td></tr>
-                        <tr><td>Espesor</td><td>14mm</td></tr>
-                        <tr><td>Ancho</td><td>62mm</td></tr>
-                        <tr><td>Largo</td><td>120mm</td></tr>
-                        <tr><td>Temp. máx.</td><td>650°C</td></tr>
-                        <tr><td>Certificación</td><td>ECE R90</td></tr>
-                        <tr><td>Contenido</td><td>Par (2 pastillas)</td></tr>
-                        <tr><td>Peso</td><td>0.85 kg</td></tr>
+                        <tr><td>SKU</td><td>{{ $autoparte['sku'] }}</td></tr>
+                        <tr><td>Categoría</td><td>{{ $autoparte['categoria'] }}</td></tr>
+                        <tr><td>Marca</td><td>{{ $autoparte['marca'] ?? '—' }}</td></tr>
+                        <tr><td>Marca Vehículo</td><td>{{ $autoparte['marca_vehiculo'] ?? '—' }}</td></tr>
+                        <tr><td>Modelo Vehículo</td><td>{{ $autoparte['modelo_vehiculo'] ?? '—' }}</td></tr>
+                        <tr><td>Unidad</td><td>{{ $autoparte['unidad'] ?? '—' }}</td></tr>
+                        <tr><td>Ubicación</td><td>{{ $autoparte['ubicacion'] ?? '—' }}</td></tr>
+                        <tr><td>Stock mínimo</td><td>{{ $autoparte['stock_minimo'] ?? '—' }}</td></tr>
                     </table>
                 </div>
             </div>
             <div>
                 <h2 style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;margin-bottom:20px;padding-bottom:10px;border-bottom:3px solid var(--macuin-red);">
-                    Vehículos <span style="color:var(--macuin-red);">Compatibles</span>
+                    Aplicación <span style="color:var(--macuin-red);">/ Compatibilidad</span>
                 </h2>
-                <div style="background:#fff;border:1px solid var(--macuin-gray);border-radius:8px;overflow:hidden;">
-                    <table class="spec-table">
-                        @foreach([['Chevrolet','Aveo','2008–2017'],['Chevrolet','Spark','2010–2019'],['Chevrolet','Beat','2020–2024'],['Chevrolet','Sonic','2012–2018'],['Buick','Encore','2013–2017'],['Opel','Corsa D','2006–2014']] as [$marca,$modelo,$anos])
-                        <tr>
-                            <td>{{ $marca }}</td>
-                            <td>{{ $modelo }} ({{ $anos }})</td>
-                        </tr>
-                        @endforeach
-                    </table>
+                <div style="background:#fff;border:1px solid var(--macuin-gray);border-radius:8px;padding:20px;">
+                    @if(!empty($autoparte['aplicacion']))
+                        <p style="font-size:14px;color:var(--macuin-muted);line-height:1.75;">{{ $autoparte['aplicacion'] }}</p>
+                    @else
+                        <p style="font-size:14px;color:var(--macuin-muted);">Sin información de compatibilidad disponible.</p>
+                    @endif
                 </div>
             </div>
         </div>

@@ -151,23 +151,27 @@ fastapi_app/
 
 ---
 
-## Milestone 6 — Integración Frontends ↔ API
+## Milestone 6 — Integración Frontends ↔ API ✅ COMPLETADO
 > **Objetivo**: Flask y Laravel dejan de usar datos hardcodeados y consumen la API.
 
-### Flask (Panel Interno)
-- [ ] Agregar `requests` a `flask_app/requirements.txt`
-- [ ] Conectar `gestion_autopartes` → `GET /v1/autopartes/`
-- [ ] Conectar `agregar_autoparte` → `POST /v1/autopartes/`
-- [ ] Conectar `editar_autoparte` → `PUT /v1/autopartes/{id}`
-- [ ] Conectar `gestion_usuarios_internos` → `GET /v1/usuarios-internos/`
-- [ ] Conectar `gestion_pedidos` → `GET /v1/pedidos/`
-- [ ] Conectar `reportes` → `GET /v1/reportes/{tipo}/{formato}`
+### Flask (Panel Interno) ✅
+- [x] Crear `flask_app/api/client.py` — ApiClient + ApiException
+- [x] Crear `flask_app/services/` — auth, autopartes, pedidos, usuarios
+- [x] Reescribir `flask_app/app.py` — 20 rutas, session, protección, descarga reportes
+- [x] Actualizar 13 templates — loops Jinja2, flash messages, forms conectados
+- [x] `requirements.txt` — `requests==2.32.3`
 
-### Laravel (Frontend Externo)
-- [ ] Conectar `POST /registro` → `POST /v1/auth/registro`
-- [ ] Conectar `GET /catalogo` → `GET /v1/autopartes/`
-- [ ] Conectar `POST /checkout` → `POST /v1/pedidos/`
-- [ ] Conectar `GET /pedidos` → `GET /v1/pedidos/usuario/{id}`
+### Laravel (Frontend Externo) ✅
+- [x] Crear `Http/Client/ApiClient.php` + `ApiException`
+- [x] Crear `Http/Services/` — AuthService, AutopartesService, PedidosService
+- [x] Crear `Http/Middleware/CheckSession.php` — registrado en bootstrap/app.php
+- [x] Crear 5 Controllers — Auth, Catalogo, Carrito, Pedido, Perfil
+- [x] Reescribir `routes/web.php` — controllers + grupo protegido `check.session`
+- [x] Actualizar 11 vistas Blade — datos dinámicos, @csrf, mensajes de error
+- [x] `config/services.php` + `.env` — API_URL configurado
+
+### Docker ✅
+- [x] `docker-compose.yml` — FLASK_SECRET_KEY=macuin-secret-2026 agregado
 
 ---
 
@@ -180,7 +184,7 @@ fastapi_app/
 | 3 | CRUD Autopartes | 11 | ✅ Completo |
 | 4 | Pedidos + CRUD Usuarios Externos | 8, 9 | ✅ Completo |
 | 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ✅ Completo |
-| 6 | Integración Frontends ↔ API | 2 | ⬜ Siguiente |
+| 6 | Integración Frontends ↔ API | 2 | ✅ Completo |
 
 ---
 

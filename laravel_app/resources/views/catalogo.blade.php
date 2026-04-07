@@ -194,57 +194,59 @@
                 </div>
 
                 {{-- Productos --}}
-                @php
-                    $productos = [
-                        ['sku'=>'FRN-001','name'=>'Pastillas de Freno Delanteras Premium Brembo','price'=>'$485','orig'=>'$620','badge'=>'available','cat'=>'Frenos'],
-                        ['sku'=>'MOT-034','name'=>'Filtro de Aceite Universal Bosch','price'=>'$189','orig'=>null,'badge'=>'available','cat'=>'Motor'],
-                        ['sku'=>'SUS-112','name'=>'Amortiguador Delantero Gabriel Ultra','price'=>'$1,240','orig'=>'$1,500','badge'=>'low','cat'=>'Suspensión'],
-                        ['sku'=>'ELE-078','name'=>'Batería de Auto Optima 65Ah 12V','price'=>'$2,890','orig'=>null,'badge'=>'available','cat'=>'Eléctrico'],
-                        ['sku'=>'FRN-045','name'=>'Disco de Freno Ventilado Brembo 300mm','price'=>'$950','orig'=>'$1,150','badge'=>'available','cat'=>'Frenos'],
-                        ['sku'=>'MOT-089','name'=>'Bujía NGK Iridium Alto Rendimiento Set x4','price'=>'$640','orig'=>null,'badge'=>'out','cat'=>'Motor'],
-                        ['sku'=>'SUS-078','name'=>'Rótula Inferior Delantera TRW','price'=>'$380','orig'=>null,'badge'=>'available','cat'=>'Suspensión'],
-                        ['sku'=>'FIL-023','name'=>'Filtro de Aire K&N Alto Flujo','price'=>'$890','orig'=>'$1,050','badge'=>'available','cat'=>'Filtros'],
-                        ['sku'=>'ELE-034','name'=>'Alternador 80A Remanufacturado','price'=>'$1,650','orig'=>null,'badge'=>'low','cat'=>'Eléctrico'],
-                        ['sku'=>'MOT-156','name'=>'Correa de Distribución Gates PowerGrip','price'=>'$420','orig'=>null,'badge'=>'available','cat'=>'Motor'],
-                        ['sku'=>'FRN-089','name'=>'Liquido de Frenos DOT4 500ml Bosch','price'=>'$98','orig'=>null,'badge'=>'available','cat'=>'Frenos'],
-                        ['sku'=>'SUS-201','name'=>'Terminales de Dirección par Delantero','price'=>'$560','orig'=>'$680','badge'=>'available','cat'=>'Suspensión'],
-                    ];
-                    $badgeMap = ['available'=>['label'=>'Disponible','class'=>'mac-badge--available'],'low'=>['label'=>'Poco stock','class'=>'mac-badge--low'],'out'=>['label'=>'Sin stock','class'=>'mac-badge--out']];
-                    $imgs = ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80','https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&q=80','https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80','https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=80'];
-                @endphp
-
                 <div class="product-grid">
-                    @foreach($productos as $i => $p)
+                    @forelse($autopartes as $a)
                     <div class="mac-product-card">
-                        <a href="/catalogo/{{ $i+1 }}" style="display:block;">
+                        <a href="/catalogo/{{ $a['id'] }}" style="display:block;">
                             <div class="mac-product-card__image">
-                                <img src="{{ $imgs[$i % 4] }}" alt="{{ $p['name'] }}" loading="lazy">
+                                @if(!empty($a['imagen']))
+                                    <img src="{{ $a['imagen'] }}" alt="{{ $a['nombre'] }}" loading="lazy">
+                                @else
+                                    <div style="background:#eee;height:200px;display:flex;align-items:center;justify-content:center;">
+                                        <i class="fas fa-image" style="font-size:40px;color:#ccc;"></i>
+                                    </div>
+                                @endif
                             </div>
                         </a>
                         <div class="mac-product-card__body">
-                            <div class="mac-product-card__sku">SKU: {{ $p['sku'] }} · {{ $p['cat'] }}</div>
-                            <a href="/catalogo/{{ $i+1 }}" style="text-decoration:none;">
-                                <div class="mac-product-card__name">{{ $p['name'] }}</div>
+                            <div class="mac-product-card__sku">SKU: {{ $a['sku'] }} · {{ $a['categoria'] }}</div>
+                            <a href="/catalogo/{{ $a['id'] }}" style="text-decoration:none;">
+                                <div class="mac-product-card__name">{{ $a['nombre'] }}</div>
                             </a>
                             <div style="display:flex;align-items:baseline;gap:10px;">
-                                <div class="mac-product-card__price">{{ $p['price'] }}</div>
-                                @if($p['orig'])
-                                <div style="font-size:13px;color:var(--macuin-muted);text-decoration:line-through;">{{ $p['orig'] }}</div>
+                                <div class="mac-product-card__price">${{ number_format($a['precio'], 2) }}</div>
+                                @if(!empty($a['precio_original']))
+                                    <div style="font-size:13px;color:var(--macuin-muted);text-decoration:line-through;">
+                                        ${{ number_format($a['precio_original'], 2) }}
+                                    </div>
                                 @endif
                             </div>
                         </div>
                         <div class="mac-product-card__footer">
-                            <span class="mac-badge {{ $badgeMap[$p['badge']]['class'] }}">{{ $badgeMap[$p['badge']]['label'] }}</span>
-                            @if($p['badge'] !== 'out')
-                            <a href="/carrito" class="mac-btn mac-btn-primary mac-btn-sm">
-                                <i class="fas fa-cart-plus"></i>
-                            </a>
-                            @else
-                            <span class="mac-btn mac-btn-ghost mac-btn-sm" style="cursor:default;opacity:.5;">Agotado</span>
-                            @endif
+                            @php
+                                $badge = match($a['estado']) {
+                                    'en_stock'   => ['label' => 'Disponible',  'class' => 'mac-badge--available'],
+                                    'bajo_stock' => ['label' => 'Poco stock',  'class' => 'mac-badge--low'],
+                                    default      => ['label' => 'Sin stock',   'class' => 'mac-badge--out'],
+                                };
+                            @endphp
+                            <span class="mac-badge {{ $badge['class'] }}">{{ $badge['label'] }}</span>
+                            <form action="/carrito/agregar" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="autoparte_id" value="{{ $a['id'] }}">
+                                <input type="hidden" name="nombre" value="{{ $a['nombre'] }}">
+                                <input type="hidden" name="precio" value="{{ $a['precio'] }}">
+                                <input type="hidden" name="imagen" value="{{ $a['imagen'] ?? '' }}">
+                                <button type="submit" class="mac-btn mac-btn-primary mac-btn-sm"
+                                    {{ $a['estado'] === 'sin_stock' ? 'disabled' : '' }}>
+                                    <i class="fas fa-cart-plus"></i> Agregar
+                                </button>
+                            </form>
                         </div>
                     </div>
-                    @endforeach
+                    @empty
+                    <p style="text-align:center;padding:40px;color:var(--macuin-muted);">Sin productos disponibles.</p>
+                    @endforelse
                 </div>
 
                 {{-- Paginación --}}

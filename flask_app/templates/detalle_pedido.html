@@ -20,6 +20,16 @@
     />
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}" style="
+          position:fixed;top:20px;right:20px;z-index:9999;
+          padding:12px 20px;border-radius:6px;font-size:14px;
+          background:{% if category == 'error' %}#C41230{% else %}#16a34a{% endif %};
+          color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);
+        ">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
     <!-- ══ SITE HEADER ══ -->
     <header class="site-header" role="banner">
       <div class="hdr-inner">
@@ -60,12 +70,12 @@
         <!-- Page heading -->
         <div class="page-heading">
           <div>
-            <h1 class="page-title">Pedido <span>#PED-001</span></h1>
+            <h1 class="page-title">Pedido <span>{{ pedido.folio }}</span></h1>
             <p class="page-subtitle">
-              Creado el 05 de marzo de 2026 por Artemio Hurtado
+              Creado el {{ pedido.creado_en[:10] if pedido.creado_en else '—' }}
             </p>
           </div>
-          <span class="folio-badge">FOLIO: PED-001</span>
+          <span class="folio-badge">FOLIO: {{ pedido.folio }}</span>
         </div>
 
         <!-- ═══ TWO-COLUMN LAYOUT ═══ -->
@@ -122,38 +132,45 @@
                     </tr>
                   </thead>
                   <tbody>
+                    {% for d in pedido.items %}
                     <tr>
                       <td>
-                        <img
-                          src="{{ url_for('static', filename='images/copa_piston.png') }}"
-                          alt="Copa Pistón"
-                          class="item-img"
-                        />
+                        {% if d.imagen %}
+                        <img src="{{ d.imagen }}" alt="{{ d.nombre }}" class="item-img" />
+                        {% else %}
+                        <i class="fas fa-image" style="font-size:24px;color:#ccc;"></i>
+                        {% endif %}
                       </td>
                       <td>
-                        <div class="item-name">Copa Pistón RSHO Macuin</div>
-                        <div class="item-sku">SKU: AUT-001</div>
+                        <div class="item-name">{{ d.nombre }}</div>
+                        <div class="item-sku">SKU: {{ d.sku }}</div>
                       </td>
-                      <td>1</td>
-                      <td>$2.00</td>
-                      <td style="text-align: right">$2.00</td>
+                      <td>{{ d.cantidad }}</td>
+                      <td>${{ '%.2f' | format(d.precio_unitario) }}</td>
+                      <td style="text-align: right">${{ '%.2f' | format(d.subtotal) }}</td>
                     </tr>
+                    {% endfor %}
 
                     <!-- Totales -->
                     <tr class="total-row">
                       <td colspan="3"></td>
                       <td style="text-align: right">Subtotal</td>
-                      <td style="text-align: right">$2.00</td>
+                      <td style="text-align: right">${{ '%.2f' | format(pedido.subtotal) }}</td>
                     </tr>
                     <tr class="total-row">
                       <td colspan="3"></td>
                       <td style="text-align: right">Envío</td>
-                      <td style="text-align: right">$0.00</td>
+                      <td style="text-align: right">${{ '%.2f' | format(pedido.envio) }}</td>
+                    </tr>
+                    <tr class="total-row">
+                      <td colspan="3"></td>
+                      <td style="text-align: right">Impuestos</td>
+                      <td style="text-align: right">${{ '%.2f' | format(pedido.impuestos) }}</td>
                     </tr>
                     <tr class="total-row grand">
                       <td colspan="3"></td>
                       <td style="text-align: right">Total</td>
-                      <td style="text-align: right">$2.00</td>
+                      <td style="text-align: right">${{ '%.2f' | format(pedido.total) }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -233,33 +250,18 @@
               <div class="card-body">
                 <p class="state-change-title">Estado actual</p>
                 <div style="margin-bottom: 16px">
-                  <span class="current-badge">En proceso</span>
+                  <span class="current-badge">{{ pedido.estado }}</span>
                 </div>
-
-                <p class="state-change-title">Cambiar a</p>
-                <div class="state-btn-group">
-                  <button type="button" class="state-btn">
-                    <i class="fas fa-clock"></i>
-                    Pendiente
-                  </button>
-                  <button type="button" class="state-btn state-btn--active">
-                    <i class="fas fa-gear"></i>
-                    En proceso
-                  </button>
-                  <button type="button" class="state-btn">
-                    <i class="fas fa-truck"></i>
-                    Enviado
-                  </button>
-                  <button type="button" class="state-btn">
-<parameter name="new_string">                  <button type="button" class="state-btn">
-                    <i class="fas fa-circle-check"></i>
-                    Completado
-                  </button>
-                  <button type="button" class="state-btn state-btn--cancel">
-                    <i class="fas fa-xmark"></i>
-                    Cancelar pedido
-                  </button>
-                </div>
+                <form action="/pedidos/{{ pedido.id }}/estado" method="post">
+                  <select name="estado" class="field-select" style="width:100%;margin-bottom:12px;">
+                    <option value="Pendiente" {% if pedido.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                    <option value="En proceso" {% if pedido.estado == 'En proceso' %}selected{% endif %}>En proceso</option>
+                    <option value="Enviado" {% if pedido.estado == 'Enviado' %}selected{% endif %}>Enviado</option>
+                    <option value="Completado" {% if pedido.estado == 'Completado' %}selected{% endif %}>Completado</option>
+                    <option value="Cancelado" {% if pedido.estado == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+                  </select>
+                  <button type="submit" class="btn-save" style="width:100%;">Actualizar estado</button>
+                </form>
               </div>
             </div>
           </div>

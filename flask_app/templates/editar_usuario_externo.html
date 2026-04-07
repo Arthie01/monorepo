@@ -73,10 +73,20 @@
         </div>
 
         {# Formulario de edición #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="flash flash--{{ category }}" style="
+              position:fixed;top:20px;right:20px;z-index:9999;
+              padding:12px 20px;border-radius:6px;font-size:14px;
+              background:{% if category == 'error' %}#C41230{% else %}#16a34a{% endif %};
+              color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);
+            ">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
         <form
           class="edit-card"
-          action="/gestion-usuarios-externos"
-          method="get"
+          action="/editar-usuario-externo/{{ usuario.id }}"
+          method="post"
           novalidate
         >
           {# Columna izquierda: perfil #}
@@ -153,7 +163,7 @@
                     id="fNombre"
                     name="nombre"
                     class="field-input"
-                    value="Juan"
+                    value="{{ usuario.nombre }}"
                     required
                   />
                 </div>
@@ -167,7 +177,7 @@
                     id="fApellidos"
                     name="apellidos"
                     class="field-input"
-                    value="Ramírez"
+                    value="{{ usuario.apellidos }}"
                     required
                   />
                 </div>
@@ -183,7 +193,7 @@
                       id="fEmail"
                       name="email"
                       class="field-input field-input--icon"
-                      value="j.ramirez@tallercentral.mx"
+                      value="{{ usuario.email }}"
                       required
                     />
                   </div>
@@ -200,7 +210,7 @@
                       id="fTelefono"
                       name="telefono"
                       class="field-input field-input--icon"
-                      value="81 9876 5432"
+                      value="{{ usuario.telefono or '' }}"
                       required
                     />
                   </div>
@@ -223,7 +233,7 @@
                     id="fEmpresa"
                     name="empresa"
                     class="field-input"
-                    value="Taller Central Monterrey"
+                    value="{{ usuario.empresa or '' }}"
                     required
                   />
                 </div>
@@ -258,7 +268,7 @@
                       id="fRFC"
                       name="rfc"
                       class="field-input field-input--icon"
-                      value="TCM850101XX1"
+                      value="{{ usuario.rfc or '' }}"
                       placeholder="Ej. XAXX010101000"
                       maxlength="13"
                       style="text-transform: uppercase"
@@ -304,7 +314,7 @@
                     id="fCalle"
                     name="calle"
                     class="field-input"
-                    value="Av. Constitución #2450, Col. Centro"
+                    value="{{ usuario.calle or '' }}"
                     placeholder="Ej. Av. Revolución #123, Col. Centro"
                   />
                 </div>
@@ -316,7 +326,7 @@
                     id="fCiudad"
                     name="ciudad"
                     class="field-input"
-                    value="Monterrey"
+                    value="{{ usuario.ciudad or '' }}"
                     placeholder="Ej. Monterrey"
                   />
                 </div>
@@ -345,7 +355,7 @@
                     id="fCP"
                     name="cp"
                     class="field-input"
-                    value="64000"
+                    value="{{ usuario.cp or '' }}"
                     placeholder="Ej. 64000"
                     maxlength="5"
                   />
@@ -403,7 +413,7 @@
                       id="fCredito"
                       name="dias_credito"
                       class="field-input field-input--icon"
-                      value="30"
+                      value="{{ usuario.dias_credito or 0 }}"
                       min="0"
                       max="120"
                     />
@@ -429,7 +439,7 @@
                       id="fLimiteCredito"
                       name="limite_credito"
                       class="field-input field-input--icon"
-                      value="50000"
+                      value="{{ usuario.limite_credito or 0 }}"
                       min="0"
                       step="1000"
                     />
@@ -447,7 +457,7 @@
                       id="fDescuento"
                       name="descuento"
                       class="field-input field-input--icon"
-                      value="10"
+                      value="{{ usuario.descuento or 0 }}"
                       min="0"
                       max="100"
                     />

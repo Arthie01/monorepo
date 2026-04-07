@@ -73,10 +73,20 @@
         </div>
 
         {# Formulario de edición #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="flash flash--{{ category }}" style="
+              position:fixed;top:20px;right:20px;z-index:9999;
+              padding:12px 20px;border-radius:6px;font-size:14px;
+              background:{% if category == 'error' %}#C41230{% else %}#16a34a{% endif %};
+              color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);
+            ">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
         <form
           class="edit-card"
-          action="/gestion-usuarios-internos"
-          method="get"
+          action="/editar-usuario-interno/{{ usuario.id }}"
+          method="post"
           novalidate
         >
           {# Columna izquierda: perfil #}
@@ -153,7 +163,7 @@
                     id="fNombre"
                     name="nombre"
                     class="field-input"
-                    value="Artemio"
+                    value="{{ usuario.nombre }}"
                     required
                   />
                 </div>
@@ -167,7 +177,7 @@
                     id="fApellidos"
                     name="apellidos"
                     class="field-input"
-                    value="Hurtado"
+                    value="{{ usuario.apellidos }}"
                     required
                   />
                 </div>
@@ -183,7 +193,7 @@
                       id="fEmail"
                       name="email"
                       class="field-input field-input--icon"
-                      value="artemio@macuin.mx"
+                      value="{{ usuario.email }}"
                       required
                     />
                   </div>
@@ -198,7 +208,7 @@
                       id="fTelefono"
                       name="telefono"
                       class="field-input field-input--icon"
-                      value="81 1234 5678"
+                      value="{{ usuario.telefono or '' }}"
                       placeholder="Ej. 81 1234 5678"
                     />
                   </div>
@@ -256,7 +266,7 @@
                     id="fCargo"
                     name="cargo"
                     class="field-input"
-                    value="Gerente de Ventas"
+                    value="{{ usuario.cargo or '' }}"
                     placeholder="Ej. Jefe de almacén"
                   />
                 </div>

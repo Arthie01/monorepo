@@ -159,6 +159,15 @@
                     </label>
                 </div>
 
+                @if($errors->has('api'))
+                    <div class="auth-error" style="color:#C41230;font-size:13px;margin-bottom:12px;">
+                        {{ $errors->first('api') }}
+                    </div>
+                @endif
+                @if(session('success'))
+                    <div style="color:#16a34a;font-size:13px;margin-bottom:12px;">{{ session('success') }}</div>
+                @endif
+
                 <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="margin-bottom:20px;">
                     <i class="fas fa-sign-in-alt"></i>
                     INGRESAR

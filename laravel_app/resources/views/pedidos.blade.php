@@ -95,49 +95,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $pedidos = [
-                            ['folio'=>'MAC-2024-0089','fecha'=>'12 Ene 2025','items'=>3,'total'=>'$2,439','status'=>'completed','label'=>'Completado','class'=>'status-completed'],
-                            ['folio'=>'MAC-2024-0081','fecha'=>'05 Ene 2025','items'=>1,'total'=>'$1,240','status'=>'shipped','label'=>'Enviado','class'=>'status-shipped'],
-                            ['folio'=>'MAC-2024-0074','fecha'=>'28 Dic 2024','items'=>5,'total'=>'$4,890','status'=>'processing','label'=>'En proceso','class'=>'status-processing'],
-                            ['folio'=>'MAC-2024-0068','fecha'=>'20 Dic 2024','items'=>2,'total'=>'$674','status'=>'pending','label'=>'Pendiente','class'=>'status-pending'],
-                            ['folio'=>'MAC-2024-0059','fecha'=>'10 Dic 2024','items'=>4,'total'=>'$3,120','status'=>'cancelled','label'=>'Cancelado','class'=>'status-cancelled'],
-                            ['folio'=>'MAC-2024-0048','fecha'=>'01 Dic 2024','items'=>1,'total'=>'$485','status'=>'completed','label'=>'Completado','class'=>'status-completed'],
-                        ];
-                    @endphp
-                    @foreach($pedidos as $p)
+                    @if(session('success'))
+                        <tr><td colspan="5" style="padding:12px 16px;">
+                            <div style="background:rgba(22,163,74,.1);color:#16a34a;padding:10px 14px;border-radius:6px;font-size:13px;">
+                                {{ session('success') }}
+                            </div>
+                        </td></tr>
+                    @endif
+                    @forelse($pedidos as $p)
                     <tr>
                         <td>
-                            <a href="/pedido/{{ $p['folio'] }}" style="
+                            <a href="/pedido/{{ $p['id'] }}" style="
                                 font-family:'JetBrains Mono',monospace;
                                 font-size:13px;font-weight:500;
                                 color:var(--macuin-red);text-decoration:none;
                             ">{{ $p['folio'] }}</a>
                         </td>
-                        <td style="color:var(--macuin-muted);font-size:13px;">{{ $p['fecha'] }}</td>
-                        <td>
-                            <span style="font-size:13px;color:var(--macuin-text);">{{ $p['items'] }} {{ $p['items']===1?'artículo':'artículos' }}</span>
+                        <td style="color:var(--macuin-muted);font-size:13px;">
+                            {{ \Carbon\Carbon::parse($p['creado_en'])->format('d/m/Y') }}
                         </td>
                         <td>
-                            <span style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--macuin-text);">{{ $p['total'] }}</span>
+                            @php
+                                $cls = match($p['estado']) {
+                                    'Completado' => 'status-completed',
+                                    'Cancelado'  => 'status-cancelled',
+                                    'Pendiente'  => 'status-pending',
+                                    'Enviado'    => 'status-shipped',
+                                    default      => 'status-processing',
+                                };
+                            @endphp
+                            <span class="status-pill {{ $cls }}">{{ $p['estado'] }}</span>
                         </td>
                         <td>
-                            <span class="status-pill {{ $p['class'] }}">{{ $p['label'] }}</span>
+                            <span style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--macuin-text);">
+                                ${{ number_format($p['total'], 2) }}
+                            </span>
                         </td>
                         <td>
-                            <div style="display:flex;gap:8px;align-items:center;">
-                                <a href="/pedido/{{ $p['folio'] }}" class="mac-btn mac-btn-outline mac-btn-sm">
-                                    <i class="fas fa-eye" style="font-size:11px;"></i> Ver
-                                </a>
-                                @if($p['status'] === 'completed')
-                                <button class="mac-btn mac-btn-ghost mac-btn-sm" title="Reordenar">
-                                    <i class="fas fa-redo" style="font-size:11px;"></i>
-                                </button>
-                                @endif
-                            </div>
+                            <a href="/pedido/{{ $p['id'] }}" class="mac-btn mac-btn-outline mac-btn-sm">
+                                <i class="fas fa-eye" style="font-size:11px;"></i> Ver
+                            </a>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--macuin-muted);">Sin pedidos aún.</td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

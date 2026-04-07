@@ -123,10 +123,10 @@
                         <div class="mac-input-icon">
                             <i class="mac-input-icon__icon fas fa-user"></i>
                             <input
-                                type="text" id="name" name="name"
-                                class="mac-input {{ $errors->has('name') ? 'mac-input-error' : '' }}"
+                                type="text" id="nombre" name="nombre"
+                                class="mac-input {{ $errors->has('nombre') ? 'mac-input-error' : '' }}"
                                 placeholder="Juan"
-                                value="{{ old('name') }}"
+                                value="{{ old('nombre') }}"
                                 autocomplete="given-name" required
                             >
                         </div>
@@ -236,6 +236,15 @@
                         </span>
                     </label>
                 </div>
+
+                @if($errors->has('api'))
+                    <div class="auth-error" style="color:#C41230;font-size:13px;margin-bottom:12px;">
+                        {{ $errors->first('api') }}
+                    </div>
+                @endif
+                @if(session('success'))
+                    <div style="color:#16a34a;font-size:13px;margin-bottom:12px;">{{ session('success') }}</div>
+                @endif
 
                 <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="margin-bottom:16px;">
                     <i class="fas fa-user-plus"></i>

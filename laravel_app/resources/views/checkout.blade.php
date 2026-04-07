@@ -126,23 +126,26 @@
                             <div class="checkout-section__title">Dirección de Envío</div>
                         </div>
                         <div class="checkout-section__body">
+                            @error('api')
+                                <p style="color:#C41230;font-size:13px;margin-bottom:12px;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>{{ $message }}</p>
+                            @enderror
                             <div class="mac-form-group">
                                 <label class="mac-label">Calle y número</label>
                                 <div class="mac-input-icon">
                                     <i class="mac-input-icon__icon fas fa-map-marker-alt"></i>
-                                    <input type="text" name="address" class="mac-input" placeholder="Av. López Mateos #1234, Col. Centro" required>
+                                    <input type="text" name="calle" class="mac-input" placeholder="Av. López Mateos #1234, Col. Centro" value="{{ old('calle') }}" required>
                                 </div>
                             </div>
                             <div class="form-grid-2">
                                 <div class="mac-form-group">
                                     <label class="mac-label">Ciudad</label>
-                                    <input type="text" name="city" class="mac-input" placeholder="Querétaro" required>
+                                    <input type="text" name="ciudad" class="mac-input" placeholder="Querétaro" value="{{ old('ciudad') }}" required>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Estado</label>
-                                    <select name="state" class="mac-input">
-                                    <option>Querétaro</option>    
-                                    <option>Aguascalientes</option>
+                                    <select name="estado" class="mac-input">
+                                        <option>Querétaro</option>
+                                        <option>Aguascalientes</option>
                                         <option>CDMX</option>
                                         <option>Jalisco</option>
                                         <option>Nuevo León</option>
@@ -151,7 +154,7 @@
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Código Postal</label>
-                                    <input type="text" name="zip" class="mac-input" placeholder="20000" maxlength="5" required>
+                                    <input type="text" name="cp" class="mac-input" placeholder="20000" maxlength="5" value="{{ old('cp') }}" required>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Referencias</label>
@@ -207,37 +210,30 @@
                             <h3 style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:#fff;text-transform:uppercase;margin:0;">Tu Pedido</h3>
                         </div>
                         <div style="padding:20px;">
-                            {{-- Items --}}
-                            @php
-                                $items = [
-                                    ['name'=>'Pastillas de Freno Brembo','qty'=>1,'price'=>'$485'],
-                                    ['name'=>'Filtro de Aceite Bosch','qty'=>2,'price'=>'$378'],
-                                    ['name'=>'Amortiguador Gabriel Ultra','qty'=>1,'price'=>'$1,240'],
-                                ];
-                            @endphp
+                            {{-- Items del carrito --}}
                             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-                                @foreach($items as $item)
+                                @forelse($carrito as $item)
                                 <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;">
                                     <span style="color:var(--macuin-muted);flex:1;line-height:1.4;">
-                                        <strong style="color:var(--macuin-text);">x{{ $item['qty'] }}</strong> {{ $item['name'] }}
+                                        <strong style="color:var(--macuin-text);">x{{ $item['cantidad'] }}</strong> {{ $item['nombre'] }}
                                     </span>
-                                    <span style="font-weight:600;color:var(--macuin-text);white-space:nowrap;">{{ $item['price'] }}</span>
+                                    <span style="font-weight:600;color:var(--macuin-text);white-space:nowrap;">
+                                        ${{ number_format($item['precio'] * $item['cantidad'], 2) }}
+                                    </span>
                                 </div>
-                                @endforeach
+                                @empty
+                                <p style="font-size:13px;color:var(--macuin-muted);">El carrito está vacío.</p>
+                                @endforelse
                             </div>
 
                             <div style="border-top:1px solid var(--macuin-gray);padding-top:14px;display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
                                 <div style="display:flex;justify-content:space-between;font-size:13px;">
                                     <span style="color:var(--macuin-muted);">Subtotal</span>
-                                    <span style="font-weight:600;">$2,103</span>
+                                    <span style="font-weight:600;">${{ number_format($subtotal, 2) }}</span>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;font-size:13px;">
                                     <span style="color:var(--macuin-muted);">Envío</span>
                                     <span style="font-weight:600;color:#16A34A;">Gratis</span>
-                                </div>
-                                <div style="display:flex;justify-content:space-between;font-size:13px;">
-                                    <span style="color:var(--macuin-muted);">IVA (16%)</span>
-                                    <span style="font-weight:600;">$336.48</span>
                                 </div>
                             </div>
 
@@ -246,8 +242,8 @@
                                 padding:14px;margin-bottom:20px;
                                 display:flex;justify-content:space-between;align-items:center;
                             ">
-                                <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;">TOTAL</span>
-                                <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--macuin-red);">$2,439.48</span>
+                                <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;">SUBTOTAL</span>
+                                <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--macuin-red);">${{ number_format($subtotal, 2) }}</span>
                             </div>
 
                             <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="margin-bottom:12px;">

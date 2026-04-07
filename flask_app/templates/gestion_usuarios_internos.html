@@ -20,6 +20,16 @@
     />
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}" style="
+          position:fixed;top:20px;right:20px;z-index:9999;
+          padding:12px 20px;border-radius:6px;font-size:14px;
+          background:{% if category == 'error' %}#C41230{% else %}#16a34a{% endif %};
+          color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);
+        ">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
     {# Sección: Header #}
     <header class="site-header" role="banner">
       <div class="hdr-inner">
@@ -161,307 +171,27 @@
                 </tr>
               </thead>
               <tbody>
-                {# Usuario 1 #}
+                {% for u in usuarios %}
                 <tr>
-                  <td class="td-id">USR-001</td>
+                  <td class="td-id">{{ u.id }}</td>
+                  <td>{{ u.nombre }} {{ u.apellidos }}</td>
+                  <td>{{ u.email }}</td>
+                  <td>{{ u.rol }}</td>
+                  <td>{{ u.departamento }}</td>
                   <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--red">AH</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Artemio Hurtado</span>
-                        <span class="user-cell__email">artemio@macuin.mx</span>
-                      </div>
-                    </div>
+                    <span class="badge {% if u.estado == 'activo' %}badge--ok{% else %}badge--err{% endif %}">
+                      {{ u.estado | title }}
+                    </span>
                   </td>
-                  <td>Ventas</td>
-                  <td><span class="badge badge--admin">Administrador</span></td>
-                  <td>06/03/2026 — 09:14</td>
-                  <td><span class="badge badge--activo">Activo</span></td>
                   <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
+                    <a href="/editar-usuario-interno/{{ u.id }}" class="act-btn act-btn--edit"><i class="fas fa-edit"></i></a>
+                    <a href="/eliminar-usuario-interno/{{ u.id }}" class="act-btn act-btn--del"
+                       onclick="return confirm('¿Eliminar a {{ u.nombre }}?')"><i class="fas fa-trash"></i></a>
                   </td>
                 </tr>
-
-                {# Usuario 2 #}
-                <tr>
-                  <td class="td-id">USR-002</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--navy">ML</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">María López</span>
-                        <span class="user-cell__email"
-                          >maria.lopez@macuin.mx</span
-                        >
-                      </div>
-                    </div>
-                  </td>
-                  <td>Almacén</td>
-                  <td><span class="badge badge--almacen">Almacén</span></td>
-                  <td>05/03/2026 — 17:42</td>
-                  <td><span class="badge badge--activo">Activo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                {# Usuario 3 #}
-                <tr>
-                  <td class="td-id">USR-003</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--blue">RG</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Roberto García</span>
-                        <span class="user-cell__email">r.garcia@macuin.mx</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Logística</td>
-                  <td><span class="badge badge--logistica">Logística</span></td>
-                  <td>06/03/2026 — 08:30</td>
-                  <td><span class="badge badge--activo">Activo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                {# Usuario 4 #}
-                <tr>
-                  <td class="td-id">USR-004</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--green">EM</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Emiliano Martínez</span>
-                        <span class="user-cell__email">emiliano@macuin.mx</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Ventas</td>
-                  <td><span class="badge badge--ventas">Ventas</span></td>
-                  <td>04/03/2026 — 14:18</td>
-                  <td><span class="badge badge--activo">Activo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                {# Usuario 5 #}
-                <tr>
-                  <td class="td-id">USR-005</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--amber">CR</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Carla Reyes</span>
-                        <span class="user-cell__email">carla.r@macuin.mx</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Almacén</td>
-                  <td><span class="badge badge--almacen">Almacén</span></td>
-                  <td>03/03/2026 — 11:05</td>
-                  <td><span class="badge badge--activo">Activo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                {# Usuario 6 #}
-                <tr>
-                  <td class="td-id">USR-006</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--steel">JV</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Jorge Villanueva</span>
-                        <span class="user-cell__email"
-                          >j.villanueva@macuin.mx</span
-                        >
-                      </div>
-                    </div>
-                  </td>
-                  <td>Logística</td>
-                  <td><span class="badge badge--logistica">Logística</span></td>
-                  <td>01/03/2026 — 09:50</td>
-                  <td><span class="badge badge--activo">Activo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                {# Usuario 7 — Inactivo #}
-                <tr>
-                  <td class="td-id">USR-007</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--steel">PN</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Patricia Navarro</span>
-                        <span class="user-cell__email"
-                          >p.navarro@macuin.mx</span
-                        >
-                      </div>
-                    </div>
-                  </td>
-                  <td>Ventas</td>
-                  <td><span class="badge badge--ventas">Ventas</span></td>
-                  <td>15/02/2026 — 16:30</td>
-                  <td><span class="badge badge--inactivo">Inactivo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                {# Usuario 8 — Inactivo #}
-                <tr>
-                  <td class="td-id">USR-008</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="user-avatar avatar--steel">DS</div>
-                      <div class="user-cell__info">
-                        <span class="user-cell__name">Daniel Soto</span>
-                        <span class="user-cell__email">d.soto@macuin.mx</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Almacén</td>
-                  <td><span class="badge badge--almacen">Almacén</span></td>
-                  <td>20/01/2026 — 10:12</td>
-                  <td><span class="badge badge--inactivo">Inactivo</span></td>
-                  <td>
-                    <div class="tbl-actions">
-                      <a
-                        href="/editar-usuario-interno"
-                        class="act-btn act-btn--edit"
-                        aria-label="Editar usuario"
-                        title="Editar"
-                      >
-                        <i class="fas fa-pen-to-square"></i
-                      ></a>
-                      <button
-                        class="act-btn act-btn--del"
-                        aria-label="Desactivar usuario"
-                        title="Desactivar"
-                      >
-                        <i class="fas fa-user-slash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                {% else %}
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">Sin usuarios internos.</td></tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>

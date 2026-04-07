@@ -225,43 +225,62 @@
 
         <div class="swiper mac-swiper" id="mac-featured-swiper">
             <div class="swiper-wrapper">
-                @php
-                    $productos = [
-                        ['sku'=>'FRN-001','name'=>'Pastillas de Freno Delanteras Premium','price'=>'$485','orig'=>'$620','badge'=>'available','img'=>'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'],
-                        ['sku'=>'MOT-034','name'=>'Filtro de Aceite Universal Bosch','price'=>'$189','orig'=>null,'badge'=>'available','img'=>'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&q=80'],
-                        ['sku'=>'SUS-112','name'=>'Amortiguador Delantero Gabriel','price'=>'$1,240','orig'=>'$1,500','badge'=>'low','img'=>'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80'],
-                        ['sku'=>'ELE-078','name'=>'Batería de Auto Optima 65Ah','price'=>'$2,890','orig'=>null,'badge'=>'available','img'=>'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=80'],
-                        ['sku'=>'FRN-045','name'=>'Disco de Freno Ventilado Brembo','price'=>'$950','orig'=>'$1,150','badge'=>'available','img'=>'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'],
-                        ['sku'=>'MOT-089','name'=>'Bujía NGK Iridium Set x4','price'=>'$640','orig'=>null,'badge'=>'out','img'=>'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&q=80'],
-                    ];
-                    $badgeMap = ['available'=>['label'=>'Disponible','class'=>'mac-badge--available'],'low'=>['label'=>'Poco stock','class'=>'mac-badge--low'],'out'=>['label'=>'Sin stock','class'=>'mac-badge--out']];
-                @endphp
-
-                @foreach($productos as $p)
+                @forelse($autopartes as $a)
                 <div class="swiper-slide">
                     <div class="mac-product-card">
-                        <div class="mac-product-card__image">
-                            <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" loading="lazy">
-                        </div>
+                        <a href="/catalogo/{{ $a['id'] }}" style="display:block;">
+                            <div class="mac-product-card__image">
+                                @if(!empty($a['imagen']))
+                                    <img src="{{ $a['imagen'] }}" alt="{{ $a['nombre'] }}" loading="lazy">
+                                @else
+                                    <div style="background:#eee;height:200px;display:flex;align-items:center;justify-content:center;">
+                                        <i class="fas fa-image" style="font-size:40px;color:#ccc;"></i>
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
                         <div class="mac-product-card__body">
-                            <div class="mac-product-card__sku">SKU: {{ $p['sku'] }}</div>
-                            <div class="mac-product-card__name">{{ $p['name'] }}</div>
+                            <div class="mac-product-card__sku">SKU: {{ $a['sku'] }}</div>
+                            <a href="/catalogo/{{ $a['id'] }}" style="text-decoration:none;">
+                                <div class="mac-product-card__name">{{ $a['nombre'] }}</div>
+                            </a>
                             <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-                                <div class="mac-product-card__price">{{ $p['price'] }}</div>
-                                @if($p['orig'])
-                                <div style="font-size:13px;color:var(--macuin-muted);text-decoration:line-through;">{{ $p['orig'] }}</div>
+                                <div class="mac-product-card__price">${{ number_format($a['precio'], 2) }}</div>
+                                @if(!empty($a['precio_original']))
+                                <div style="font-size:13px;color:var(--macuin-muted);text-decoration:line-through;">
+                                    ${{ number_format($a['precio_original'], 2) }}
+                                </div>
                                 @endif
                             </div>
                         </div>
                         <div class="mac-product-card__footer">
-                            <span class="mac-badge {{ $badgeMap[$p['badge']]['class'] }}">{{ $badgeMap[$p['badge']]['label'] }}</span>
-                            <a href="/catalogo/1" class="mac-btn mac-btn-primary mac-btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Agregar
-                            </a>
+                            @php
+                                $badge = match($a['estado']) {
+                                    'en_stock'   => ['label' => 'Disponible', 'class' => 'mac-badge--available'],
+                                    'bajo_stock' => ['label' => 'Poco stock', 'class' => 'mac-badge--low'],
+                                    default      => ['label' => 'Sin stock',  'class' => 'mac-badge--out'],
+                                };
+                            @endphp
+                            <span class="mac-badge {{ $badge['class'] }}">{{ $badge['label'] }}</span>
+                            <form action="/carrito/agregar" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="autoparte_id" value="{{ $a['id'] }}">
+                                <input type="hidden" name="nombre" value="{{ $a['nombre'] }}">
+                                <input type="hidden" name="precio" value="{{ $a['precio'] }}">
+                                <input type="hidden" name="imagen" value="{{ $a['imagen'] ?? '' }}">
+                                <button type="submit" class="mac-btn mac-btn-primary mac-btn-sm"
+                                    {{ $a['estado'] === 'sin_stock' ? 'disabled' : '' }}>
+                                    <i class="fas fa-shopping-cart"></i> Agregar
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="swiper-slide">
+                    <p style="text-align:center;padding:40px;color:var(--macuin-muted);">Sin productos disponibles.</p>
+                </div>
+                @endforelse
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
