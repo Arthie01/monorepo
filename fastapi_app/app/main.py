@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.data.db import engine
 from app.data import usuario_externo, usuario_interno, autoparte, pedido, detalle_pedido
-from app.routers import auth, usuarios_internos, usuarios_externos, autopartes, pedidos
+from app.routers import auth, usuarios_internos, usuarios_externos, autopartes, pedidos, reportes
 
 # Crear directorio de uploads si no existe
 os.makedirs("/app/uploads/autopartes", exist_ok=True)
@@ -26,6 +26,7 @@ app.include_router(usuarios_internos.router)
 app.include_router(usuarios_externos.router)
 app.include_router(autopartes.router)
 app.include_router(pedidos.router)
+app.include_router(reportes.router)
 
 
 @app.get("/")

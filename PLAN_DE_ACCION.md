@@ -5,7 +5,7 @@
 |------------|--------|
 | Laravel (Frontend Externo) | ✅ Terminado — 10 vistas Blade estáticas |
 | Flask (Panel Interno) | ✅ Terminado — 14 vistas Jinja2 estáticas |
-| FastAPI (API Central) | 🔄 En progreso — M1+M2+M3+M4 completos, falta reportes |
+| FastAPI (API Central) | 🔄 En progreso — M1+M2+M3+M4+M5 completos, falta integración frontends |
 | PostgreSQL (Base de Datos) | ✅ Lista — ddl.sql + dml.sql + modelos SQLAlchemy |
 | Docker (Todos los servicios) | ✅ Completo — 4 servicios con healthcheck en docker-compose.yml |
 | Integración Frontends ↔ API | ⬜ Por conectar |
@@ -135,17 +135,17 @@ fastapi_app/
 
 ---
 
-## Milestone 5 — Reportes (4 tipos + 3 formatos)
+## Milestone 5 — Reportes (4 tipos + 3 formatos) ✅ COMPLETADO
 > **Objetivo**: Endpoints que generan reportes descargables en PDF, xlsx y docx.
 
-- [ ] Crear `fastapi_app/app/routers/reportes.py` con 4 tipos de reporte:
-  - `GET /v1/reportes/ventas/{formato}`      — Total de ventas por período
-  - `GET /v1/reportes/inventario/{formato}`  — Stock actual de autopartes
-  - `GET /v1/reportes/pedidos/{formato}`     — Pedidos por estado
-  - `GET /v1/reportes/usuarios/{formato}`    — Usuarios externos registrados
-  - `{formato}` acepta: `pdf`, `xlsx`, `docx`
-- [ ] Usar `reportlab` para PDF, `openpyxl` para xlsx, `python-docx` para docx
-- [ ] Registrar router en `main.py`
+- [x] ~~Crear `fastapi_app/app/routers/reportes.py`~~ ✅ — 4 endpoints:
+  - `GET /v1/reportes/ventas/{formato}`      — Ventas totales, top 5 productos, por categoría/marca/mes (`?fecha_inicio=` `?fecha_fin=`)
+  - `GET /v1/reportes/inventario/{formato}`  — Stock actual por categoría + alertas de stock bajo
+  - `GET /v1/reportes/pedidos/{formato}`     — Listado y distribución por estado (`?fecha_inicio=` `?fecha_fin=` `?estado=`)
+  - `GET /v1/reportes/usuarios/{formato}`    — Usuarios externos con total pedidos y monto total comprado
+  - `{formato}` acepta: `pdf`, `xlsx`, `docx` — todos requieren HTTPBasic
+- [x] ~~Usar `reportlab` para PDF, `openpyxl` para xlsx, `python-docx` para docx~~ ✅ — archivos en memoria con `io.BytesIO`, `StreamingResponse`
+- [x] ~~Registrar router en `main.py`~~ ✅ — 6 routers registrados
 
 **Rúbrica cubierta**: Criterios 12 (4 reportes), 13 (PDF/xlsx/docx)
 
@@ -179,8 +179,8 @@ fastapi_app/
 | 2 | Registro + CRUD Usuarios Internos | 7, 10 | ✅ Completo |
 | 3 | CRUD Autopartes | 11 | ✅ Completo |
 | 4 | Pedidos + CRUD Usuarios Externos | 8, 9 | ✅ Completo |
-| 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ⬜ Siguiente |
-| 6 | Integración Frontends ↔ API | 2 | ⬜ |
+| 5 | Reportes (4 tipos, 3 formatos) | 12, 13 | ✅ Completo |
+| 6 | Integración Frontends ↔ API | 2 | ⬜ Siguiente |
 
 ---
 
