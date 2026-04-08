@@ -139,28 +139,12 @@
         {{-- Selector de Vehículo Hero --}}
         <div class="mac-vs-hero">
             <div class="mac-vs-hero__group">
-                <div class="mac-vs-label"><i class="fas fa-calendar-alt" style="margin-right:4px;"></i>Año</div>
-                <select id="vs-year" class="mac-vs-select" onchange="updateVsMarca()">
-                    <option value="">Seleccionar</option>
-                    @for($y = 2024; $y >= 1995; $y--)
-                        <option value="{{ $y }}">{{ $y }}</option>
-                    @endfor
-                </select>
-            </div>
-            <div class="mac-vs-hero__group">
                 <div class="mac-vs-label"><i class="fas fa-car" style="margin-right:4px;"></i>Marca</div>
                 <select id="vs-marca" class="mac-vs-select" onchange="updateVsModelo()">
                     <option value="">Seleccionar</option>
-                    <option value="chevrolet">Chevrolet</option>
-                    <option value="ford">Ford</option>
-                    <option value="nissan">Nissan</option>
-                    <option value="volkswagen">Volkswagen</option>
-                    <option value="toyota">Toyota</option>
-                    <option value="honda">Honda</option>
-                    <option value="dodge">Dodge</option>
-                    <option value="kia">Kia</option>
-                    <option value="hyundai">Hyundai</option>
-                    <option value="mazda">Mazda</option>
+                    @foreach($marcas as $marca)
+                        <option value="{{ $marca }}">{{ $marca }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="mac-vs-hero__group">
@@ -169,10 +153,10 @@
                     <option value="">Seleccionar</option>
                 </select>
             </div>
-            <a href="/catalogo" class="mac-btn mac-btn-primary" style="flex-shrink:0;height:42px;align-self:flex-end;">
+            <button type="button" onclick="buscarHero()" class="mac-btn mac-btn-primary" style="flex-shrink:0;height:42px;align-self:flex-end;">
                 <i class="fas fa-search"></i>
                 BUSCAR PARTES
-            </a>
+            </button>
         </div>
     </div>
 </section>
@@ -348,31 +332,31 @@
         }
     });
 
-    // Selector de vehículo
-    const vsModelos = {
-        chevrolet:  ['Aveo','Beat','Trax','Equinox','Silverado','Cheyenne','Captiva','Spark'],
-        ford:       ['Fiesta','Focus','Mustang','Ranger','F-150','Escape','Explorer','Lobo'],
-        nissan:     ['Tsuru','Versa','Sentra','Altima','X-Trail','Kicks','NP300','Frontier'],
-        volkswagen: ['Jetta','Golf','Vento','Tiguan','Passat','Polo','Amarok','Saveiro'],
-        toyota:     ['Corolla','Camry','Hilux','RAV4','Fortuner','Yaris','Avanza','Prius'],
-        honda:      ['Civic','Accord','CR-V','HR-V','Fit','City','Pilot','Ridgeline'],
-        dodge:      ['Attitude','Journey','Durango','Charger','RAM 700','RAM 1500','Challenger'],
-        kia:        ['Rio','Forte','Seltos','Sportage','Sorento','Stinger','Carnival'],
-        hyundai:    ['Accent','Elantra','Tucson','Santa Fe','Creta','Ioniq','Venue'],
-        mazda:      ['Mazda2','Mazda3','Mazda6','CX-3','CX-5','CX-30','MX-5'],
-    };
+    // Modelos por marca — datos reales de la BD
+    const vsModelosPorMarca = @json($modelosPorMarca);
+
     function updateVsModelo() {
         const marca = document.getElementById('vs-marca').value;
-        const sel = document.getElementById('vs-modelo');
+        const sel   = document.getElementById('vs-modelo');
         sel.innerHTML = '<option value="">Seleccionar</option>';
-        if (vsModelos[marca]) {
-            vsModelos[marca].forEach(m => {
+        if (vsModelosPorMarca[marca]) {
+            vsModelosPorMarca[marca].forEach(m => {
                 const o = document.createElement('option');
-                o.value = m.toLowerCase().replace(/\s/g,'-');
+                o.value = m;
                 o.textContent = m;
                 sel.appendChild(o);
             });
         }
+    }
+
+    function buscarHero() {
+        const marca  = document.getElementById('vs-marca').value;
+        const modelo = document.getElementById('vs-modelo').value;
+        const params = new URLSearchParams();
+        if (marca)  params.set('marca_vehiculo',  marca);
+        if (modelo) params.set('modelo_vehiculo', modelo);
+        const qs = params.toString();
+        window.location.href = '/catalogo' + (qs ? '?' + qs : '');
     }
 </script>
 @endpush

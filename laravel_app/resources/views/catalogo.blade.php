@@ -110,6 +110,7 @@
         <div class="cat-layout">
 
             {{-- Sidebar de Filtros --}}
+            <form method="GET" action="/catalogo" id="cat-filter-form">
             <aside class="cat-sidebar">
                 <div class="cat-sidebar__section" style="background:var(--macuin-dark);">
                     <h3 style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.08em;margin:0;display:flex;align-items:center;gap:8px;">
@@ -121,62 +122,83 @@
                 <div class="cat-sidebar__section">
                     <div class="cat-sidebar__title">Categoría</div>
                     @php
-                        $cats = ['Motor (3,240)','Suspensión (1,890)','Frenos (2,105)','Sistema Eléctrico (4,320)','Transmisión (1,560)','Filtros (980)','Carrocería (720)','Climatización (640)'];
+                        $cats = ['Motor','Suspensión','Frenos','Eléctrico','Transmisión','Filtros'];
                     @endphp
                     @foreach($cats as $c)
                     <label class="filter-check">
-                        <input type="checkbox">
+                        <input type="radio" name="categoria" value="{{ $c }}"
+                            {{ ($filtros['categoria'] ?? '') === $c ? 'checked' : '' }}
+                            onchange="document.getElementById('cat-filter-form').submit()">
                         <span>{{ $c }}</span>
                     </label>
                     @endforeach
                 </div>
 
-                {{-- Marca de auto --}}
+                {{-- Marca de vehículo --}}
                 <div class="cat-sidebar__section">
-                    <div class="cat-sidebar__title">Marca de Auto</div>
-                    @foreach(['Chevrolet','Ford','Nissan','Volkswagen','Toyota','Honda'] as $m)
+                    <div class="cat-sidebar__title">Marca de Vehículo</div>
+                    @foreach(['Chevrolet','Ford','Nissan','Volkswagen','Toyota','Honda','Dodge','Kia','Hyundai','Mazda'] as $m)
                     <label class="filter-check">
-                        <input type="checkbox">
+                        <input type="radio" name="marca_vehiculo" value="{{ $m }}"
+                            {{ ($filtros['marca_vehiculo'] ?? '') === $m ? 'checked' : '' }}
+                            onchange="document.getElementById('cat-filter-form').submit()">
                         <span>{{ $m }}</span>
                     </label>
                     @endforeach
                 </div>
 
-                {{-- Rango de precio --}}
                 <div class="cat-sidebar__section">
-                    <div class="cat-sidebar__title">Rango de Precio</div>
-                    <div class="price-range">
-                        <input type="number" class="price-input" placeholder="Mín" min="0">
-                        <span style="color:var(--macuin-muted);font-size:12px;">—</span>
-                        <input type="number" class="price-input" placeholder="Máx" min="0">
-                    </div>
-                </div>
-
-                {{-- Stock --}}
-                <div class="cat-sidebar__section">
-                    <div class="cat-sidebar__title">Disponibilidad</div>
-                    <label class="filter-check"><input type="radio" name="stock"> <span>Todos</span></label>
-                    <label class="filter-check"><input type="radio" name="stock"> <span>En stock</span></label>
-                    <label class="filter-check"><input type="radio" name="stock"> <span>Poco stock</span></label>
-                </div>
-
-                <div class="cat-sidebar__section">
-                    <button class="mac-btn mac-btn-primary mac-btn-block mac-btn-sm">
+                    <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-sm">
                         <i class="fas fa-filter"></i> Aplicar Filtros
                     </button>
-                    <button class="mac-btn mac-btn-ghost mac-btn-block mac-btn-sm" style="margin-top:8px;">
+                    <a href="/catalogo" class="mac-btn mac-btn-ghost mac-btn-block mac-btn-sm" style="margin-top:8px;text-align:center;text-decoration:none;">
                         Limpiar filtros
-                    </button>
+                    </a>
                 </div>
             </aside>
+            </form>
 
             {{-- Grid de Productos --}}
             <div>
                 {{-- Toolbar --}}
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
-                    <p style="font-size:14px;color:var(--macuin-muted);">
-                        Mostrando <strong style="color:var(--macuin-text);">1–12</strong> de <strong style="color:var(--macuin-text);">248</strong> resultados
-                    </p>
+                    <div>
+                        <p style="font-size:14px;color:var(--macuin-muted);margin-bottom:6px;">
+                            <strong style="color:var(--macuin-text);">{{ count($autopartes) }}</strong> resultado(s)
+                            @if(!empty($filtros['marca_vehiculo']))
+                                para <strong style="color:var(--macuin-text);">{{ $filtros['marca_vehiculo'] }}</strong>
+                            @endif
+                            @if(!empty($filtros['modelo_vehiculo']))
+                                — <strong style="color:var(--macuin-text);">{{ $filtros['modelo_vehiculo'] }}</strong>
+                            @endif
+                            @if(!empty($filtros['categoria']))
+                                en <strong style="color:var(--macuin-text);">{{ $filtros['categoria'] }}</strong>
+                            @endif
+                        </p>
+                        {{-- Tags de filtros activos --}}
+                        @if(!empty($filtros['marca_vehiculo']) || !empty($filtros['modelo_vehiculo']) || !empty($filtros['categoria']))
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            @if(!empty($filtros['categoria']))
+                            <span style="background:var(--macuin-red);color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;">
+                                {{ $filtros['categoria'] }}
+                                <a href="/catalogo?{{ http_build_query(array_filter(array_merge($filtros, ['categoria'=>null]))) }}" style="color:rgba(255,255,255,.7);text-decoration:none;font-weight:700;">×</a>
+                            </span>
+                            @endif
+                            @if(!empty($filtros['marca_vehiculo']))
+                            <span style="background:var(--macuin-red);color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;">
+                                {{ $filtros['marca_vehiculo'] }}
+                                <a href="/catalogo?{{ http_build_query(array_filter(array_merge($filtros, ['marca_vehiculo'=>null]))) }}" style="color:rgba(255,255,255,.7);text-decoration:none;font-weight:700;">×</a>
+                            </span>
+                            @endif
+                            @if(!empty($filtros['modelo_vehiculo']))
+                            <span style="background:var(--macuin-red);color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;">
+                                {{ $filtros['modelo_vehiculo'] }}
+                                <a href="/catalogo?{{ http_build_query(array_filter(array_merge($filtros, ['modelo_vehiculo'=>null]))) }}" style="color:rgba(255,255,255,.7);text-decoration:none;font-weight:700;">×</a>
+                            </span>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <label style="font-size:13px;color:var(--macuin-muted);">Ordenar:</label>
                         <select style="

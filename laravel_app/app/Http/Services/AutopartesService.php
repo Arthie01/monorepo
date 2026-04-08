@@ -8,10 +8,13 @@ class AutopartesService
 {
     public function __construct(private ApiClient $client) {}
 
-    /** Lista todas las autopartes. Si $categoria se pasa, filtra. */
-    public function listar(?string $categoria = null): array
+    /** Lista todas las autopartes. Filtros opcionales: categoria, marca y modelo de vehículo. */
+    public function listar(?string $categoria = null, ?string $marcaVehiculo = null, ?string $modeloVehiculo = null): array
     {
-        $query = $categoria ? ['categoria' => $categoria] : [];
+        $query = [];
+        if ($categoria)      $query['categoria']       = $categoria;
+        if ($marcaVehiculo)  $query['marca_vehiculo']  = $marcaVehiculo;
+        if ($modeloVehiculo) $query['modelo_vehiculo'] = $modeloVehiculo;
         $resp = $this->client->get('/v1/autopartes/', $query);
         return $resp['data'] ?? [];
     }

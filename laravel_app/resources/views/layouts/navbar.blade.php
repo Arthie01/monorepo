@@ -49,17 +49,6 @@
             height:42px;
         ">
             <i class="fas fa-car" style="color:#8B949E;font-size:14px;flex-shrink:0;"></i>
-            <select id="nav-year" onchange="updateNavMarca()" style="
-                flex:1;background:transparent;border:none;outline:none;
-                color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;
-                cursor:pointer;
-            ">
-                <option value="" style="background:#0D0D0D;">Año</option>
-                @for($y = 2024; $y >= 2000; $y--)
-                    <option value="{{ $y }}" style="background:#0D0D0D;">{{ $y }}</option>
-                @endfor
-            </select>
-            <span style="color:#333;font-size:10px;">|</span>
             <select id="nav-marca" style="
                 flex:1;background:transparent;border:none;outline:none;
                 color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;
@@ -84,7 +73,7 @@
             ">
                 <option value="" style="background:#0D0D0D;">Modelo</option>
             </select>
-            <button onclick="window.location.href='/catalogo'" style="
+            <button onclick="buscarNav()" style="
                 background:var(--macuin-red);border:none;color:#fff;
                 width:32px;height:32px;border-radius:4px;cursor:pointer;
                 display:flex;align-items:center;justify-content:center;flex-shrink:0;
@@ -187,7 +176,7 @@
         if (macModelos[marca]) {
             macModelos[marca].forEach(m => {
                 const o = document.createElement('option');
-                o.value = m.toLowerCase().replace(/\s/g,'-');
+                o.value = m;
                 o.textContent = m;
                 o.style.background = '#0D0D0D';
                 modeloSel.appendChild(o);
@@ -195,4 +184,14 @@
         }
     }
     document.getElementById('nav-marca').addEventListener('change', updateNavMarca);
+
+    function buscarNav() {
+        const marca  = document.getElementById('nav-marca').value;
+        const modelo = document.getElementById('nav-modelo').value;
+        const params = new URLSearchParams();
+        if (marca)  params.set('marca_vehiculo',  marca);
+        if (modelo) params.set('modelo_vehiculo', modelo);
+        const qs = params.toString();
+        window.location.href = '/catalogo' + (qs ? '?' + qs : '');
+    }
 </script>

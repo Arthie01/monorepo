@@ -19,10 +19,19 @@ UPLOAD_DIR = "/app/uploads/autopartes"
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
-async def consultar_todos(categoria: Optional[str] = None, db: Session = Depends(get_db)):
+async def consultar_todos(
+    categoria: Optional[str] = None,
+    marca_vehiculo: Optional[str] = None,
+    modelo_vehiculo: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
     query = db.query(Autoparte)
     if categoria:
-        query = query.filter(Autoparte.categoria.ilike(categoria))
+        query = query.filter(Autoparte.categoria.ilike(f"%{categoria}%"))
+    if marca_vehiculo:
+        query = query.filter(Autoparte.marca_vehiculo.ilike(f"%{marca_vehiculo}%"))
+    if modelo_vehiculo:
+        query = query.filter(Autoparte.modelo_vehiculo.ilike(f"%{modelo_vehiculo}%"))
     autopartes = query.all()
     return {
         "status": "200",
