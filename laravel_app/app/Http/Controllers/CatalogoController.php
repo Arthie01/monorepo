@@ -44,21 +44,53 @@ class CatalogoController extends Controller
         return view('dashboard', compact('autopartes', 'marcas', 'modelosPorMarca'));
     }
 
-    /** Catálogo completo con filtros opcionales: categoría, marca y modelo de vehículo. */
+    /** Catálogo completo con filtros opcionales: categoría, marca, modelo, búsqueda y orden. */
     public function index(Request $request)
     {
         $categoria      = $request->query('categoria');
         $marcaVehiculo  = $request->query('marca_vehiculo');
         $modeloVehiculo = $request->query('modelo_vehiculo');
+        $q              = $request->query('q');
+        $orden          = $request->query('orden');
+
         try {
             $autopartes = $this->autopartesService->listar($categoria, $marcaVehiculo, $modeloVehiculo);
         } catch (ApiException $e) {
             $autopartes = [];
         }
+
+        // Filtrar por búsqueda (nombre o SKU)
+        if ($q) {
+            $qLower     = strtolower($q);
+            $autopartes = array_values(array_filter($autopartes, function ($a) use ($qLower) {
+                return str_contains(strtolower($a['nombre'] ?? ''), $qLower)
+                    || str_contains(strtolower($a['sku'] ?? ''), $qLower);
+            }));
+        }
+
+        // Ordenar resultados
+        switch ($orden) {
+            case 'precio_asc':
+                usort($autopartes, fn($a, $b) => $a['precio'] <=> $b['precio']);
+                break;
+            case 'precio_desc':
+                usort($autopartes, fn($a, $b) => $b['precio'] <=> $a['precio']);
+                break;
+            case 'nombre_az':
+                usort($autopartes, fn($a, $b) => strcmp($a['nombre'], $b['nombre']));
+                break;
+            case 'disponibilidad':
+                $prioridad = ['en_stock' => 0, 'bajo_stock' => 1, 'sin_stock' => 2];
+                usort($autopartes, fn($a, $b) => ($prioridad[$a['estado']] ?? 3) <=> ($prioridad[$b['estado']] ?? 3));
+                break;
+        }
+
         $filtros = [
             'categoria'      => $categoria,
             'marca_vehiculo' => $marcaVehiculo,
             'modelo_vehiculo'=> $modeloVehiculo,
+            'q'              => $q,
+            'orden'          => $orden,
         ];
         return view('catalogo', compact('autopartes', 'filtros'));
     }

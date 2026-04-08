@@ -90,14 +90,16 @@
             <div style="display:flex;align-items:center;gap:10px;">
                 <div style="position:relative;">
                     <i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#6B7280;font-size:13px;pointer-events:none;"></i>
-                    <input type="text" placeholder="Buscar autoparte..." style="
-                        padding:10px 14px 10px 36px;
-                        background:rgba(255,255,255,.08);
-                        border:1px solid rgba(255,255,255,.15);
-                        border-radius:4px;color:#fff;
-                        font-family:'DM Sans',sans-serif;font-size:13px;
-                        outline:none;width:240px;
-                    " onfocus="this.style.borderColor='var(--macuin-red)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+                    <input id="cat-search" type="text" placeholder="Buscar autoparte..."
+                        value="{{ $filtros['q'] ?? '' }}"
+                        style="
+                            padding:10px 14px 10px 36px;
+                            background:rgba(255,255,255,.08);
+                            border:1px solid rgba(255,255,255,.15);
+                            border-radius:4px;color:#fff;
+                            font-family:'DM Sans',sans-serif;font-size:13px;
+                            outline:none;width:240px;
+                        " onfocus="this.style.borderColor='var(--macuin-red)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
                 </div>
             </div>
         </div>
@@ -176,8 +178,14 @@
                             @endif
                         </p>
                         {{-- Tags de filtros activos --}}
-                        @if(!empty($filtros['marca_vehiculo']) || !empty($filtros['modelo_vehiculo']) || !empty($filtros['categoria']))
+                        @if(!empty($filtros['marca_vehiculo']) || !empty($filtros['modelo_vehiculo']) || !empty($filtros['categoria']) || !empty($filtros['q']))
                         <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            @if(!empty($filtros['q']))
+                            <span style="background:var(--macuin-navy);color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;">
+                                <i class="fas fa-search" style="font-size:9px;"></i> "{{ $filtros['q'] }}"
+                                <a href="/catalogo?{{ http_build_query(array_filter(array_merge($filtros, ['q'=>null]))) }}" style="color:rgba(255,255,255,.7);text-decoration:none;font-weight:700;">×</a>
+                            </span>
+                            @endif
                             @if(!empty($filtros['categoria']))
                             <span style="background:var(--macuin-red);color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;">
                                 {{ $filtros['categoria'] }}
@@ -201,16 +209,16 @@
                     </div>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <label style="font-size:13px;color:var(--macuin-muted);">Ordenar:</label>
-                        <select style="
+                        <select id="cat-orden" style="
                             padding:8px 12px;border:1px solid var(--macuin-gray);
                             border-radius:4px;font-family:'DM Sans',sans-serif;font-size:13px;
                             outline:none;cursor:pointer;background:#fff;
                         ">
-                            <option>Relevancia</option>
-                            <option>Precio: Menor a Mayor</option>
-                            <option>Precio: Mayor a Menor</option>
-                            <option>Nombre A–Z</option>
-                            <option>Disponibilidad</option>
+                            <option value="" {{ empty($filtros['orden']) ? 'selected' : '' }}>Relevancia</option>
+                            <option value="precio_asc"  {{ ($filtros['orden'] ?? '') === 'precio_asc'  ? 'selected' : '' }}>Precio: Menor a Mayor</option>
+                            <option value="precio_desc" {{ ($filtros['orden'] ?? '') === 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a Menor</option>
+                            <option value="nombre_az"   {{ ($filtros['orden'] ?? '') === 'nombre_az'   ? 'selected' : '' }}>Nombre A–Z</option>
+                            <option value="disponibilidad" {{ ($filtros['orden'] ?? '') === 'disponibilidad' ? 'selected' : '' }}>Disponibilidad</option>
                         </select>
                     </div>
                 </div>
@@ -286,5 +294,27 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+    // Buscar autoparte al presionar Enter
+    document.getElementById('cat-search').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const params = new URLSearchParams(window.location.search);
+            const val = this.value.trim();
+            if (val) params.set('q', val); else params.delete('q');
+            params.delete('orden'); // resetear orden al buscar
+            window.location.href = '/catalogo?' + params.toString();
+        }
+    });
+
+    // Ordenar al cambiar el select
+    document.getElementById('cat-orden').addEventListener('change', function() {
+        const params = new URLSearchParams(window.location.search);
+        if (this.value) params.set('orden', this.value); else params.delete('orden');
+        window.location.href = '/catalogo?' + params.toString();
+    });
+</script>
+@endpush
 
 @endsection
