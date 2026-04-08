@@ -23,14 +23,45 @@ ESTADOS_VALIDOS = ["Pendiente", "En proceso", "Enviado", "Completado", "Cancelad
 # 1. GET / — Lista todos los pedidos
 @router.get("/", status_code=status.HTTP_200_OK)
 async def consultar_todos(estado: Optional[str] = None, db: Session = Depends(get_db)):
-    query = db.query(Pedido)
+    query = db.query(Pedido).outerjoin(UsuarioExterno, Pedido.usuario_externo_id == UsuarioExterno.id)
     if estado:
         query = query.filter(Pedido.estado.ilike(estado))
+    
+    # Ordenar por fecha de creación descendente (más recientes primero)
+    query = query.order_by(Pedido.creado_en.desc())
     pedidos = query.all()
+    
+    # Agregar nombre del cliente y cantidad de items
+    result = []
+    for p in pedidos:
+        usuario = db.query(UsuarioExterno).filter(UsuarioExterno.id == p.usuario_externo_id).first()
+        # Contar items en el pedido
+        items_count = db.query(DetallePedido).filter(DetallePedido.pedido_id == p.id).count()
+        
+        pedido_dict = {
+            "id": p.id,
+            "folio": p.folio,
+            "usuario_externo_id": p.usuario_externo_id,
+            "usuario_interno_id": p.usuario_interno_id,
+            "estado": p.estado,
+            "subtotal": float(p.subtotal),
+            "envio": float(p.envio),
+            "impuestos": float(p.impuestos),
+            "total": float(p.total),
+            "creado_en": str(p.creado_en),
+            "dir_calle": p.dir_calle,
+            "dir_ciudad": p.dir_ciudad,
+            "dir_estado": p.dir_estado,
+            "dir_cp": p.dir_cp,
+            "cliente_nombre": f"{usuario.nombre} {usuario.apellidos}" if usuario else "—",
+            "items_count": items_count
+        }
+        result.append(pedido_dict)
+    
     return {
         "status": "200",
-        "total":  len(pedidos),
-        "data":   pedidos
+        "total":  len(result),
+        "data":   result
     }
 
 

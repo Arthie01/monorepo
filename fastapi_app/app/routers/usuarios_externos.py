@@ -77,38 +77,39 @@ async def crear(usuarioP: Crear_UsuarioExterno, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
-async def actualizar(id: int, usuarioP: Crear_UsuarioExterno, db: Session = Depends(get_db)):
+async def actualizar(id: int, usuarioP: Actualizar_UsuarioExterno, db: Session = Depends(get_db)):
     usuario = db.query(UsuarioExterno).filter(UsuarioExterno.id == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail=f"Usuario externo con id {id} no encontrado")
 
-    email_en_uso = db.query(UsuarioExterno).filter(
-        UsuarioExterno.email == usuarioP.email,
-        UsuarioExterno.id != id
-    ).first()
-    if email_en_uso:
-        raise HTTPException(status_code=400, detail="El email ya está en uso por otro usuario")
+    if usuarioP.email:
+        email_en_uso = db.query(UsuarioExterno).filter(
+            UsuarioExterno.email == usuarioP.email,
+            UsuarioExterno.id != id
+        ).first()
+        if email_en_uso:
+            raise HTTPException(status_code=400, detail="El email ya está en uso por otro usuario")
 
-    usuario.nombre         = usuarioP.nombre
-    usuario.apellidos      = usuarioP.apellidos
-    usuario.email          = usuarioP.email
-    usuario.password       = usuarioP.password
-    usuario.tipo_cliente   = usuarioP.tipo_cliente
-    usuario.lista_precio   = usuarioP.lista_precio
-    usuario.dias_credito   = usuarioP.dias_credito
-    usuario.limite_credito = usuarioP.limite_credito
-    usuario.descuento      = usuarioP.descuento
-    usuario.estado         = usuarioP.estado
-    usuario.telefono       = usuarioP.telefono
-    usuario.empresa        = usuarioP.empresa
-    usuario.rfc            = usuarioP.rfc
-    usuario.giro           = usuarioP.giro
-    usuario.calle          = usuarioP.calle
-    usuario.ciudad         = usuarioP.ciudad
-    usuario.estado_geo     = usuarioP.estado_geo
-    usuario.cp             = usuarioP.cp
-    usuario.referencia     = usuarioP.referencia
-    usuario.notas          = usuarioP.notas
+    if usuarioP.nombre is not None:         usuario.nombre = usuarioP.nombre
+    if usuarioP.apellidos is not None:      usuario.apellidos = usuarioP.apellidos
+    if usuarioP.email is not None:          usuario.email = usuarioP.email
+    if usuarioP.password is not None:       usuario.password = usuarioP.password
+    if usuarioP.tipo_cliente is not None:   usuario.tipo_cliente = usuarioP.tipo_cliente
+    if usuarioP.lista_precio is not None:   usuario.lista_precio = usuarioP.lista_precio
+    if usuarioP.dias_credito is not None:   usuario.dias_credito = usuarioP.dias_credito
+    if usuarioP.limite_credito is not None: usuario.limite_credito = usuarioP.limite_credito
+    if usuarioP.descuento is not None:      usuario.descuento = usuarioP.descuento
+    if usuarioP.estado is not None:         usuario.estado = usuarioP.estado
+    if usuarioP.telefono is not None:       usuario.telefono = usuarioP.telefono
+    if usuarioP.empresa is not None:        usuario.empresa = usuarioP.empresa
+    if usuarioP.rfc is not None:            usuario.rfc = usuarioP.rfc
+    if usuarioP.giro is not None:           usuario.giro = usuarioP.giro
+    if usuarioP.calle is not None:          usuario.calle = usuarioP.calle
+    if usuarioP.ciudad is not None:         usuario.ciudad = usuarioP.ciudad
+    if usuarioP.estado_geo is not None:     usuario.estado_geo = usuarioP.estado_geo
+    if usuarioP.cp is not None:             usuario.cp = usuarioP.cp
+    if usuarioP.referencia is not None:     usuario.referencia = usuarioP.referencia
+    if usuarioP.notas is not None:          usuario.notas = usuarioP.notas
 
     db.commit()
     db.refresh(usuario)

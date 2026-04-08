@@ -68,7 +68,7 @@
             </p>
           </div>
           <div class="page-heading__badge">
-            <span class="id-badge">CLI-001</span>
+            <span class="id-badge">CLI-{{ "%03d"|format(usuario.id) }}</span>
           </div>
         </div>
 
@@ -92,37 +92,42 @@
           {# Columna izquierda: perfil #}
           <aside class="edit-profile-col">
             <div class="profile-avatar-wrap">
-              <span class="profile-avatar-initials">JR</span>
+              {% set iniciales = (usuario.nombre[0] + usuario.apellidos[0]) | upper %}
+              <span class="profile-avatar-initials">{{ iniciales }}</span>
               <div class="profile-avatar-overlay">
                 <i class="fas fa-camera"></i>
                 <span>Cambiar</span>
               </div>
             </div>
 
-            <p class="profile-name">Juan Ramírez</p>
-            <p class="profile-email">j.ramirez@tallercentral.mx</p>
+            <p class="profile-name">{{ usuario.nombre }} {{ usuario.apellidos }}</p>
+            <p class="profile-email">{{ usuario.email }}</p>
 
             {# Info rápida #}
             <div class="profile-info-block">
               <div class="profile-info-item">
                 <i class="fas fa-store"></i>
                 <span class="profile-info-item__label">Tipo</span>
-                <span class="profile-info-item__val">Taller</span>
+                <span class="profile-info-item__val">{{ usuario.tipo_cliente or 'N/A' }}</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-building"></i>
                 <span class="profile-info-item__label">Empresa</span>
-                <span class="profile-info-item__val">Taller Central</span>
+                <span class="profile-info-item__val">{{ usuario.empresa or 'N/A' }}</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-box"></i>
                 <span class="profile-info-item__label">Pedidos</span>
-                <span class="profile-info-item__val">42</span>
+                <span class="profile-info-item__val">—</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-calendar-plus"></i>
                 <span class="profile-info-item__label">Registro</span>
-                <span class="profile-info-item__val">12/01/2025</span>
+                {% if usuario.creado_en %}
+                  <span class="profile-info-item__val">{{ usuario.creado_en[:10] }}</span>
+                {% else %}
+                  <span class="profile-info-item__val">—</span>
+                {% endif %}
               </div>
             </div>
 
@@ -131,15 +136,16 @@
               <p class="status-block__label">Estado de la cuenta</p>
               <div class="status-options">
                 <label class="status-opt">
-                  <input type="radio" name="estado" value="activo" checked />
+                  <input type="radio" name="estado" value="activo" {% if usuario.estado == 'activo' %}checked{% endif %} />
+                  <span class="status-pill status-pill--ok">Activo</span>
                   <span class="status-pill status-pill--ok">Activo</span>
                 </label>
                 <label class="status-opt">
-                  <input type="radio" name="estado" value="pendiente" />
+                  <input type="radio" name="estado" value="pendiente" {% if usuario.estado == 'pendiente' %}checked{% endif %} />
                   <span class="status-pill status-pill--warn">Pendiente</span>
                 </label>
                 <label class="status-opt">
-                  <input type="radio" name="estado" value="inactivo" />
+                  <input type="radio" name="estado" value="inactivo" {% if usuario.estado == 'inactivo' %}checked{% endif %} />
                   <span class="status-pill status-pill--err">Inactivo</span>
                 </label>
               </div>

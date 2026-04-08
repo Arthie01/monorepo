@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.data.db import get_db
 from app.data.usuario_interno import UsuarioInterno
-from app.models.usuarios_internos import Crear_UsuarioInterno, Actualizar_UsuarioInterno
+from app.models.usuarios_internos import Crear_UsuarioInterno, Actualizar_UsuarioInterno, PatchUsuarioInterno
 from app.security.auth import verificar_peticion
 
 router = APIRouter(
@@ -58,17 +58,41 @@ async def crear(usuarioP: Crear_UsuarioInterno, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
-async def actualizar(id: int, usuarioP: Crear_UsuarioInterno, db: Session = Depends(get_db)):
+async def actualizar(id: int, usuarioP: Actualizar_UsuarioInterno, db: Session = Depends(get_db)):
     usuario = db.query(UsuarioInterno).filter(UsuarioInterno.id == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail=f"Usuario interno con id {id} no encontrado")
 
+    # Actualizar campos obligatorios
     usuario.nombre       = usuarioP.nombre
     usuario.apellidos    = usuarioP.apellidos
     usuario.email        = usuarioP.email
-    usuario.password     = usuarioP.password
     usuario.departamento = usuarioP.departamento
     usuario.rol          = usuarioP.rol
+    
+    # Password opcional — solo actualizar si se envió
+    if usuarioP.password is not None:
+        usuario.password = usuarioP.password
+    
+    # Campos opcionales
+    if usuarioP.telefono is not None:
+        usuario.telefono = usuarioP.telefono
+    if usuarioP.cargo is not None:
+        usuario.cargo = usuarioP.cargo
+    if usuarioP.sucursal is not None:
+        usuario.sucursal = usuarioP.sucursal
+    if usuarioP.perm_autopartes is not None:
+        usuario.perm_autopartes = usuarioP.perm_autopartes
+    if usuarioP.perm_pedidos is not None:
+        usuario.perm_pedidos = usuarioP.perm_pedidos
+    if usuarioP.perm_usuarios is not None:
+        usuario.perm_usuarios = usuarioP.perm_usuarios
+    if usuarioP.perm_reportes is not None:
+        usuario.perm_reportes = usuarioP.perm_reportes
+    if usuarioP.perm_config is not None:
+        usuario.perm_config = usuarioP.perm_config
+    if usuarioP.estado is not None:
+        usuario.estado = usuarioP.estado
 
     db.commit()
     db.refresh(usuario)
@@ -80,7 +104,7 @@ async def actualizar(id: int, usuarioP: Crear_UsuarioInterno, db: Session = Depe
 
 
 @router.patch("/{id}", status_code=status.HTTP_200_OK)
-async def actualizar_parcial(id: int, usuarioP: Actualizar_UsuarioInterno, db: Session = Depends(get_db)):
+async def actualizar_parcial(id: int, usuarioP: PatchUsuarioInterno, db: Session = Depends(get_db)):
     usuario = db.query(UsuarioInterno).filter(UsuarioInterno.id == id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail=f"Usuario interno con id {id} no encontrado")

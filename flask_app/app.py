@@ -232,6 +232,11 @@ def editar_usuario_interno_submit(id):
     r = requiere_sesion()
     if r: return r
     data = request.form.to_dict()
+    
+    # Si password está vacío, quitarlo del payload (no cambiar contraseña)
+    if "password" in data and not data["password"].strip():
+        del data["password"]
+    
     try:
         UsuariosService.editar_interno(id, data)
         flash("Usuario interno actualizado.", "success")
@@ -340,7 +345,53 @@ def perfil():
 def reportes():
     r = requiere_sesion()
     if r: return r
-    return render_template("reportes.html")
+    
+    # Obtener filtros de la URL
+    fecha_inicio = request.args.get("fecha_inicio")
+    fecha_fin = request.args.get("fecha_fin")
+    estado = request.args.get("estado")
+    
+    # Construir params para las APIs
+    params_ventas = {}
+    if fecha_inicio: params_ventas["fecha_inicio"] = fecha_inicio
+    if fecha_fin: params_ventas["fecha_fin"] = fecha_fin
+    
+    params_pedidos = params_ventas.copy()
+    if estado: params_pedidos["estado"] = estado
+    
+    # Obtener datos de la API para mostrar en la página
+    auth_macuin = ("macuin", "123456")
+    
+    try:
+        datos_ventas = ApiClient.get("/v1/reportes/datos/ventas", params=params_ventas, auth=auth_macuin)["data"]
+    except Exception as e:
+        datos_ventas = None
+    
+    try:
+        datos_inventario = ApiClient.get("/v1/reportes/datos/inventario", auth=auth_macuin)["data"]
+    except Exception as e:
+        datos_inventario = None
+    
+    try:
+        datos_pedidos = ApiClient.get("/v1/reportes/datos/pedidos", params=params_pedidos, auth=auth_macuin)["data"]
+    except Exception as e:
+        datos_pedidos = None
+    
+    try:
+        datos_usuarios = ApiClient.get("/v1/reportes/datos/usuarios", auth=auth_macuin)["data"]
+    except Exception as e:
+        datos_usuarios = None
+    
+    return render_template(
+        "reportes.html",
+        ventas=datos_ventas,
+        inventario=datos_inventario,
+        pedidos=datos_pedidos,
+        usuarios=datos_usuarios,
+        filtro_inicio=fecha_inicio,
+        filtro_fin=fecha_fin,
+        filtro_estado=estado
+    )
 
 
 @app.route("/reportes/descargar/<tipo>/<formato>")

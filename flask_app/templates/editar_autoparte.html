@@ -176,6 +176,19 @@
                   />
                 </div>
 
+                <div class="field-group field-group--full">
+                  <label class="field-label" for="fDescripcion"
+                    >Descripción breve</label
+                  >
+                  <textarea
+                    id="fDescripcion"
+                    name="descripcion"
+                    class="field-textarea"
+                    rows="2"
+                    placeholder="Descripción general de la autoparte…"
+                  >{{ autoparte.descripcion or '' }}</textarea>
+                </div>
+
                 <div class="field-group field-group--half">
                   <label class="field-label" for="fCategoria">Categoría</label>
                   <div class="field-select-wrap">
@@ -185,12 +198,13 @@
                       class="field-select"
                     >
                       <option value="">— Seleccionar —</option>
-                      <option value="motor" selected>Motor</option>
-                      <option value="frenos">Frenos</option>
-                      <option value="suspension">Suspensión</option>
-                      <option value="electrico">Eléctrico</option>
-                      <option value="transmision">Transmisión</option>
-                      <option value="carroceria">Carrocería</option>
+                      <option value="Motor" {% if autoparte.categoria == 'Motor' %}selected{% endif %}>Motor</option>
+                      <option value="Frenos" {% if autoparte.categoria == 'Frenos' %}selected{% endif %}>Frenos</option>
+                      <option value="Suspensión" {% if autoparte.categoria == 'Suspensión' %}selected{% endif %}>Suspensión</option>
+                      <option value="Eléctrico" {% if autoparte.categoria == 'Eléctrico' %}selected{% endif %}>Eléctrico</option>
+                      <option value="Transmisión" {% if autoparte.categoria == 'Transmisión' %}selected{% endif %}>Transmisión</option>
+                      <option value="Carrocería" {% if autoparte.categoria == 'Carrocería' %}selected{% endif %}>Carrocería</option>
+                      <option value="Filtros" {% if autoparte.categoria == 'Filtros' %}selected{% endif %}>Filtros</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -201,11 +215,16 @@
                   <div class="field-select-wrap">
                     <select id="fMarca" name="marca" class="field-select">
                       <option value="">— Seleccionar —</option>
-                      <option value="macuin" selected>Macuin</option>
-                      <option value="bosch">Bosch</option>
-                      <option value="ngk">NGK</option>
-                      <option value="gates">Gates</option>
-                      <option value="monroe">Monroe</option>
+                      <option value="MACUIN" {% if autoparte.marca == 'MACUIN' %}selected{% endif %}>MACUIN</option>
+                      <option value="BOSCH" {% if autoparte.marca == 'BOSCH' %}selected{% endif %}>BOSCH</option>
+                      <option value="NGK" {% if autoparte.marca == 'NGK' %}selected{% endif %}>NGK</option>
+                      <option value="K&N" {% if autoparte.marca == 'K&N' %}selected{% endif %}>K&N</option>
+                      <option value="FRAM" {% if autoparte.marca == 'FRAM' %}selected{% endif %}>FRAM</option>
+                      <option value="MANN" {% if autoparte.marca == 'MANN' %}selected{% endif %}>MANN</option>
+                      <option value="MOBIL" {% if autoparte.marca == 'MOBIL' %}selected{% endif %}>MOBIL</option>
+                      <option value="Gates" {% if autoparte.marca == 'Gates' %}selected{% endif %}>Gates</option>
+                      <option value="Monroe" {% if autoparte.marca == 'Monroe' %}selected{% endif %}>Monroe</option>
+                      <option value="Otra" {% if autoparte.marca == 'Otra' %}selected{% endif %}>Otra</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -344,7 +363,7 @@
                     class="field-textarea"
                     rows="3"
                     placeholder="Describe la aplicación específica, notas de instalación, compatibilidades adicionales…"
-                  ></textarea>
+                  >{{ autoparte.aplicacion or '' }}</textarea>
                 </div>
               </div>
             </section>
@@ -363,6 +382,8 @@
                     class="field-textarea"
                     rows="2"
                     placeholder="Notas visibles solo para el personal del almacén…"
+                  >{{ autoparte.notas or '' }}</textarea>
+                </div>
                   ></textarea>
                 </div>
               </div>

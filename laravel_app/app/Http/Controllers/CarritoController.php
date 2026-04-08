@@ -66,10 +66,12 @@ class CarritoController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'calle'   => 'required',
-            'ciudad'  => 'required',
-            'estado'  => 'required',
-            'cp'      => 'required',
+            'calle'   => 'required|max:200',
+            'ciudad'  => 'required|max:100',
+            'estado'  => 'required|max:5',
+            'cp'      => 'required|digits:5',
+        ], [
+            'cp.digits' => 'El código postal debe tener exactamente 5 dígitos.',
         ]);
 
         $carrito = session('carrito', []);

@@ -32,8 +32,8 @@ from docx.shared import RGBColor
 # ──────────────────────────────────────────────────────────────────────────────
 router = APIRouter(
     prefix="/v1/reportes",
-    tags=["Reportes"],
-    dependencies=[Depends(verificar_peticion)]   # HTTPBasic en todos los endpoints
+    tags=["Reportes"]
+    # NO incluir dependencies aquí — se aplican por endpoint
 )
 
 FORMATOS_VALIDOS = ["pdf", "xlsx", "docx"]
@@ -610,7 +610,52 @@ def _despachar(datos: dict, tipo: str, formato: str) -> io.BytesIO:
         return _generar_docx(datos, tipo)
 
 
-@router.get("/ventas/{formato}", status_code=status.HTTP_200_OK)
+# ══════════════════════════════════════════════════════════════════════════════
+# ENDPOINTS JSON — Para consumo del dashboard (sin auth)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@router.get("/datos/ventas", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
+async def datos_ventas_json(
+    fecha_inicio: Optional[str] = None,
+    fecha_fin:    Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """Devuelve datos de ventas en formato JSON para dashboard Flask."""
+    datos = _datos_ventas(db, fecha_inicio, fecha_fin)
+    return {"status": "200", "data": datos}
+
+
+@router.get("/datos/inventario", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
+async def datos_inventario_json(db: Session = Depends(get_db)):
+    """Devuelve datos de inventario en formato JSON para dashboard Flask."""
+    datos = _datos_inventario(db)
+    return {"status": "200", "data": datos}
+
+
+@router.get("/datos/pedidos", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
+async def datos_pedidos_json(
+    fecha_inicio: Optional[str] = None,
+    fecha_fin:    Optional[str] = None,
+    estado:       Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """Devuelve datos de pedidos en formato JSON para dashboard Flask."""
+    datos = _datos_pedidos(db, fecha_inicio, fecha_fin, estado)
+    return {"status": "200", "data": datos}
+
+
+@router.get("/datos/usuarios", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
+async def datos_usuarios_json(db: Session = Depends(get_db)):
+    """Devuelve datos de usuarios en formato JSON para dashboard Flask."""
+    datos = _datos_usuarios(db)
+    return {"status": "200", "data": datos}
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ENDPOINTS DE DESCARGA — Requieren HTTPBasic auth
+# ══════════════════════════════════════════════════════════════════════════════
+
+@router.get("/ventas/{formato}", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
 async def reporte_ventas(
     formato: str,
     fecha_inicio: Optional[str] = None,
@@ -622,7 +667,7 @@ async def reporte_ventas(
     return _responder(_despachar(datos, "ventas", formato), formato, "reporte_ventas")
 
 
-@router.get("/inventario/{formato}", status_code=status.HTTP_200_OK)
+@router.get("/inventario/{formato}", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
 async def reporte_inventario(
     formato: str,
     db: Session = Depends(get_db)
@@ -632,7 +677,7 @@ async def reporte_inventario(
     return _responder(_despachar(datos, "inventario", formato), formato, "reporte_inventario")
 
 
-@router.get("/pedidos/{formato}", status_code=status.HTTP_200_OK)
+@router.get("/pedidos/{formato}", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
 async def reporte_pedidos(
     formato: str,
     fecha_inicio: Optional[str] = None,
@@ -645,7 +690,7 @@ async def reporte_pedidos(
     return _responder(_despachar(datos, "pedidos", formato), formato, "reporte_pedidos")
 
 
-@router.get("/usuarios/{formato}", status_code=status.HTTP_200_OK)
+@router.get("/usuarios/{formato}", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
 async def reporte_usuarios(
     formato: str,
     db: Session = Depends(get_db)

@@ -77,12 +77,17 @@
 
         <!-- ── Filter bar ── -->
         <div class="filter-bar" role="search" aria-label="Filtros de búsqueda">
-          <div class="filter-capsules">
+          <form method="GET" action="/gestion-pedidos" class="filter-capsules">
             <div class="capsule">
               <span class="cap-label" id="lbl-estado">Estado:</span>
               <div class="cap-select-wrap">
-                <select class="cap-select" aria-labelledby="lbl-estado">
+                <select name="estado" class="cap-select" aria-labelledby="lbl-estado" onchange="this.form.submit()">
                   <option value="">Todos</option>
+                  <option value="Pendiente" {% if request.args.get('estado') == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                  <option value="En proceso" {% if request.args.get('estado') == 'En proceso' %}selected{% endif %}>En proceso</option>
+                  <option value="Enviado" {% if request.args.get('estado') == 'Enviado' %}selected{% endif %}>Enviado</option>
+                  <option value="Completado" {% if request.args.get('estado') == 'Completado' %}selected{% endif %}>Completado</option>
+                  <option value="Cancelado" {% if request.args.get('estado') == 'Cancelado' %}selected{% endif %}>Cancelado</option>
                 </select>
                 <img
                   src="{{ url_for('static', filename='images/chevron-down.png') }}"
@@ -92,23 +97,8 @@
                 />
               </div>
             </div>
-
-            <div class="capsule">
-              <span class="cap-label" id="lbl-fecha">Fecha:</span>
-              <div class="cap-select-wrap">
-                <select class="cap-select" aria-labelledby="lbl-fecha">
-                  <option value="">Últimos 6 meses</option>
-                </select>
-                <img
-                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
-                  alt=""
-                  class="cap-arrow"
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-          </div>
-          <button type="button" class="btn-search">
+          </form>
+          <button type="button" class="btn-search" style="visibility: hidden;">
             <img
               src="{{ url_for('static', filename='images/search.png') }}"
               alt=""
@@ -180,7 +170,8 @@
                 {% for p in pedidos %}
                 <tr>
                   <td class="td-id">{{ p.folio }}</td>
-                  <td>{{ p.usuario_externo_id or '—' }}</td>
+                  <td>{{ p.items_count or 0 }}</td>
+                  <td>{{ p.cliente_nombre or '—' }}</td>
                   <td>{{ p.creado_en[:10] if p.creado_en else '—' }}</td>
                   <td>
                     <span class="badge {% if p.estado == 'Completado' %}badge--ok
@@ -198,78 +189,8 @@
                   </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="6" style="text-align:center;padding:32px;color:#aaa;">No hay pedidos.</td></tr>
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">No hay pedidos.</td></tr>
                 {% endfor %}
-
-                <tr class="sk" aria-hidden="true">
-                  <td><b class="sk-b sk-id"></b></td>
-                  <td><b class="sk-b sk-thumb"></b></td>
-                  <td><b class="sk-b sk-md"></b></td>
-                  <td><b class="sk-b sk-sm"></b></td>
-                  <td><b class="sk-b sk-badge"></b></td>
-                  <td><b class="sk-b sk-sm"></b></td>
-                  <td>
-                    <span class="sk-acts"
-                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
-                    ></span>
-                  </td>
-                </tr>
-
-                <tr class="sk" aria-hidden="true">
-                  <td><b class="sk-b sk-id" style="width: 52px"></b></td>
-                  <td><b class="sk-b sk-thumb"></b></td>
-                  <td><b class="sk-b sk-md" style="width: 55%"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 70px"></b></td>
-                  <td><b class="sk-b sk-badge"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 72px"></b></td>
-                  <td>
-                    <span class="sk-acts"
-                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
-                    ></span>
-                  </td>
-                </tr>
-
-                <tr class="sk" aria-hidden="true">
-                  <td><b class="sk-b sk-id" style="width: 44px"></b></td>
-                  <td><b class="sk-b sk-thumb"></b></td>
-                  <td><b class="sk-b sk-md" style="width: 68%"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 64px"></b></td>
-                  <td><b class="sk-b sk-badge"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 80px"></b></td>
-                  <td>
-                    <span class="sk-acts"
-                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
-                    ></span>
-                  </td>
-                </tr>
-
-                <tr class="sk" aria-hidden="true">
-                  <td><b class="sk-b sk-id" style="width: 48px"></b></td>
-                  <td><b class="sk-b sk-thumb"></b></td>
-                  <td><b class="sk-b sk-md" style="width: 48%"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 58px"></b></td>
-                  <td><b class="sk-b sk-badge"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 68px"></b></td>
-                  <td>
-                    <span class="sk-acts"
-                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
-                    ></span>
-                  </td>
-                </tr>
-
-                <tr class="sk" aria-hidden="true">
-                  <td><b class="sk-b sk-id" style="width: 38px"></b></td>
-                  <td><b class="sk-b sk-thumb"></b></td>
-                  <td><b class="sk-b sk-md" style="width: 72%"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 74px"></b></td>
-                  <td><b class="sk-b sk-badge"></b></td>
-                  <td><b class="sk-b sk-sm" style="width: 76px"></b></td>
-                  <td>
-                    <span class="sk-acts"
-                      ><b class="sk-b sk-act"></b><b class="sk-b sk-act"></b
-                    ></span>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>

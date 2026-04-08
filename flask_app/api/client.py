@@ -30,8 +30,12 @@ class ApiClient:
         return resp.json()
 
     @staticmethod
-    def get(path: str, params: dict = None) -> dict:
-        resp = http.get(f"{ApiClient.BASE_URL}{path}", params=params)
+    def get(path: str, params: dict = None, auth: tuple = None) -> dict:
+        """GET request. Si auth=True, usa credenciales macuin/123456."""
+        kwargs = {"params": params}
+        if auth:
+            kwargs["auth"] = auth
+        resp = http.get(f"{ApiClient.BASE_URL}{path}", **kwargs)
         return ApiClient._raise_for_status(resp)
 
     @staticmethod

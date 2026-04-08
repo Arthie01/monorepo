@@ -143,18 +143,24 @@
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Estado</label>
-                                    <select name="estado" class="mac-input">
-                                        <option>Querétaro</option>
-                                        <option>Aguascalientes</option>
-                                        <option>CDMX</option>
-                                        <option>Jalisco</option>
-                                        <option>Nuevo León</option>
-                                        <option>Guanajuato</option>
+                                    <select name="estado" class="mac-input" required>
+                                        <option value="QRO" {{ old('estado') == 'QRO' ? 'selected' : '' }}>Querétaro</option>
+                                        <option value="AGS" {{ old('estado') == 'AGS' ? 'selected' : '' }}>Aguascalientes</option>
+                                        <option value="CDMX" {{ old('estado') == 'CDMX' ? 'selected' : '' }}>Ciudad de México</option>
+                                        <option value="JAL" {{ old('estado') == 'JAL' ? 'selected' : '' }}>Jalisco</option>
+                                        <option value="NL" {{ old('estado') == 'NL' ? 'selected' : '' }}>Nuevo León</option>
+                                        <option value="GTO" {{ old('estado') == 'GTO' ? 'selected' : '' }}>Guanajuato</option>
+                                        <option value="COAH" {{ old('estado') == 'COAH' ? 'selected' : '' }}>Coahuila</option>
+                                        <option value="CHIH" {{ old('estado') == 'CHIH' ? 'selected' : '' }}>Chihuahua</option>
+                                        <option value="SON" {{ old('estado') == 'SON' ? 'selected' : '' }}>Sonora</option>
                                     </select>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Código Postal</label>
-                                    <input type="text" name="cp" class="mac-input" placeholder="20000" maxlength="5" value="{{ old('cp') }}" required>
+                                    <input type="text" name="cp" class="mac-input" placeholder="20000" maxlength="5" pattern="[0-9]{5}" value="{{ old('cp') }}" required>
+                                    @error('cp')
+                                        <p style="color:#C41230;font-size:12px;margin-top:4px;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Referencias</label>
