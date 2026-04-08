@@ -82,19 +82,19 @@
 
           <div class="page-kpis" aria-label="Resumen de usuarios externos">
             <div class="kpi-card">
-              <span class="kpi-val">24</span>
+              <span class="kpi-val">{{ total }}</span>
               <span class="kpi-lbl">Total</span>
             </div>
             <div class="kpi-card kpi-card--ok">
-              <span class="kpi-val">19</span>
+              <span class="kpi-val">{{ activos }}</span>
               <span class="kpi-lbl">Activos</span>
             </div>
             <div class="kpi-card kpi-card--warn">
-              <span class="kpi-val">3</span>
+              <span class="kpi-val">{{ pendientes }}</span>
               <span class="kpi-lbl">Pendientes</span>
             </div>
             <div class="kpi-card kpi-card--red">
-              <span class="kpi-val">2</span>
+              <span class="kpi-val">{{ inactivos }}</span>
               <span class="kpi-lbl">Inactivos</span>
             </div>
           </div>
@@ -118,7 +118,7 @@
             aria-selected="true"
           >
             <i class="fas fa-users"></i> Externos
-            <span class="tab-count">24</span>
+            <span class="tab-count">{{ total }}</span>
           </a>
         </div>
 
@@ -138,6 +138,7 @@
               "
             ></i>
             <input
+              id="search-input"
               type="search"
               class="tbar-search-input"
               placeholder="Buscar por nombre, empresa o RFC…"
@@ -146,7 +147,7 @@
             />
           </div>
           <div class="tbar-right">
-            <button type="button" class="btn-export">
+            <button type="button" id="export-btn" class="btn-export">
               <i class="fas fa-file-export"></i> Exportar
             </button>
             <a href="/agregar-usuario-externo" class="btn-add">
@@ -170,20 +171,21 @@
                   <th scope="col">Cliente</th>
                   <th scope="col">Empresa / Negocio</th>
                   <th scope="col">Tipo</th>
-                  <th scope="col">Pedidos</th>
+                  <th scope="col">Empresa</th>
                   <th scope="col">Registro</th>
                   <th scope="col">Estado</th>
                   <th scope="col">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="tbl-body">
                 {% for u in usuarios %}
-                <tr>
+                <tr data-search="{{ u.nombre|lower }} {{ u.apellidos|lower }} {{ u.email|lower }} {{ (u.empresa or '')|lower }} {{ (u.tipo_cliente or '')|lower }}">
                   <td class="td-id">{{ u.id }}</td>
                   <td>{{ u.nombre }} {{ u.apellidos }}</td>
                   <td>{{ u.email }}</td>
                   <td>{{ u.tipo_cliente or '—' }}</td>
                   <td>{{ u.empresa or '—' }}</td>
+                  <td>{{ (u.creado_en[8:10] ~ '/' ~ u.creado_en[5:7] ~ '/' ~ u.creado_en[:4]) if u.creado_en else '—' }}</td>
                   <td>
                     <span class="badge {% if u.estado == 'activo' %}badge--ok{% else %}badge--err{% endif %}">
                       {{ u.estado | title }}
@@ -250,7 +252,7 @@
 
           {# Footer paginación #}
           <div class="tbl-footer">
-            <span class="tbl-count">Mostrando 1–10 de 24 clientes</span>
+            <span id="tbl-count-text" class="tbl-count">Mostrando {{ usuarios|length }} de {{ usuarios|length }} clientes</span>
             <nav class="pagination" aria-label="Paginación">
               <button class="pp pp--on" aria-current="page">1</button>
               <button class="pp">2</button>
@@ -261,5 +263,55 @@
         </div>
       </div>
     </main>
+  <script>
+    const searchInput = document.getElementById('search-input');
+    const exportBtn   = document.getElementById('export-btn');
+    const tblBody     = document.getElementById('tbl-body');
+    const countText   = document.getElementById('tbl-count-text');
+    const allRows     = Array.from(tblBody.querySelectorAll('tr[data-search]'));
+    const total       = allRows.length;
+
+    function filterTable() {
+      const q = searchInput.value.toLowerCase().trim();
+      let visible = 0;
+      allRows.forEach(row => {
+        const match = !q || row.dataset.search.includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      countText.textContent = 'Mostrando ' + visible + ' de ' + total + ' clientes';
+    }
+
+    searchInput.addEventListener('input', filterTable);
+
+    exportBtn.addEventListener('click', () => {
+      const headers = ['ID', 'Cliente', 'Correo', 'Tipo', 'Empresa', 'Registro', 'Estado'];
+      const csvRows = [headers.join(',')];
+      allRows.forEach(row => {
+        if (row.style.display === 'none') return;
+        const cells = row.querySelectorAll('td');
+        const values = [
+          cells[0].textContent.trim(),
+          cells[1].textContent.trim(),
+          cells[2].textContent.trim(),
+          cells[3].textContent.trim(),
+          cells[4].textContent.trim(),
+          cells[5].textContent.trim(),
+          cells[6].textContent.trim()
+        ].map(v => '"' + v.replace(/"/g, '""') + '"');
+        csvRows.push(values.join(','));
+      });
+      const csv  = '\uFEFF' + csvRows.join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'usuarios_externos.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
   </body>
 </html>

@@ -95,6 +95,28 @@
             <option value="Cancelado" {% if filtro_estado == 'Cancelado' %}selected{% endif %}>Cancelado</option>
           </select>
 
+          <select id="filtro_categoria" class="filter-select" style="margin-left:8px;" title="Filtrar por categoría (Ventas / Inventario)">
+            <option value="">Todas las categorías</option>
+            <option value="Motor" {% if filtro_categoria == 'Motor' %}selected{% endif %}>Motor</option>
+            <option value="Suspensión" {% if filtro_categoria == 'Suspensión' %}selected{% endif %}>Suspensión</option>
+            <option value="Frenos" {% if filtro_categoria == 'Frenos' %}selected{% endif %}>Frenos</option>
+            <option value="Sistema eléctrico" {% if filtro_categoria == 'Sistema eléctrico' %}selected{% endif %}>Eléctrico</option>
+            <option value="Transmisión" {% if filtro_categoria == 'Transmisión' %}selected{% endif %}>Transmisión</option>
+            <option value="Filtros" {% if filtro_categoria == 'Filtros' %}selected{% endif %}>Filtros</option>
+          </select>
+
+          <select id="filtro_tipo_cliente" class="filter-select" style="margin-left:8px;" title="Filtrar usuarios por tipo (Usuarios)">
+            <option value="">Todos los tipos</option>
+            <option value="Particular" {% if filtro_tipo_cliente == 'Particular' %}selected{% endif %}>Particular</option>
+            <option value="Taller mecánico" {% if filtro_tipo_cliente == 'Taller mecánico' %}selected{% endif %}>Taller mecánico</option>
+            <option value="Refaccionaria" {% if filtro_tipo_cliente == 'Refaccionaria' %}selected{% endif %}>Refaccionaria</option>
+            <option value="Distribuidor" {% if filtro_tipo_cliente == 'Distribuidor' %}selected{% endif %}>Distribuidor</option>
+          </select>
+
+          <label style="margin-left:8px;display:flex;align-items:center;gap:5px;font-size:13px;color:#6b7280;white-space:nowrap;" title="Mostrar solo productos con stock bajo (Inventario)">
+            <input type="checkbox" id="filtro_solo_alertas" {% if filtro_solo_alertas == 'true' %}checked{% endif %}> Solo alertas
+          </label>
+
           <button type="button" class="btn-filter" onclick="aplicarFiltros()">
             <i class="fas fa-filter"></i> Aplicar
           </button>
@@ -108,51 +130,27 @@
             <div class="dropdown-menu" id="exportMenu">
               <div class="dropdown-section">
                 <div class="dropdown-label">Reporte de Ventas</div>
-                <a href="/reportes/descargar/ventas/pdf{% if filtro_inicio or filtro_fin %}?{% if filtro_inicio %}fecha_inicio={{ filtro_inicio }}{% endif %}{% if filtro_fin %}{% if filtro_inicio %}&{% endif %}fecha_fin={{ filtro_fin }}{% endif %}{% endif %}" class="dropdown-item">
-                  <i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF
-                </a>
-                <a href="/reportes/descargar/ventas/xlsx{% if filtro_inicio or filtro_fin %}?{% if filtro_inicio %}fecha_inicio={{ filtro_inicio }}{% endif %}{% if filtro_fin %}{% if filtro_inicio %}&{% endif %}fecha_fin={{ filtro_fin }}{% endif %}{% endif %}" class="dropdown-item">
-                  <i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel
-                </a>
-                <a href="/reportes/descargar/ventas/docx{% if filtro_inicio or filtro_fin %}?{% if filtro_inicio %}fecha_inicio={{ filtro_inicio }}{% endif %}{% if filtro_fin %}{% if filtro_inicio %}&{% endif %}fecha_fin={{ filtro_fin }}{% endif %}{% endif %}" class="dropdown-item">
-                  <i class="fas fa-file-word" style="color:#2563eb;"></i> Word
-                </a>
+                <a href="#" onclick="exportar('ventas','pdf');return false;" class="dropdown-item"><i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF</a>
+                <a href="#" onclick="exportar('ventas','xlsx');return false;" class="dropdown-item"><i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel</a>
+                <a href="#" onclick="exportar('ventas','docx');return false;" class="dropdown-item"><i class="fas fa-file-word" style="color:#2563eb;"></i> Word</a>
               </div>
               <div class="dropdown-section">
                 <div class="dropdown-label">Reporte de Inventario</div>
-                <a href="/reportes/descargar/inventario/pdf" class="dropdown-item">
-                  <i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF
-                </a>
-                <a href="/reportes/descargar/inventario/xlsx" class="dropdown-item">
-                  <i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel
-                </a>
-                <a href="/reportes/descargar/inventario/docx" class="dropdown-item">
-                  <i class="fas fa-file-word" style="color:#2563eb;"></i> Word
-                </a>
+                <a href="#" onclick="exportar('inventario','pdf');return false;" class="dropdown-item"><i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF</a>
+                <a href="#" onclick="exportar('inventario','xlsx');return false;" class="dropdown-item"><i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel</a>
+                <a href="#" onclick="exportar('inventario','docx');return false;" class="dropdown-item"><i class="fas fa-file-word" style="color:#2563eb;"></i> Word</a>
               </div>
               <div class="dropdown-section">
                 <div class="dropdown-label">Reporte de Pedidos</div>
-                <a href="/reportes/descargar/pedidos/pdf{% if filtro_inicio or filtro_fin or filtro_estado %}?{% if filtro_inicio %}fecha_inicio={{ filtro_inicio }}{% endif %}{% if filtro_fin %}{% if filtro_inicio %}&{% endif %}fecha_fin={{ filtro_fin }}{% endif %}{% if filtro_estado %}{% if filtro_inicio or filtro_fin %}&{% endif %}estado={{ filtro_estado }}{% endif %}{% endif %}" class="dropdown-item">
-                  <i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF
-                </a>
-                <a href="/reportes/descargar/pedidos/xlsx{% if filtro_inicio or filtro_fin or filtro_estado %}?{% if filtro_inicio %}fecha_inicio={{ filtro_inicio }}{% endif %}{% if filtro_fin %}{% if filtro_inicio %}&{% endif %}fecha_fin={{ filtro_fin }}{% endif %}{% if filtro_estado %}{% if filtro_inicio or filtro_fin %}&{% endif %}estado={{ filtro_estado }}{% endif %}{% endif %}" class="dropdown-item">
-                  <i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel
-                </a>
-                <a href="/reportes/descargar/pedidos/docx{% if filtro_inicio or filtro_fin or filtro_estado %}?{% if filtro_inicio %}fecha_inicio={{ filtro_inicio }}{% endif %}{% if filtro_fin %}{% if filtro_inicio %}&{% endif %}fecha_fin={{ filtro_fin }}{% endif %}{% if filtro_estado %}{% if filtro_inicio or filtro_fin %}&{% endif %}estado={{ filtro_estado }}{% endif %}{% endif %}" class="dropdown-item">
-                  <i class="fas fa-file-word" style="color:#2563eb;"></i> Word
-                </a>
+                <a href="#" onclick="exportar('pedidos','pdf');return false;" class="dropdown-item"><i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF</a>
+                <a href="#" onclick="exportar('pedidos','xlsx');return false;" class="dropdown-item"><i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel</a>
+                <a href="#" onclick="exportar('pedidos','docx');return false;" class="dropdown-item"><i class="fas fa-file-word" style="color:#2563eb;"></i> Word</a>
               </div>
               <div class="dropdown-section">
                 <div class="dropdown-label">Reporte de Usuarios</div>
-                <a href="/reportes/descargar/usuarios/pdf" class="dropdown-item">
-                  <i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF
-                </a>
-                <a href="/reportes/descargar/usuarios/xlsx" class="dropdown-item">
-                  <i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel
-                </a>
-                <a href="/reportes/descargar/usuarios/docx" class="dropdown-item">
-                  <i class="fas fa-file-word" style="color:#2563eb;"></i> Word
-                </a>
+                <a href="#" onclick="exportar('usuarios','pdf');return false;" class="dropdown-item"><i class="fas fa-file-pdf" style="color:#dc2626;"></i> PDF</a>
+                <a href="#" onclick="exportar('usuarios','xlsx');return false;" class="dropdown-item"><i class="fas fa-file-excel" style="color:#16a34a;"></i> Excel</a>
+                <a href="#" onclick="exportar('usuarios','docx');return false;" class="dropdown-item"><i class="fas fa-file-word" style="color:#2563eb;"></i> Word</a>
               </div>
             </div>
           </div>
@@ -228,7 +226,7 @@
                   <i class="fas fa-trophy"></i> Top 5 Productos
                 </h3>
               </div>
-              <div class="report-card__body" style="padding:0;">
+              <div class="report-card__body" style="padding:0; overflow-x:auto;">
                 <table class="report-table">
                   <thead>
                     <tr>
@@ -471,18 +469,33 @@
         }
       });
 
-      // Aplicar filtros
-      function aplicarFiltros() {
-        var inicio = document.getElementById('fecha_inicio').value;
-        var fin = document.getElementById('fecha_fin').value;
-        var estado = document.getElementById('estado_pedidos').value;
-        
+      function _buildParams() {
         var params = new URLSearchParams();
-        if (inicio) params.append('fecha_inicio', inicio);
-        if (fin) params.append('fecha_fin', fin);
-        if (estado) params.append('estado', estado);
-        
-        window.location.href = '/reportes?' + params.toString();
+        var inicio      = document.getElementById('fecha_inicio').value;
+        var fin         = document.getElementById('fecha_fin').value;
+        var estado      = document.getElementById('estado_pedidos').value;
+        var categoria   = document.getElementById('filtro_categoria').value;
+        var tipoCliente = document.getElementById('filtro_tipo_cliente').value;
+        var soloAlertas = document.getElementById('filtro_solo_alertas').checked;
+        if (inicio)      params.append('fecha_inicio', inicio);
+        if (fin)         params.append('fecha_fin', fin);
+        if (estado)      params.append('estado', estado);
+        if (categoria)   params.append('categoria', categoria);
+        if (tipoCliente) params.append('tipo_cliente', tipoCliente);
+        if (soloAlertas) params.append('solo_alertas', 'true');
+        return params;
+      }
+
+      function aplicarFiltros() {
+        window.location.href = '/reportes?' + _buildParams().toString();
+      }
+
+      function exportar(tipo, formato) {
+        var url = '/reportes/descargar/' + tipo + '/' + formato;
+        var qs  = _buildParams().toString();
+        if (qs) url += '?' + qs;
+        window.location.href = url;
+        document.getElementById('exportMenu').classList.remove('show');
       }
 
       // Datos desde el backend

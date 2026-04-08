@@ -82,17 +82,21 @@ def _date_filter(query, fecha_inicio: Optional[str], fecha_fin: Optional[str]):
     return query
 
 
-def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[str]) -> dict:
-    # KPIs — pedidos no cancelados
+def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[str], categoria: Optional[str] = None) -> dict:
+    # KPIs globales (no filtrados por categoría para mantener totales reales)
     base = _date_filter(
         db.query(Pedido).filter(Pedido.estado != "Cancelado"),
         fecha_inicio, fecha_fin
     )
     pedidos_list = base.all()
-    ventas_totales     = sum(float(p.total) for p in pedidos_list)
+    ventas_totales      = sum(float(p.total) for p in pedidos_list)
     pedidos_completados = sum(1 for p in pedidos_list if p.estado == "Completado")
 
-    # Ventas por mes
+    # Helper: aplica filtro de categoría a queries que ya hacen join con Autoparte
+    def with_cat(q):
+        return q.filter(Autoparte.categoria.ilike(categoria)) if categoria else q
+
+    # Ventas por mes (global, sin filtro de categoría)
     mes_q = _date_filter(
         db.query(
             func.to_char(Pedido.creado_en, "YYYY-MM").label("mes"),
@@ -102,8 +106,8 @@ def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[
     )
     ventas_por_mes = mes_q.group_by("mes").order_by("mes").all()
 
-    # Ventas por categoría
-    cat_q = _date_filter(
+    # Ventas por categoría (filtrable)
+    cat_q = with_cat(_date_filter(
         db.query(
             Autoparte.categoria,
             func.sum(DetallePedido.precio_unitario * DetallePedido.cantidad).label("total")
@@ -111,13 +115,13 @@ def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[
          .join(Pedido, DetallePedido.pedido_id == Pedido.id)
          .filter(Pedido.estado != "Cancelado"),
         fecha_inicio, fecha_fin
-    )
+    ))
     por_categoria = cat_q.group_by(Autoparte.categoria).order_by(
         func.sum(DetallePedido.precio_unitario * DetallePedido.cantidad).desc()
     ).all()
 
-    # Top 5 productos más vendidos (por revenue)
-    top_q = _date_filter(
+    # Top 5 productos (filtrable por categoría)
+    top_q = with_cat(_date_filter(
         db.query(
             Autoparte.nombre, Autoparte.sku, Autoparte.categoria,
             func.sum(DetallePedido.precio_unitario * DetallePedido.cantidad).label("total_vendido"),
@@ -126,15 +130,15 @@ def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[
          .join(Pedido, DetallePedido.pedido_id == Pedido.id)
          .filter(Pedido.estado != "Cancelado"),
         fecha_inicio, fecha_fin
-    )
+    ))
     top_productos = top_q.group_by(
         Autoparte.id, Autoparte.nombre, Autoparte.sku, Autoparte.categoria
     ).order_by(
         func.sum(DetallePedido.precio_unitario * DetallePedido.cantidad).desc()
     ).limit(5).all()
 
-    # Ventas por marca
-    marca_q = _date_filter(
+    # Ventas por marca (filtrable por categoría)
+    marca_q = with_cat(_date_filter(
         db.query(
             Autoparte.marca,
             func.sum(DetallePedido.precio_unitario * DetallePedido.cantidad).label("total")
@@ -142,13 +146,14 @@ def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[
          .join(Pedido, DetallePedido.pedido_id == Pedido.id)
          .filter(Pedido.estado != "Cancelado"),
         fecha_inicio, fecha_fin
-    )
+    ))
     por_marca = marca_q.group_by(Autoparte.marca).order_by(
         func.sum(DetallePedido.precio_unitario * DetallePedido.cantidad).desc()
     ).all()
 
     return {
-        "periodo": {"inicio": fecha_inicio or "Todos", "fin": fecha_fin or "Todos"},
+        "periodo":          {"inicio": fecha_inicio or "Todos", "fin": fecha_fin or "Todos"},
+        "filtro_categoria": categoria,
         "kpis": {
             "ventas_totales":      round(ventas_totales, 2),
             "pedidos_completados": pedidos_completados,
@@ -165,8 +170,14 @@ def _datos_ventas(db: Session, fecha_inicio: Optional[str], fecha_fin: Optional[
     }
 
 
-def _datos_inventario(db: Session) -> dict:
-    autopartes = db.query(Autoparte).filter(Autoparte.activo == True).all()
+def _datos_inventario(db: Session, categoria: Optional[str] = None, solo_alertas: bool = False) -> dict:
+    q = db.query(Autoparte).filter(Autoparte.activo == True)
+    if categoria:
+        q = q.filter(Autoparte.categoria.ilike(categoria))
+    autopartes = q.all()
+
+    if solo_alertas:
+        autopartes = [a for a in autopartes if a.stock < a.stock_minimo]
 
     cat_dict: dict = {}
     for a in autopartes:
@@ -184,11 +195,13 @@ def _datos_inventario(db: Session) -> dict:
     )
 
     return {
-        "generado_en":  datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "total_skus":   len(autopartes),
-        "stock_total":  sum(a.stock for a in autopartes),
-        "por_categoria": por_categoria,
-        "alertas":       alertas,
+        "generado_en":      datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "filtro_categoria": categoria,
+        "solo_alertas":     solo_alertas,
+        "total_skus":       len(autopartes),
+        "stock_total":      sum(a.stock for a in autopartes),
+        "por_categoria":    por_categoria,
+        "alertas":          alertas,
     }
 
 
@@ -242,13 +255,17 @@ def _datos_pedidos(
     }
 
 
-def _datos_usuarios(db: Session) -> dict:
-    resultados = db.query(
+def _datos_usuarios(db: Session, tipo_cliente: Optional[str] = None, estado: Optional[str] = None) -> dict:
+    q = db.query(
         UsuarioExterno,
         func.count(Pedido.id).label("total_pedidos"),
         func.coalesce(func.sum(Pedido.total), 0).label("monto_total"),
-    ).outerjoin(Pedido, UsuarioExterno.id == Pedido.usuario_externo_id
-    ).group_by(UsuarioExterno.id
+    ).outerjoin(Pedido, UsuarioExterno.id == Pedido.usuario_externo_id)
+    if tipo_cliente:
+        q = q.filter(UsuarioExterno.tipo_cliente.ilike(tipo_cliente))
+    if estado:
+        q = q.filter(UsuarioExterno.estado.ilike(estado))
+    resultados = q.group_by(UsuarioExterno.id
     ).order_by(func.coalesce(func.sum(Pedido.total), 0).desc()
     ).all()
 
@@ -618,17 +635,20 @@ def _despachar(datos: dict, tipo: str, formato: str) -> io.BytesIO:
 async def datos_ventas_json(
     fecha_inicio: Optional[str] = None,
     fecha_fin:    Optional[str] = None,
+    categoria:    Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    """Devuelve datos de ventas en formato JSON para dashboard Flask."""
-    datos = _datos_ventas(db, fecha_inicio, fecha_fin)
+    datos = _datos_ventas(db, fecha_inicio, fecha_fin, categoria)
     return {"status": "200", "data": datos}
 
 
 @router.get("/datos/inventario", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
-async def datos_inventario_json(db: Session = Depends(get_db)):
-    """Devuelve datos de inventario en formato JSON para dashboard Flask."""
-    datos = _datos_inventario(db)
+async def datos_inventario_json(
+    categoria:    Optional[str] = None,
+    solo_alertas: bool = False,
+    db: Session = Depends(get_db)
+):
+    datos = _datos_inventario(db, categoria, solo_alertas)
     return {"status": "200", "data": datos}
 
 
@@ -639,15 +659,17 @@ async def datos_pedidos_json(
     estado:       Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    """Devuelve datos de pedidos en formato JSON para dashboard Flask."""
     datos = _datos_pedidos(db, fecha_inicio, fecha_fin, estado)
     return {"status": "200", "data": datos}
 
 
 @router.get("/datos/usuarios", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
-async def datos_usuarios_json(db: Session = Depends(get_db)):
-    """Devuelve datos de usuarios en formato JSON para dashboard Flask."""
-    datos = _datos_usuarios(db)
+async def datos_usuarios_json(
+    tipo_cliente: Optional[str] = None,
+    estado:       Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    datos = _datos_usuarios(db, tipo_cliente, estado)
     return {"status": "200", "data": datos}
 
 
@@ -660,20 +682,23 @@ async def reporte_ventas(
     formato: str,
     fecha_inicio: Optional[str] = None,
     fecha_fin:    Optional[str] = None,
+    categoria:    Optional[str] = None,
     db: Session = Depends(get_db)
 ):
     _validar_formato(formato)
-    datos = _datos_ventas(db, fecha_inicio, fecha_fin)
+    datos = _datos_ventas(db, fecha_inicio, fecha_fin, categoria)
     return _responder(_despachar(datos, "ventas", formato), formato, "reporte_ventas")
 
 
 @router.get("/inventario/{formato}", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
 async def reporte_inventario(
     formato: str,
+    categoria:    Optional[str] = None,
+    solo_alertas: bool = False,
     db: Session = Depends(get_db)
 ):
     _validar_formato(formato)
-    datos = _datos_inventario(db)
+    datos = _datos_inventario(db, categoria, solo_alertas)
     return _responder(_despachar(datos, "inventario", formato), formato, "reporte_inventario")
 
 
@@ -692,9 +717,11 @@ async def reporte_pedidos(
 
 @router.get("/usuarios/{formato}", status_code=status.HTTP_200_OK, dependencies=[Depends(verificar_peticion)])
 async def reporte_usuarios(
-    formato: str,
+    formato:      str,
+    tipo_cliente: Optional[str] = None,
+    estado:       Optional[str] = None,
     db: Session = Depends(get_db)
 ):
     _validar_formato(formato)
-    datos = _datos_usuarios(db)
+    datos = _datos_usuarios(db, tipo_cliente, estado)
     return _responder(_despachar(datos, "usuarios", formato), formato, "reporte_usuarios")

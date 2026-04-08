@@ -70,9 +70,11 @@ class ApiClient:
         return ApiClient._raise_for_status(resp)
 
     @staticmethod
-    def get_raw(path: str, auth: tuple = None) -> http.Response:
+    def get_raw(path: str, auth: tuple = None, params: dict = None) -> http.Response:
         """Descarga de archivos — devuelve Response sin procesar (para reportes)."""
         kwargs = {}
         if auth:
             kwargs["auth"] = auth
+        if params:
+            kwargs["params"] = params
         return http.get(f"{ApiClient.BASE_URL}{path}", **kwargs)

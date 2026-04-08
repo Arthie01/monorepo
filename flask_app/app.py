@@ -188,10 +188,15 @@ def gestion_usuarios_internos():
     r = requiere_sesion()
     if r: return r
     try:
-        usuarios = UsuariosService.listar_internos()
+        usuarios = sorted(UsuariosService.listar_internos(), key=lambda u: u.get('id', 0))
     except ApiException:
         usuarios = []
-    return render_template("gestion_usuarios_internos.html", usuarios=usuarios)
+    total    = len(usuarios)
+    activos  = sum(1 for u in usuarios if u.get('estado', '').lower() == 'activo')
+    inactivos = total - activos
+    return render_template("gestion_usuarios_internos.html",
+                           usuarios=usuarios,
+                           total=total, activos=activos, inactivos=inactivos)
 
 
 @app.route("/agregar-usuario-interno", methods=["GET"])
@@ -265,10 +270,17 @@ def gestion_usuarios_externos():
     r = requiere_sesion()
     if r: return r
     try:
-        usuarios = UsuariosService.listar_externos()
+        usuarios = sorted(UsuariosService.listar_externos(), key=lambda u: u.get('id', 0))
     except ApiException:
         usuarios = []
-    return render_template("gestion_usuarios_externos.html", usuarios=usuarios)
+    total      = len(usuarios)
+    activos    = sum(1 for u in usuarios if u.get('estado', '').lower() == 'activo')
+    pendientes = sum(1 for u in usuarios if u.get('estado', '').lower() == 'pendiente')
+    inactivos  = sum(1 for u in usuarios if u.get('estado', '').lower() == 'inactivo')
+    return render_template("gestion_usuarios_externos.html",
+                           usuarios=usuarios,
+                           total=total, activos=activos,
+                           pendientes=pendientes, inactivos=inactivos)
 
 
 @app.route("/agregar-usuario-externo", methods=["GET"])
@@ -347,41 +359,51 @@ def reportes():
     if r: return r
     
     # Obtener filtros de la URL
-    fecha_inicio = request.args.get("fecha_inicio")
-    fecha_fin = request.args.get("fecha_fin")
-    estado = request.args.get("estado")
-    
-    # Construir params para las APIs
-    params_ventas = {}
-    if fecha_inicio: params_ventas["fecha_inicio"] = fecha_inicio
-    if fecha_fin: params_ventas["fecha_fin"] = fecha_fin
-    
-    params_pedidos = params_ventas.copy()
-    if estado: params_pedidos["estado"] = estado
-    
-    # Obtener datos de la API para mostrar en la página
+    fecha_inicio  = request.args.get("fecha_inicio")
+    fecha_fin     = request.args.get("fecha_fin")
+    estado        = request.args.get("estado")
+    categoria     = request.args.get("categoria")
+    tipo_cliente  = request.args.get("tipo_cliente")
+    solo_alertas  = request.args.get("solo_alertas", "false")
+
     auth_macuin = ("macuin", "123456")
-    
+
+    params_ventas = {k: v for k, v in {
+        "fecha_inicio": fecha_inicio, "fecha_fin": fecha_fin, "categoria": categoria
+    }.items() if v}
+
+    params_inventario = {k: v for k, v in {
+        "categoria": categoria, "solo_alertas": solo_alertas
+    }.items() if v and v != "false"}
+
+    params_pedidos = {k: v for k, v in {
+        "fecha_inicio": fecha_inicio, "fecha_fin": fecha_fin, "estado": estado
+    }.items() if v}
+
+    params_usuarios = {k: v for k, v in {
+        "tipo_cliente": tipo_cliente, "estado": estado
+    }.items() if v}
+
     try:
         datos_ventas = ApiClient.get("/v1/reportes/datos/ventas", params=params_ventas, auth=auth_macuin)["data"]
-    except Exception as e:
+    except Exception:
         datos_ventas = None
-    
+
     try:
-        datos_inventario = ApiClient.get("/v1/reportes/datos/inventario", auth=auth_macuin)["data"]
-    except Exception as e:
+        datos_inventario = ApiClient.get("/v1/reportes/datos/inventario", params=params_inventario, auth=auth_macuin)["data"]
+    except Exception:
         datos_inventario = None
-    
+
     try:
         datos_pedidos = ApiClient.get("/v1/reportes/datos/pedidos", params=params_pedidos, auth=auth_macuin)["data"]
-    except Exception as e:
+    except Exception:
         datos_pedidos = None
-    
+
     try:
-        datos_usuarios = ApiClient.get("/v1/reportes/datos/usuarios", auth=auth_macuin)["data"]
-    except Exception as e:
+        datos_usuarios = ApiClient.get("/v1/reportes/datos/usuarios", params=params_usuarios, auth=auth_macuin)["data"]
+    except Exception:
         datos_usuarios = None
-    
+
     return render_template(
         "reportes.html",
         ventas=datos_ventas,
@@ -390,7 +412,10 @@ def reportes():
         usuarios=datos_usuarios,
         filtro_inicio=fecha_inicio,
         filtro_fin=fecha_fin,
-        filtro_estado=estado
+        filtro_estado=estado,
+        filtro_categoria=categoria,
+        filtro_tipo_cliente=tipo_cliente,
+        filtro_solo_alertas=solo_alertas,
     )
 
 
@@ -398,10 +423,20 @@ def reportes():
 def descargar_reporte(tipo, formato):
     r = requiere_sesion()
     if r: return r
+    # Pasar todos los query params al endpoint de FastAPI
+    params = {k: v for k, v in {
+        "fecha_inicio": request.args.get("fecha_inicio"),
+        "fecha_fin":    request.args.get("fecha_fin"),
+        "estado":       request.args.get("estado"),
+        "categoria":    request.args.get("categoria"),
+        "tipo_cliente": request.args.get("tipo_cliente"),
+        "solo_alertas": request.args.get("solo_alertas"),
+    }.items() if v}
     try:
         resp = ApiClient.get_raw(
             f"/v1/reportes/{tipo}/{formato}",
             auth=("macuin", "123456"),
+            params=params or None,
         )
         if resp.status_code >= 400:
             flash(f"Error al generar reporte: {resp.status_code}", "error")
