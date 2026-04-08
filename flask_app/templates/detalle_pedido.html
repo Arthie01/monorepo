@@ -30,6 +30,15 @@
         ">{{ message }}</div>
       {% endfor %}
     {% endwith %}
+    <script>
+      setTimeout(function () {
+        document.querySelectorAll('.flash').forEach(function (f) {
+          f.style.transition = 'opacity .4s';
+          f.style.opacity = '0';
+          setTimeout(function () { f.remove(); }, 400);
+        });
+      }, 3500);
+    </script>
     <!-- ══ SITE HEADER ══ -->
     <header class="site-header" role="banner">
       <div class="hdr-inner">
@@ -89,27 +98,36 @@
                   <i class="fas fa-route"></i> Estado del Pedido
                 </h2>
               </div>
+              {% set orden = ['Pendiente', 'En proceso', 'Enviado', 'Completado'] %}
+              {% set idx_actual = orden.index(pedido.estado) if pedido.estado in orden else -1 %}
               <div class="state-timeline">
-                <div class="state-step done">
+                <div class="state-step {% if idx_actual > 0 %}done{% elif idx_actual == 0 %}active{% endif %}">
                   <div class="state-dot"><i class="fas fa-check"></i></div>
                   <span class="state-label">Recibido</span>
-                  <span class="state-date">05/03/2026</span>
+                  <span class="state-date">—</span>
                 </div>
-                <div class="state-step active">
+                <div class="state-step {% if idx_actual > 1 %}done{% elif idx_actual == 1 %}active{% endif %}">
                   <div class="state-dot"><i class="fas fa-spinner"></i></div>
                   <span class="state-label">En proceso</span>
                   <span class="state-date">—</span>
                 </div>
-                <div class="state-step">
+                <div class="state-step {% if idx_actual > 2 %}done{% elif idx_actual == 2 %}active{% endif %}">
                   <div class="state-dot"><i class="fas fa-truck"></i></div>
                   <span class="state-label">Enviado</span>
                   <span class="state-date">—</span>
                 </div>
-                <div class="state-step">
+                <div class="state-step {% if idx_actual == 3 %}active{% endif %}">
                   <div class="state-dot"><i class="fas fa-box-open"></i></div>
                   <span class="state-label">Completado</span>
                   <span class="state-date">—</span>
                 </div>
+                {% if pedido.estado == 'Cancelado' %}
+                <div class="state-step cancelled">
+                  <div class="state-dot"><i class="fas fa-times"></i></div>
+                  <span class="state-label">Cancelado</span>
+                  <span class="state-date">—</span>
+                </div>
+                {% endif %}
               </div>
             </div>
 

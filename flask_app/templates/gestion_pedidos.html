@@ -77,36 +77,24 @@
 
         <!-- ── Filter bar ── -->
         <div class="filter-bar" role="search" aria-label="Filtros de búsqueda">
-          <form method="GET" action="/gestion-pedidos" class="filter-capsules">
-            <div class="capsule">
-              <span class="cap-label" id="lbl-estado">Estado:</span>
-              <div class="cap-select-wrap">
-                <select name="estado" class="cap-select" aria-labelledby="lbl-estado" onchange="this.form.submit()">
-                  <option value="">Todos</option>
-                  <option value="Pendiente" {% if request.args.get('estado') == 'Pendiente' %}selected{% endif %}>Pendiente</option>
-                  <option value="En proceso" {% if request.args.get('estado') == 'En proceso' %}selected{% endif %}>En proceso</option>
-                  <option value="Enviado" {% if request.args.get('estado') == 'Enviado' %}selected{% endif %}>Enviado</option>
-                  <option value="Completado" {% if request.args.get('estado') == 'Completado' %}selected{% endif %}>Completado</option>
-                  <option value="Cancelado" {% if request.args.get('estado') == 'Cancelado' %}selected{% endif %}>Cancelado</option>
-                </select>
-                <img
-                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
-                  alt=""
-                  class="cap-arrow"
-                  aria-hidden="true"
-                />
+          <form method="GET" action="/gestion-pedidos" class="filter-capsules" id="pedidos-filter-form">
+            <input type="hidden" name="estado" id="hidden-estado" value="{{ request.args.get('estado', '') }}">
+            <div class="capsule {% if request.args.get('estado') %}capsule--active{% endif %}" id="capsule-estado">
+              <span class="cap-label">Estado:</span>
+              <div class="custom-dd" id="dd-estado" data-value="{{ request.args.get('estado', '') }}">
+                <div class="custom-dd__trigger">
+                  <span class="custom-dd__text">{{ request.args.get('estado') or 'Todos' }}</span>
+                  <img src="{{ url_for('static', filename='images/chevron-down.png') }}" alt="" class="cap-arrow" aria-hidden="true" />
+                </div>
+                <div class="custom-dd__panel">
+                  <div class="custom-dd__opt {% if not request.args.get('estado') %}custom-dd__opt--sel{% endif %}" data-value="">Todos</div>
+                  {% for e in ['Pendiente', 'En proceso', 'Enviado', 'Completado', 'Cancelado'] %}
+                  <div class="custom-dd__opt {% if request.args.get('estado') == e %}custom-dd__opt--sel{% endif %}" data-value="{{ e }}">{{ e }}</div>
+                  {% endfor %}
+                </div>
               </div>
             </div>
           </form>
-          <button type="button" class="btn-search" style="visibility: hidden;">
-            <img
-              src="{{ url_for('static', filename='images/search.png') }}"
-              alt=""
-              class="btn-icon"
-              aria-hidden="true"
-            />
-            <span>Buscar</span>
-          </button>
         </div>
 
         <!-- ── KPI Cards + CTA ── -->
@@ -217,5 +205,31 @@
       </div>
       <!-- /container -->
     </main>
+    <script>
+      (function () {
+        var dd          = document.getElementById('dd-estado');
+        var capsule     = document.getElementById('capsule-estado');
+        var hiddenInput = document.getElementById('hidden-estado');
+        var form        = document.getElementById('pedidos-filter-form');
+        var trigger     = dd.querySelector('.custom-dd__trigger');
+        var opts        = dd.querySelectorAll('.custom-dd__opt');
+
+        trigger.addEventListener('click', function (e) {
+          e.stopPropagation();
+          dd.classList.toggle('custom-dd--open');
+        });
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            hiddenInput.value = opt.dataset.value;
+            form.submit();
+          });
+        });
+
+        document.addEventListener('click', function () {
+          dd.classList.remove('custom-dd--open');
+        });
+      })();
+    </script>
   </body>
 </html>

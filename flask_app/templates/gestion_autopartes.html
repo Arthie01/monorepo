@@ -30,6 +30,15 @@
         ">{{ message }}</div>
       {% endfor %}
     {% endwith %}
+    <script>
+      setTimeout(function () {
+        document.querySelectorAll('.flash').forEach(function (f) {
+          f.style.transition = 'opacity .4s';
+          f.style.opacity = '0';
+          setTimeout(function () { f.remove(); }, 400);
+        });
+      }, 3500);
+    </script>
     <!-- ══ SITE HEADER ══ -->
     <header class="site-header" role="banner">
       <div class="hdr-inner">
@@ -90,69 +99,53 @@
               <span class="kpi-lbl">En Stock</span>
             </div>
             <div class="kpi-card kpi-card--warn">
-              <span class="kpi-val">&mdash;</span>
+              <span class="kpi-val">{{ autopartes | selectattr('estado', 'equalto', 'sin_stock') | list | length }}</span>
               <span class="kpi-lbl">Sin Stock</span>
             </div>
           </div>
         </div>
 
         <!-- ── Filter bar ── -->
+        {% set categorias = [] %}
+        {% set marcas = [] %}
+        {% for a in autopartes %}
+          {% if a.categoria and a.categoria not in categorias %}{% set _ = categorias.append(a.categoria) %}{% endif %}
+          {% if a.marca and a.marca not in marcas %}{% set _ = marcas.append(a.marca) %}{% endif %}
+        {% endfor %}
         <div class="filter-bar" role="search" aria-label="Filtros de búsqueda">
           <div class="filter-capsules">
-            <div class="capsule">
-              <span class="cap-label" id="lbl-cat">Categoría</span>
-              <div class="cap-select-wrap">
-                <select class="cap-select" aria-labelledby="lbl-cat">
-                  <option value="">Todas las categorías</option>
-                </select>
-                <img
-                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
-                  alt=""
-                  class="cap-arrow"
-                  aria-hidden="true"
-                />
+            <div class="capsule" id="capsule-cat">
+              <span class="cap-label">Categoría</span>
+              <div class="custom-dd" id="dd-cat" data-value="">
+                <div class="custom-dd__trigger">
+                  <span class="custom-dd__text">Todas las categorías</span>
+                  <img src="{{ url_for('static', filename='images/chevron-down.png') }}" alt="" class="cap-arrow" aria-hidden="true" />
+                </div>
+                <div class="custom-dd__panel">
+                  <div class="custom-dd__opt custom-dd__opt--sel" data-value="">Todas las categorías</div>
+                  {% for cat in categorias | sort %}
+                  <div class="custom-dd__opt" data-value="{{ cat }}">{{ cat }}</div>
+                  {% endfor %}
+                </div>
               </div>
             </div>
 
-            <div class="capsule">
-              <span class="cap-label" id="lbl-marca">Marca</span>
-              <div class="cap-select-wrap">
-                <select class="cap-select" aria-labelledby="lbl-marca">
-                  <option value="">Todas las marcas</option>
-                </select>
-                <img
-                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
-                  alt=""
-                  class="cap-arrow"
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-
-            <div class="capsule">
-              <span class="cap-label" id="lbl-estado">Buscar</span>
-              <div class="cap-select-wrap">
-                <select class="cap-select" aria-labelledby="lbl-estado">
-                  <option value="">Todos</option>
-                </select>
-                <img
-                  src="{{ url_for('static', filename='images/chevron-down.png') }}"
-                  alt=""
-                  class="cap-arrow"
-                  aria-hidden="true"
-                />
+            <div class="capsule" id="capsule-marca">
+              <span class="cap-label">Marca</span>
+              <div class="custom-dd" id="dd-marca" data-value="">
+                <div class="custom-dd__trigger">
+                  <span class="custom-dd__text">Todas las marcas</span>
+                  <img src="{{ url_for('static', filename='images/chevron-down.png') }}" alt="" class="cap-arrow" aria-hidden="true" />
+                </div>
+                <div class="custom-dd__panel">
+                  <div class="custom-dd__opt custom-dd__opt--sel" data-value="">Todas las marcas</div>
+                  {% for m in marcas | sort %}
+                  <div class="custom-dd__opt" data-value="{{ m }}">{{ m }}</div>
+                  {% endfor %}
+                </div>
               </div>
             </div>
           </div>
-          <button type="button" class="btn-search">
-            <img
-              src="{{ url_for('static', filename='images/search.png') }}"
-              alt=""
-              class="btn-icon"
-              aria-hidden="true"
-            />
-            <span>Buscar Autoparte</span>
-          </button>
         </div>
 
         <!-- ── Table panel ── -->
@@ -160,8 +153,8 @@
           <!-- Top bar -->
           <div class="tbar">
             <p class="tbar-count" aria-live="polite">
-              <span class="count-range">1 a 7</span> de
-              <span class="count-total">&mdash;</span> autopartes
+              <span class="count-range">1 a {{ autopartes | length }}</span> de
+              <span class="count-total">{{ autopartes | length }}</span> autopartes
             </p>
             <div class="tbar-center">
               <div class="tbar-search-wrap">
@@ -172,6 +165,7 @@
                   aria-hidden="true"
                 />
                 <input
+                  id="tbar-search"
                   type="search"
                   class="tbar-search-input"
                   placeholder="Buscar por nombre, ID o categoría…"
@@ -181,12 +175,6 @@
             </div>
             <div class="tbar-right">
               <a href="/agregar-autoparte" class="btn-add">
-                <img
-                  src="{{ url_for('static', filename='images/plus.png') }}"
-                  alt=""
-                  class="btn-icon"
-                  aria-hidden="true"
-                />
                 <span>Agregar Autoparte</span>
               </a>
             </div>
@@ -214,7 +202,7 @@
               </thead>
               <tbody>
                 {% for a in autopartes %}
-                <tr>
+                <tr data-autoparte="true" data-id="{{ a.id }}" data-nombre="{{ a.nombre | lower }}" data-categoria="{{ a.categoria | lower }}" data-marca="{{ a.marca | lower }}">
                   <td class="td-id">{{ a.id }}</td>
                   <td>
                     <div class="tbl-img-wrap">
@@ -362,5 +350,76 @@
       </div>
       <!-- /container -->
     </main>
+    <script>
+      (function () {
+        var ddCat     = document.getElementById('dd-cat');
+        var ddMarca   = document.getElementById('dd-marca');
+        var searchInp = document.getElementById('tbar-search');
+        var rows      = document.querySelectorAll('tr[data-autoparte]');
+        var countRange = document.querySelector('.count-range');
+        var countTotal = document.querySelector('.count-total');
+
+        /* ── Custom dropdown ── */
+        function closeAll() {
+          document.querySelectorAll('.custom-dd--open').forEach(function (d) {
+            d.classList.remove('custom-dd--open');
+          });
+        }
+
+        function initDD(dd) {
+          var trigger = dd.querySelector('.custom-dd__trigger');
+          var textEl  = dd.querySelector('.custom-dd__text');
+          var opts    = dd.querySelectorAll('.custom-dd__opt');
+
+          trigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var isOpen = dd.classList.contains('custom-dd--open');
+            closeAll();
+            if (!isOpen) dd.classList.add('custom-dd--open');
+          });
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              var val = opt.dataset.value;
+              dd.dataset.value = val;
+              textEl.textContent = opt.textContent;
+              opts.forEach(function (o) { o.classList.remove('custom-dd__opt--sel'); });
+              opt.classList.add('custom-dd__opt--sel');
+              var capsule = dd.closest('.capsule');
+              if (capsule) capsule.classList.toggle('capsule--active', val !== '');
+              closeAll();
+              applyFilters();
+            });
+          });
+        }
+
+        initDD(ddCat);
+        initDD(ddMarca);
+        document.addEventListener('click', closeAll);
+
+        /* ── Filter logic ── */
+        function applyFilters() {
+          var cat   = (ddCat.dataset.value   || '').toLowerCase();
+          var marca = (ddMarca.dataset.value || '').toLowerCase();
+          var q     = searchInp.value.toLowerCase().trim();
+          var visible = 0;
+
+          rows.forEach(function (row) {
+            var match = (!cat   || row.dataset.categoria === cat)  &&
+                        (!marca || row.dataset.marca     === marca) &&
+                        (!q     || row.dataset.nombre.includes(q)  ||
+                                   row.dataset.id.includes(q)      ||
+                                   row.dataset.categoria.includes(q));
+            row.style.display = match ? '' : 'none';
+            if (match) visible++;
+          });
+
+          countRange.textContent = visible > 0 ? '1 a ' + visible : '0';
+          countTotal.textContent = visible;
+        }
+
+        searchInp.addEventListener('input', applyFilters);
+      })();
+    </script>
   </body>
 </html>
