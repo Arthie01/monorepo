@@ -362,6 +362,47 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--body);
   flex-shrink: 0;
 }
 
+/* ── Selector y botón de cambio de estado ── */
+.field-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border-mid);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--body);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: border-color var(--t);
+}
+.field-select:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(196,18,48,.12);
+}
+
+.btn-save {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--t), transform var(--t);
+}
+.btn-save:hover  { background: var(--red-dark); }
+.btn-save:active { transform: scale(.98); }
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .detail-layout { grid-template-columns: 1fr; }

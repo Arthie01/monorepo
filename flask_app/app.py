@@ -191,12 +191,17 @@ def gestion_usuarios_internos():
         usuarios = sorted(UsuariosService.listar_internos(), key=lambda u: u.get('id', 0))
     except ApiException:
         usuarios = []
+    try:
+        total_externos = len(UsuariosService.listar_externos())
+    except ApiException:
+        total_externos = 0
     total    = len(usuarios)
     activos  = sum(1 for u in usuarios if u.get('estado', '').lower() == 'activo')
     inactivos = total - activos
     return render_template("gestion_usuarios_internos.html",
                            usuarios=usuarios,
-                           total=total, activos=activos, inactivos=inactivos)
+                           total=total, activos=activos, inactivos=inactivos,
+                           total_externos=total_externos)
 
 
 @app.route("/agregar-usuario-interno", methods=["GET"])
