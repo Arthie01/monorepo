@@ -127,7 +127,7 @@
                     <a href="/pedidos"   class="profile-nav-link"><i class="fas fa-history"></i> Historial Completo</a>
                 </nav>
                 <div style="padding:12px;border-top:1px solid var(--macuin-gray);">
-                    <a href="/login" class="mac-btn mac-btn-ghost mac-btn-block mac-btn-sm" style="color:var(--macuin-muted);">
+                    <a href="/logout" class="mac-btn mac-btn-ghost mac-btn-block mac-btn-sm" style="color:var(--macuin-muted);">
                         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                     </a>
                 </div>
