@@ -36,6 +36,8 @@ Route::middleware('check.session')->group(function () {
     Route::get('/pedido/{id}',         [PedidoController::class,    'show']);
 
     Route::get('/perfil',              [PerfilController::class,    'index']);
+    Route::put('/perfil',              [PerfilController::class,    'update']);
+    Route::put('/perfil/password',     [PerfilController::class,    'updatePassword']);
 });
 
 // Legacy

@@ -7,6 +7,7 @@ class Crear_UsuarioExterno(BaseModel):
     apellidos: str = Field(..., min_length=2, max_length=100, description="Apellidos del cliente")
     email:     str = Field(..., min_length=5, max_length=120, description="Correo electrónico único")
     password:  str = Field(..., min_length=4, max_length=255, description="Contraseña")
+    telefono:  Optional[str] = Field(None, max_length=15, description="Teléfono de contacto")
 
 
 class Actualizar_UsuarioExterno(BaseModel):

@@ -170,14 +170,14 @@
 
                 {{-- Teléfono --}}
                 <div class="mac-form-group">
-                    <label class="mac-label" for="phone">Teléfono</label>
+                    <label class="mac-label" for="telefono">Teléfono</label>
                     <div class="mac-input-icon">
                         <i class="mac-input-icon__icon fas fa-phone"></i>
                         <input
-                            type="tel" id="phone" name="phone"
+                            type="tel" id="telefono" name="telefono"
                             class="mac-input"
                             placeholder="449-123-4567"
-                            value="{{ old('phone') }}"
+                            value="{{ old('telefono') }}"
                             autocomplete="tel"
                         >
                     </div>

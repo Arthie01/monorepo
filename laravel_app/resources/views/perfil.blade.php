@@ -148,6 +148,16 @@
                         </button>
                     </div>
                     <div class="profile-section__body">
+                        @if(session('success_info'))
+                            <div style="background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#16A34A;display:flex;align-items:center;gap:8px;">
+                                <i class="fas fa-check-circle"></i> {{ session('success_info') }}
+                            </div>
+                        @endif
+                        @if($errors->has('api'))
+                            <div style="background:rgba(196,18,48,.08);border:1px solid rgba(196,18,48,.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--macuin-red);display:flex;align-items:center;gap:8px;">
+                                <i class="fas fa-exclamation-circle"></i> {{ $errors->first('api') }}
+                            </div>
+                        @endif
                         <form id="personal-form" method="POST" action="/perfil">
                             @csrf
                             @method('PUT')
@@ -168,15 +178,30 @@
                                     </div>
                                 </div>
                                 <div class="mac-form-group">
+                                    <label class="mac-label">Teléfono</label>
+                                    <div class="mac-input-icon">
+                                        <i class="mac-input-icon__icon fas fa-phone"></i>
+                                        <input type="tel" name="telefono" class="mac-input" value="{{ $usuario['telefono'] ?? '' }}" placeholder="449-123-4567" disabled>
+                                    </div>
+                                </div>
+                                <div class="mac-form-group">
                                     <label class="mac-label">Tipo de Cliente</label>
-                                    <input type="text" name="tipo_cliente" class="mac-input" value="{{ $usuario['tipo_cliente'] ?? '—' }}" disabled>
+                                    <input type="text" class="mac-input" value="{{ $usuario['tipo_cliente'] ?? '—' }}" disabled style="background:var(--macuin-gray);color:var(--macuin-muted);">
+                                    <p style="font-size:11px;color:var(--macuin-muted);margin-top:5px;display:flex;align-items:center;gap:5px;">
+                                        <i class="fas fa-info-circle" style="color:var(--macuin-steel);"></i>
+                                        Para cambiar tu tipo de cliente, contacta al equipo de ventas.
+                                    </p>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Empresa</label>
-                                    <input type="text" name="empresa" class="mac-input" value="{{ $usuario['empresa'] ?? '—' }}" disabled>
+                                    <input type="text" class="mac-input" value="{{ $usuario['empresa'] ?? '—' }}" disabled style="background:var(--macuin-gray);color:var(--macuin-muted);">
+                                    <p style="font-size:11px;color:var(--macuin-muted);margin-top:5px;display:flex;align-items:center;gap:5px;">
+                                        <i class="fas fa-info-circle" style="color:var(--macuin-steel);"></i>
+                                        El equipo de ventas actualiza los datos de empresa.
+                                    </p>
                                 </div>
                             </div>
-                            <div id="personal-actions" style="display:none;gap:12px;margin-top:8px;display:none;">
+                            <div id="personal-actions" style="display:none;gap:12px;margin-top:8px;">
                                 <button type="submit" class="mac-btn mac-btn-primary mac-btn-sm">
                                     <i class="fas fa-save"></i> Guardar Cambios
                                 </button>
@@ -197,6 +222,16 @@
                         </div>
                     </div>
                     <div class="profile-section__body">
+                        @if(session('success_password'))
+                            <div style="background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#16A34A;display:flex;align-items:center;gap:8px;">
+                                <i class="fas fa-check-circle"></i> {{ session('success_password') }}
+                            </div>
+                        @endif
+                        @if($errors->has('current_password'))
+                            <div style="background:rgba(196,18,48,.08);border:1px solid rgba(196,18,48,.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--macuin-red);display:flex;align-items:center;gap:8px;">
+                                <i class="fas fa-exclamation-circle"></i> {{ $errors->first('current_password') }}
+                            </div>
+                        @endif
                         <form method="POST" action="/perfil/password">
                             @csrf
                             @method('PUT')
@@ -205,8 +240,8 @@
                                     <label class="mac-label">Contraseña Actual</label>
                                     <div class="mac-input-icon" style="position:relative;">
                                         <i class="mac-input-icon__icon fas fa-lock"></i>
-                                        <input type="password" name="current_password" class="mac-input" placeholder="••••••••">
-                                        <button type="button" onclick="togglePass('cp1',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--macuin-muted);font-size:13px;padding:0;"><i class="fas fa-eye"></i></button>
+                                        <input type="password" id="cp0" name="current_password" class="mac-input" placeholder="••••••••">
+                                        <button type="button" onclick="togglePass('cp0',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--macuin-muted);font-size:13px;padding:0;"><i class="fas fa-eye"></i></button>
                                     </div>
                                 </div>
                                 <div class="mac-form-group">
@@ -221,7 +256,8 @@
                                     <label class="mac-label">Confirmar Nueva Contraseña</label>
                                     <div class="mac-input-icon" style="position:relative;">
                                         <i class="mac-input-icon__icon fas fa-lock"></i>
-                                        <input type="password" name="password_confirmation" class="mac-input" placeholder="••••••••">
+                                        <input type="password" id="cp2" name="password_confirmation" class="mac-input" placeholder="••••••••">
+                                        <button type="button" onclick="togglePass('cp2',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--macuin-muted);font-size:13px;padding:0;"><i class="fas fa-eye"></i></button>
                                     </div>
                                 </div>
                                 <button type="submit" class="mac-btn mac-btn-primary mac-btn-sm" style="align-self:flex-start;">
@@ -242,37 +278,45 @@
                         <a href="/pedidos" class="mac-btn mac-btn-ghost mac-btn-sm">Ver todo el historial</a>
                     </div>
                     <div style="padding:0;">
+                        @forelse($pedidos as $p)
                         @php
-                            $pedidos = [
-                                ['folio'=>'MAC-2024-0089','fecha'=>'12 Ene 2025','items'=>3,'total'=>'$2,439','status'=>'Completado','class'=>'status-completed'],
-                                ['folio'=>'MAC-2024-0081','fecha'=>'05 Ene 2025','items'=>1,'total'=>'$1,240','status'=>'Enviado','class'=>'status-shipped'],
-                                ['folio'=>'MAC-2024-0074','fecha'=>'28 Dic 2024','items'=>5,'total'=>'$4,890','status'=>'En proceso','class'=>'status-processing'],
-                            ];
+                            $estado = $p['estado'] ?? '';
+                            $estadoStyle = match($estado) {
+                                'Completado' => 'background:rgba(22,163,74,.1);color:#16A34A;',
+                                'Enviado'    => 'background:rgba(139,92,246,.1);color:#8B5CF6;',
+                                'Cancelado'  => 'background:rgba(196,18,48,.1);color:#C41230;',
+                                'Pendiente'  => 'background:rgba(234,179,8,.1);color:#CA8A04;',
+                                default      => 'background:rgba(59,130,246,.1);color:#3B82F6;',
+                            };
+                            $fecha = $p['fecha_pedido'] ?? $p['created_at'] ?? '';
+                            $fechaFormato = $fecha ? \Carbon\Carbon::parse($fecha)->format('d M Y') : '—';
+                            $items = count($p['detalles'] ?? []);
                         @endphp
-                        @foreach($pedidos as $p)
                         <div style="display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--macuin-gray);flex-wrap:wrap;">
                             <div style="flex:1;min-width:140px;">
-                                <a href="/pedido/{{ $p['folio'] }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--macuin-red);text-decoration:none;font-weight:500;">{{ $p['folio'] }}</a>
-                                <div style="font-size:12px;color:var(--macuin-muted);margin-top:2px;">{{ $p['fecha'] }} · {{ $p['items'] }} artículos</div>
+                                <a href="/pedido/{{ $p['id'] }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--macuin-red);text-decoration:none;font-weight:500;">{{ $p['folio'] }}</a>
+                                <div style="font-size:12px;color:var(--macuin-muted);margin-top:2px;">
+                                    {{ $fechaFormato }}@if($items > 0) · {{ $items }} {{ $items === 1 ? 'artículo' : 'artículos' }}@endif
+                                </div>
                             </div>
                             <div>
-                                @php
-                                    $statusColors = ['Completado'=>'status-completed','Enviado'=>'status-shipped','En proceso'=>'status-processing'];
-                                @endphp
-                                <span style="
-                                    display:inline-flex;align-items:center;gap:5px;
-                                    padding:3px 10px;border-radius:100px;
-                                    font-size:10px;font-weight:700;font-family:'Oswald',sans-serif;
-                                    {{ $p['status']==='Completado' ? 'background:rgba(22,163,74,.1);color:#16A34A;' : ($p['status']==='Enviado' ? 'background:rgba(139,92,246,.1);color:#8B5CF6;' : 'background:rgba(59,130,246,.1);color:#3B82F6;') }}
-                                ">
+                                <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;font-family:'Oswald',sans-serif;{{ $estadoStyle }}">
                                     <span style="width:5px;height:5px;border-radius:50%;background:currentColor;"></span>
-                                    {{ $p['status'] }}
+                                    {{ $estado }}
                                 </span>
                             </div>
-                            <div style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:var(--macuin-text);">{{ $p['total'] }}</div>
-                            <a href="/pedido/{{ $p['folio'] }}" class="mac-btn mac-btn-outline mac-btn-sm">Ver →</a>
+                            <div style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:var(--macuin-text);">
+                                ${{ number_format($p['total'] ?? 0, 2) }}
+                            </div>
+                            <a href="/pedido/{{ $p['id'] }}" class="mac-btn mac-btn-outline mac-btn-sm">Ver →</a>
                         </div>
-                        @endforeach
+                        @empty
+                        <div style="padding:40px 24px;text-align:center;">
+                            <i class="fas fa-box-open" style="font-size:32px;color:var(--macuin-gray);display:block;margin-bottom:12px;"></i>
+                            <p style="font-family:'Oswald',sans-serif;font-size:14px;color:var(--macuin-muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 16px;">Aún no tienes pedidos</p>
+                            <a href="/catalogo" class="mac-btn mac-btn-primary mac-btn-sm">Explorar catálogo</a>
+                        </div>
+                        @endforelse
                     </div>
                 </div>
 
@@ -292,6 +336,9 @@
         input.type = input.type === 'password' ? 'text' : 'password';
         icon.className = input.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
     }
+    // Campos que el cliente NO puede editar (gestionados por ventas)
+    const LOCKED_NAMES = ['tipo_cliente', 'empresa'];
+
     function toggleEdit(formId, cancel = false) {
         const form = document.getElementById(formId);
         const inputs = form.querySelectorAll('input, select, textarea');
@@ -300,7 +347,9 @@
             inputs.forEach(i => i.disabled = true);
             if (actions) actions.style.display = 'none';
         } else {
-            inputs.forEach(i => i.disabled = false);
+            inputs.forEach(i => {
+                if (!LOCKED_NAMES.includes(i.name)) i.disabled = false;
+            });
             if (actions) actions.style.display = 'flex';
         }
     }

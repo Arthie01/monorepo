@@ -256,10 +256,10 @@
                       required
                     >
                       <option value="">— Seleccionar —</option>
-                      <option value="taller" selected>Taller mecánico</option>
-                      <option value="refaccionaria">Refaccionaria</option>
-                      <option value="particular">Particular</option>
-                      <option value="distribuidor">Distribuidor</option>
+                      <option value="Taller mecánico" {% if usuario.tipo_cliente == 'Taller mecánico' %}selected{% endif %}>Taller mecánico</option>
+                      <option value="Refaccionaria" {% if usuario.tipo_cliente == 'Refaccionaria' %}selected{% endif %}>Refaccionaria</option>
+                      <option value="Particular" {% if usuario.tipo_cliente == 'Particular' %}selected{% endif %}>Particular</option>
+                      <option value="Distribuidor" {% if usuario.tipo_cliente == 'Distribuidor' %}selected{% endif %}>Distribuidor</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>

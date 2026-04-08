@@ -23,7 +23,8 @@ async def registro(usuario: Crear_UsuarioExterno, db: Session = Depends(get_db))
         nombre=usuario.nombre,
         apellidos=usuario.apellidos,
         email=usuario.email,
-        password=usuario.password
+        password=usuario.password,
+        telefono=usuario.telefono
     )
     db.add(nuevo)
     db.commit()

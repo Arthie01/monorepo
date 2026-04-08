@@ -52,11 +52,12 @@ class AuthController extends Controller
             'apellidos' => 'required|min:2',
             'email'     => 'required|email',
             'password'  => 'required|min:4',
+            'telefono'  => 'nullable|string|max:15',
         ]);
 
         try {
             $this->authService->registro($request->only([
-                'nombre', 'apellidos', 'email', 'password'
+                'nombre', 'apellidos', 'email', 'password', 'telefono'
             ]));
             return redirect('/login')->with('success', 'Cuenta creada. Inicia sesión.');
         } catch (ApiException $e) {

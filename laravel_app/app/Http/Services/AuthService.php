@@ -14,6 +14,10 @@ class AuthService
      */
     public function registro(array $data): array
     {
+        // Eliminar telefono si viene vacío para no enviar null innecesario
+        if (isset($data['telefono']) && $data['telefono'] === '') {
+            unset($data['telefono']);
+        }
         $resp = $this->client->post('/v1/auth/registro', $data);
         return $resp['data'] ?? $resp;
     }
