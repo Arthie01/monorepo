@@ -178,14 +178,29 @@ async def crear(data: Crear_Pedido, db: Session = Depends(get_db)):
             )
         autopartes_map[item.autoparte_id] = autoparte
 
-    # 3. Calcular totales con descuento del usuario
-    subtotal_bruto  = sum(float(autopartes_map[item.autoparte_id].precio) * item.cantidad for item in data.items)
-    descuento_pct   = float(usuario.descuento)            # 0-100
-    subtotal_desc   = subtotal_bruto * (1 - descuento_pct / 100)
-    impuestos       = round(subtotal_desc * 0.16, 2)
-    envio           = 0.0
-    total           = round(subtotal_desc + impuestos + envio, 2)
-    subtotal_final  = round(subtotal_desc, 2)
+    # 3. Calcular totales
+    subtotal_bruto = sum(float(autopartes_map[item.autoparte_id].precio) * item.cantidad for item in data.items)
+
+    # Descuento solo aplica para tarjeta y transferencia
+    if data.metodo_pago in ("tarjeta", "transferencia"):
+        descuento_pct = float(usuario.descuento)
+    else:
+        descuento_pct = 0.0
+
+    subtotal_desc  = subtotal_bruto * (1 - descuento_pct / 100)
+    impuestos      = round(subtotal_desc * 0.16, 2)
+    envio          = 0.0
+    total          = round(subtotal_desc + impuestos + envio, 2)
+    subtotal_final = round(subtotal_desc, 2)
+
+    # Validación crédito MACUIN
+    if data.metodo_pago == "credito_macuin":
+        limite = float(usuario.limite_credito or 0)
+        if total > limite:
+            raise HTTPException(
+                status_code=400,
+                detail=f"El total del pedido (${total:,.2f}) supera tu límite de Crédito MACUIN disponible (${limite:,.2f})"
+            )
 
     # 4. Generar folio único
     folio = f"MACUIN-{datetime.now().year}-{uuid.uuid4().hex[:8].upper()}"

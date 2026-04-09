@@ -14,10 +14,11 @@ class PedidosService
      * $items: [['autoparte_id' => int, 'cantidad' => int], ...]
      * $direccion: ['calle' => str, 'ciudad' => str, 'estado' => str, 'cp' => str]
      */
-    public function crear(int $usuarioId, array $items, array $direccion): array
+    public function crear(int $usuarioId, array $items, array $direccion, string $metodoPago): array
     {
         return $this->client->post('/v1/pedidos/', [
             'usuario_externo_id' => $usuarioId,
+            'metodo_pago'        => $metodoPago,
             'items'              => $items,
             'dir_calle'          => $direccion['calle']  ?? '',
             'dir_ciudad'         => $direccion['ciudad'] ?? '',

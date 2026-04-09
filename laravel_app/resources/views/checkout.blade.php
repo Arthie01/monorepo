@@ -45,6 +45,24 @@
 
     .order-summary { background: #fff; border: 1px solid var(--macuin-gray); border-radius: 8px; overflow: hidden; position: sticky; top: 88px; }
 
+    /* Método de pago */
+    .pay-option { display:flex; align-items:center; gap:14px; padding:14px 16px; border:2px solid var(--macuin-gray); border-radius:8px; cursor:pointer; margin-bottom:10px; transition:border-color .2s, background .2s; }
+    .pay-option:hover { border-color:var(--macuin-red); }
+    .pay-option input[type=radio] { accent-color:var(--macuin-red); width:17px; height:17px; flex-shrink:0; }
+    .pay-option.selected { border-color:var(--macuin-red); background:#fff5f6; }
+    .pay-option__icon { width:36px; height:36px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .pay-sub { margin-top:14px; padding:18px; border:1px solid var(--macuin-gray); border-radius:8px; background:#fafafa; display:none; }
+    .pay-sub.active { display:block; }
+    .card-input-wrap { position:relative; }
+    .card-input-wrap .card-brand { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:700; color:var(--macuin-muted); letter-spacing:.05em; }
+    .transfer-box { background:var(--macuin-navy); border-radius:8px; padding:18px; color:#fff; }
+    .transfer-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; }
+    .transfer-row:last-child { border-bottom:none; }
+    .transfer-row__label { color:var(--macuin-steel); font-size:12px; }
+    .transfer-row__val { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px; }
+    .credit-info { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:16px; }
+    .credit-info.over { background:#fff5f5; border-color:#fecaca; }
+
     @media (max-width: 900px) {
         .checkout-layout { grid-template-columns: 1fr; }
         .order-summary { position: static; }
@@ -119,10 +137,118 @@
                         </div>
                     </div>
 
-                    {{-- 2. Dirección de envío --}}
+                    {{-- 2. Método de pago --}}
                     <div class="checkout-section">
                         <div class="checkout-section__header">
                             <div class="checkout-section__num">2</div>
+                            <div class="checkout-section__title">Método de Pago</div>
+                        </div>
+                        <div class="checkout-section__body">
+                            @error('metodo_pago')
+                                <p style="color:#C41230;font-size:13px;margin-bottom:12px;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>{{ $message }}</p>
+                            @enderror
+
+                            {{-- Opciones de pago --}}
+                            @php $metodoOld = old('metodo_pago', 'tarjeta'); @endphp
+
+                            <label class="pay-option {{ $metodoOld === 'tarjeta' ? 'selected' : '' }}" id="lbl-tarjeta">
+                                <input type="radio" name="metodo_pago" value="tarjeta" {{ $metodoOld === 'tarjeta' ? 'checked' : '' }}>
+                                <div class="pay-option__icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-credit-card"></i></div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:600;font-size:14px;">Tarjeta de crédito / débito</div>
+                                    <div style="font-size:12px;color:var(--macuin-muted);">VISA, Mastercard, American Express</div>
+                                </div>
+                                @if($descuento > 0)
+                                <span style="font-size:11px;font-weight:700;color:#16a34a;background:#f0fdf4;padding:3px 8px;border-radius:4px;">{{ $descuento }}% DESC</span>
+                                @endif
+                            </label>
+
+                            <label class="pay-option {{ $metodoOld === 'transferencia' ? 'selected' : '' }}" id="lbl-transferencia">
+                                <input type="radio" name="metodo_pago" value="transferencia" {{ $metodoOld === 'transferencia' ? 'checked' : '' }}>
+                                <div class="pay-option__icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-university"></i></div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:600;font-size:14px;">Transferencia bancaria / SPEI</div>
+                                    <div style="font-size:12px;color:var(--macuin-muted);">Pago en 24–48 hrs hábiles</div>
+                                </div>
+                                @if($descuento > 0)
+                                <span style="font-size:11px;font-weight:700;color:#16a34a;background:#f0fdf4;padding:3px 8px;border-radius:4px;">{{ $descuento }}% DESC</span>
+                                @endif
+                            </label>
+
+                            <label class="pay-option {{ $metodoOld === 'credito_macuin' ? 'selected' : '' }}" id="lbl-credito">
+                                <input type="radio" name="metodo_pago" value="credito_macuin" {{ $metodoOld === 'credito_macuin' ? 'checked' : '' }}>
+                                <div class="pay-option__icon" style="background:#fff5f6; color:var(--macuin-red);"><i class="fas fa-hand-holding-usd"></i></div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:600;font-size:14px;">Crédito MACUIN</div>
+                                    <div style="font-size:12px;color:var(--macuin-muted);">Disponible: ${{ number_format($limiteCredito, 2) }}</div>
+                                </div>
+                            </label>
+
+                            {{-- Sub-sección: Tarjeta --}}
+                            <div class="pay-sub {{ $metodoOld === 'tarjeta' ? 'active' : '' }}" id="sub-tarjeta">
+                                <div class="form-grid-2" style="margin-bottom:14px;">
+                                    <div class="mac-form-group" style="grid-column:1/-1;">
+                                        <label class="mac-label">Número de tarjeta</label>
+                                        <div class="card-input-wrap">
+                                            <input type="text" id="card-number" class="mac-input" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number">
+                                            <span class="card-brand" id="card-brand-label"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mac-form-group">
+                                        <label class="mac-label">Vencimiento</label>
+                                        <input type="text" id="card-expiry" class="mac-input" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp">
+                                    </div>
+                                    <div class="mac-form-group">
+                                        <label class="mac-label">CVV</label>
+                                        <input type="text" id="card-cvv" class="mac-input" placeholder="123" maxlength="4" autocomplete="cc-csc">
+                                    </div>
+                                    <div class="mac-form-group" style="grid-column:1/-1;">
+                                        <label class="mac-label">Nombre en la tarjeta</label>
+                                        <input type="text" id="card-name" class="mac-input" placeholder="Como aparece en la tarjeta" autocomplete="cc-name">
+                                    </div>
+                                </div>
+                                <p style="font-size:11px;color:var(--macuin-muted);"><i class="fas fa-lock" style="color:#16a34a;margin-right:4px;"></i>Tus datos están protegidos con cifrado SSL de 256 bits.</p>
+                            </div>
+
+                            {{-- Sub-sección: Transferencia --}}
+                            <div class="pay-sub {{ $metodoOld === 'transferencia' ? 'active' : '' }}" id="sub-transferencia">
+                                <p style="font-size:13px;color:var(--macuin-muted);margin-bottom:12px;">Realiza tu transferencia a la siguiente cuenta y envía tu comprobante a <strong>pagos@macuin.mx</strong></p>
+                                <div class="transfer-box">
+                                    <div style="margin-bottom:12px;">
+                                        <span style="font-family:'Oswald',sans-serif;font-size:11px;color:var(--macuin-steel);text-transform:uppercase;letter-spacing:.08em;">Datos de transferencia</span>
+                                    </div>
+                                    @foreach([
+                                        ['Beneficiario','MACUIN Autopartes y Distribución S.A. de C.V.'],
+                                        ['Banco','BBVA México'],
+                                        ['CLABE','012 310 001 2345 678 90'],
+                                        ['Cuenta','1234 5678 90'],
+                                        ['Concepto','Pedido MACUIN'],
+                                    ] as [$label, $val])
+                                    <div class="transfer-row">
+                                        <span class="transfer-row__label">{{ $label }}</span>
+                                        <span class="transfer-row__val">{{ $val }}</span>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            {{-- Sub-sección: Crédito MACUIN --}}
+                            <div class="pay-sub {{ $metodoOld === 'credito_macuin' ? 'active' : '' }}" id="sub-credito">
+                                <div class="credit-info" id="credit-info-box">
+                                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                                        <i class="fas fa-info-circle" style="color:#16a34a;font-size:18px;"></i>
+                                        <span style="font-weight:600;font-size:14px;color:#15803d;">Crédito disponible</span>
+                                    </div>
+                                    <p style="font-size:13px;color:#166534;margin:0;">Tu límite de Crédito MACUIN es de <strong>${{ number_format($limiteCredito, 2) }}</strong>. Si el total de tu pedido supera este monto, la compra no podrá procesarse con este método.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 3. Dirección de envío --}}
+                    <div class="checkout-section">
+                        <div class="checkout-section__header">
+                            <div class="checkout-section__num">3</div>
                             <div class="checkout-section__title">Dirección de Envío</div>
                         </div>
                         <div class="checkout-section__body">
@@ -170,10 +296,10 @@
                         </div>
                     </div>
 
-                    {{-- 3. Método de envío --}}
+                    {{-- 4. Método de envío --}}
                     <div class="checkout-section">
                         <div class="checkout-section__header">
-                            <div class="checkout-section__num">3</div>
+                            <div class="checkout-section__num">4</div>
                             <div class="checkout-section__title">Método de Envío</div>
                         </div>
                         <div class="checkout-section__body">
@@ -196,10 +322,10 @@
                         </div>
                     </div>
 
-                    {{-- 4. Notas --}}
+                    {{-- 5. Notas --}}
                     <div class="checkout-section">
                         <div class="checkout-section__header">
-                            <div class="checkout-section__num">4</div>
+                            <div class="checkout-section__num">5</div>
                             <div class="checkout-section__title">Notas del Pedido (opcional)</div>
                         </div>
                         <div class="checkout-section__body">
@@ -237,13 +363,19 @@
                                     <span style="color:var(--macuin-muted);">Subtotal</span>
                                     <span style="font-weight:600;">${{ number_format($subtotal, 2) }}</span>
                                 </div>
+                                @if($descuento > 0)
+                                <div id="descuento-row" style="display:flex;justify-content:space-between;font-size:13px;">
+                                    <span style="color:#16a34a;"><i class="fas fa-tag" style="margin-right:4px;"></i>Descuento ({{ $descuento }}%)</span>
+                                    <span style="font-weight:600;color:#16a34a;">-${{ number_format($subtotal * $descuento / 100, 2) }}</span>
+                                </div>
+                                @endif
                                 <div style="display:flex;justify-content:space-between;font-size:13px;">
                                     <span style="color:var(--macuin-muted);">Envío</span>
                                     <span style="font-weight:600;color:#16A34A;">Gratis</span>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;font-size:13px;">
                                     <span style="color:var(--macuin-muted);">IVA (16%)</span>
-                                    <span style="font-weight:600;">${{ number_format($iva, 2) }}</span>
+                                    <span style="font-weight:600;" id="iva-display">${{ number_format($iva, 2) }}</span>
                                 </div>
                             </div>
 
@@ -253,7 +385,7 @@
                                 display:flex;justify-content:space-between;align-items:center;
                             ">
                                 <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;">TOTAL</span>
-                                <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--macuin-red);">${{ number_format($total, 2) }}</span>
+                                <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--macuin-red);" id="total-display">${{ number_format($total, 2) }}</span>
                             </div>
 
                             <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="margin-bottom:12px;">
@@ -284,5 +416,104 @@
         </form>
     </div>
 </section>
+
+@push('scripts')
+<script>
+(function () {
+    // ── Datos del resumen ──────────────────────────────────────────────────
+    const subtotal    = {{ $subtotal }};
+    const descuentoPct = {{ $descuento }};
+    const subtotalDesc = subtotal * (1 - descuentoPct / 100);
+    const ivaDesc      = Math.round(subtotalDesc * 0.16 * 100) / 100;
+    const totalDesc    = Math.round((subtotalDesc + ivaDesc) * 100) / 100;
+    const ivaBase      = Math.round(subtotal * 0.16 * 100) / 100;
+    const totalBase    = Math.round((subtotal + ivaBase) * 100) / 100;
+
+    const fmt = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // ── Elementos del DOM ──────────────────────────────────────────────────
+    const radios        = document.querySelectorAll('input[name="metodo_pago"]');
+    const subs          = { tarjeta: 'sub-tarjeta', transferencia: 'sub-transferencia', credito_macuin: 'sub-credito' };
+    const lbls          = { tarjeta: 'lbl-tarjeta', transferencia: 'lbl-transferencia', credito_macuin: 'lbl-credito' };
+    const descRow       = document.getElementById('descuento-row');
+    const ivaDisplay    = document.getElementById('iva-display');
+    const totalDisplay  = document.getElementById('total-display');
+
+    // ── Campos de tarjeta (solo requeridos cuando esa sección está activa) ─
+    const cardFields = ['card-number', 'card-expiry', 'card-cvv', 'card-name'];
+
+    function applyCardRequired(active) {
+        cardFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.required = active;
+        });
+    }
+
+    // ── Actualizar resumen y secciones ─────────────────────────────────────
+    function update(metodo) {
+        // Mostrar/ocultar sub-secciones
+        Object.entries(subs).forEach(([key, subId]) => {
+            const el = document.getElementById(subId);
+            if (el) el.classList.toggle('active', key === metodo);
+        });
+        // Resaltar opción seleccionada
+        Object.entries(lbls).forEach(([key, lblId]) => {
+            const el = document.getElementById(lblId);
+            if (el) el.classList.toggle('selected', key === metodo);
+        });
+        // Campos de tarjeta requeridos solo si está seleccionada
+        applyCardRequired(metodo === 'tarjeta');
+
+        // Actualizar totales en resumen
+        const aplicaDescuento = (metodo === 'tarjeta' || metodo === 'transferencia') && descuentoPct > 0;
+        if (descRow)     descRow.style.display    = aplicaDescuento ? 'flex' : 'none';
+        if (ivaDisplay)  ivaDisplay.textContent   = aplicaDescuento ? fmt(ivaDesc)   : fmt(ivaBase);
+        if (totalDisplay) totalDisplay.textContent = aplicaDescuento ? fmt(totalDesc) : fmt(totalBase);
+    }
+
+    // ── Escuchar cambios ───────────────────────────────────────────────────
+    radios.forEach(r => r.addEventListener('change', () => update(r.value)));
+
+    // ── Estado inicial ─────────────────────────────────────────────────────
+    const checked = document.querySelector('input[name="metodo_pago"]:checked');
+    if (checked) update(checked.value);
+
+    // ── Formateo automático número de tarjeta ──────────────────────────────
+    const cardNum = document.getElementById('card-number');
+    if (cardNum) {
+        cardNum.addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').substring(0, 16);
+            // Detectar marca
+            const brand = document.getElementById('card-brand-label');
+            if (brand) {
+                if (/^4/.test(v))      brand.textContent = 'VISA';
+                else if (/^5[1-5]/.test(v)) brand.textContent = 'MC';
+                else if (/^3[47]/.test(v))  brand.textContent = 'AMEX';
+                else brand.textContent = '';
+            }
+            this.value = v.replace(/(.{4})/g, '$1 ').trim();
+        });
+    }
+
+    // ── Formateo MM/AA vencimiento ─────────────────────────────────────────
+    const cardExp = document.getElementById('card-expiry');
+    if (cardExp) {
+        cardExp.addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
+            this.value = v;
+        });
+    }
+
+    // ── Solo dígitos en CVV ────────────────────────────────────────────────
+    const cardCvv = document.getElementById('card-cvv');
+    if (cardCvv) {
+        cardCvv.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '').substring(0, 4);
+        });
+    }
+})();
+</script>
+@endpush
 
 @endsection

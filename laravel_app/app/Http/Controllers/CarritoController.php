@@ -79,7 +79,10 @@ class CarritoController extends Controller
             }
         }
 
-        return view('checkout', compact('carrito', 'subtotal', 'iva', 'total', 'usuario', 'perfil'));
+        $descuento     = (float) ($usuario['descuento']        ?? 0);
+        $limiteCredito = (float) ($perfil['limite_credito']    ?? 0);
+
+        return view('checkout', compact('carrito', 'subtotal', 'iva', 'total', 'usuario', 'perfil', 'descuento', 'limiteCredito'));
     }
 
     /** Agrega al carrito todos los items de un pedido anterior. */
@@ -114,12 +117,15 @@ class CarritoController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'calle'   => 'required|max:200',
-            'ciudad'  => 'required|max:100',
-            'estado'  => 'required|max:5',
-            'cp'      => 'required|digits:5',
+            'metodo_pago' => 'required|in:tarjeta,transferencia,credito_macuin',
+            'calle'       => 'required|max:200',
+            'ciudad'      => 'required|max:100',
+            'estado'      => 'required|max:5',
+            'cp'          => 'required|digits:5',
         ], [
-            'cp.digits' => 'El código postal debe tener exactamente 5 dígitos.',
+            'metodo_pago.required' => 'Selecciona un método de pago.',
+            'metodo_pago.in'       => 'Método de pago no válido.',
+            'cp.digits'            => 'El código postal debe tener exactamente 5 dígitos.',
         ]);
 
         $carrito = session('carrito', []);
@@ -132,11 +138,12 @@ class CarritoController extends Controller
             'cantidad'     => (int) $i['cantidad'],
         ])->values()->all();
 
-        $direccion = $request->only(['calle', 'ciudad', 'estado', 'cp']);
-        $usuarioId = session('usuario.id');
+        $direccion  = $request->only(['calle', 'ciudad', 'estado', 'cp']);
+        $usuarioId  = session('usuario.id');
+        $metodoPago = $request->input('metodo_pago');
 
         try {
-            $this->pedidosService->crear($usuarioId, $items, $direccion);
+            $this->pedidosService->crear($usuarioId, $items, $direccion, $metodoPago);
             session()->forget('carrito');
             return redirect('/pedidos')->with('success', 'Pedido realizado exitosamente.');
         } catch (ApiException $e) {
