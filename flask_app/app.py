@@ -333,6 +333,14 @@ def editar_usuario_externo_submit(id):
     if r: return r
     data = request.form.to_dict()
     try:
+        descuento = float(data.get("descuento", 0))
+        if descuento > 100:
+            flash("El descuento no puede ser mayor a 100%.", "error")
+            return redirect(f"/editar-usuario-externo/{id}")
+    except (ValueError, TypeError):
+        flash("El descuento debe ser un número válido.", "error")
+        return redirect(f"/editar-usuario-externo/{id}")
+    try:
         UsuariosService.editar_externo(id, data)
         flash("Usuario externo actualizado.", "success")
         return redirect("/gestion-usuarios-externos")
