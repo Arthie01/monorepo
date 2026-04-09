@@ -79,8 +79,8 @@ class CarritoController extends Controller
             }
         }
 
-        $descuento     = (float) ($usuario['descuento']        ?? 0);
-        $limiteCredito = (float) ($perfil['limite_credito']    ?? 0);
+        $descuento     = (float) ($perfil['descuento']       ?? $usuario['descuento']    ?? 0);
+        $limiteCredito = (float) ($perfil['limite_credito'] ?? 0);
 
         return view('checkout', compact('carrito', 'subtotal', 'iva', 'total', 'usuario', 'perfil', 'descuento', 'limiteCredito'));
     }
