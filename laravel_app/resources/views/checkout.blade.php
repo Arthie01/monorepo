@@ -91,28 +91,28 @@
                                     <label class="mac-label" for="co-name">Nombre(s)</label>
                                     <div class="mac-input-icon">
                                         <i class="mac-input-icon__icon fas fa-user"></i>
-                                        <input type="text" id="co-name" name="name" class="mac-input" value="Juan" required>
+                                        <input type="text" id="co-name" name="name" class="mac-input" value="{{ $usuario['nombre'] ?? '' }}" placeholder="Nombre(s)" required>
                                     </div>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label" for="co-apellidos">Apellidos</label>
                                     <div class="mac-input-icon">
                                         <i class="mac-input-icon__icon fas fa-user"></i>
-                                        <input type="text" id="co-apellidos" name="apellidos" class="mac-input" value="García López" required>
+                                        <input type="text" id="co-apellidos" name="apellidos" class="mac-input" value="{{ $usuario['apellidos'] ?? '' }}" placeholder="Apellidos" required>
                                     </div>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label" for="co-email">Email</label>
                                     <div class="mac-input-icon">
                                         <i class="mac-input-icon__icon fas fa-envelope"></i>
-                                        <input type="email" id="co-email" name="email" class="mac-input" value="juan.garcia@gmail.com" required>
+                                        <input type="email" id="co-email" name="email" class="mac-input" value="{{ $usuario['email'] ?? '' }}" placeholder="correo@ejemplo.com" required>
                                     </div>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label" for="co-phone">Teléfono</label>
                                     <div class="mac-input-icon">
                                         <i class="mac-input-icon__icon fas fa-phone"></i>
-                                        <input type="tel" id="co-phone" name="phone" class="mac-input" value="449-123-4567" required>
+                                        <input type="tel" id="co-phone" name="phone" class="mac-input" value="{{ $usuario['telefono'] ?? '' }}" placeholder="Ej. 449-123-4567" required>
                                     </div>
                                 </div>
                             </div>
@@ -133,31 +133,31 @@
                                 <label class="mac-label">Calle y número</label>
                                 <div class="mac-input-icon">
                                     <i class="mac-input-icon__icon fas fa-map-marker-alt"></i>
-                                    <input type="text" name="calle" class="mac-input" placeholder="Av. López Mateos #1234, Col. Centro" value="{{ old('calle') }}" required>
+                                    <input type="text" name="calle" class="mac-input"
+                                        placeholder="Av. López Mateos #1234, Col. Centro"
+                                        value="{{ old('calle', $perfil['calle'] ?? '') }}" required>
                                 </div>
                             </div>
                             <div class="form-grid-2">
                                 <div class="mac-form-group">
                                     <label class="mac-label">Ciudad</label>
-                                    <input type="text" name="ciudad" class="mac-input" placeholder="Querétaro" value="{{ old('ciudad') }}" required>
+                                    <input type="text" name="ciudad" class="mac-input"
+                                        placeholder="Querétaro"
+                                        value="{{ old('ciudad', $perfil['ciudad'] ?? '') }}" required>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Estado</label>
+                                    @php $estadoSel = old('estado', $perfil['estado_geo'] ?? ''); @endphp
                                     <select name="estado" class="mac-input" required>
-                                        <option value="QRO" {{ old('estado') == 'QRO' ? 'selected' : '' }}>Querétaro</option>
-                                        <option value="AGS" {{ old('estado') == 'AGS' ? 'selected' : '' }}>Aguascalientes</option>
-                                        <option value="CDMX" {{ old('estado') == 'CDMX' ? 'selected' : '' }}>Ciudad de México</option>
-                                        <option value="JAL" {{ old('estado') == 'JAL' ? 'selected' : '' }}>Jalisco</option>
-                                        <option value="NL" {{ old('estado') == 'NL' ? 'selected' : '' }}>Nuevo León</option>
-                                        <option value="GTO" {{ old('estado') == 'GTO' ? 'selected' : '' }}>Guanajuato</option>
-                                        <option value="COAH" {{ old('estado') == 'COAH' ? 'selected' : '' }}>Coahuila</option>
-                                        <option value="CHIH" {{ old('estado') == 'CHIH' ? 'selected' : '' }}>Chihuahua</option>
-                                        <option value="SON" {{ old('estado') == 'SON' ? 'selected' : '' }}>Sonora</option>
+                                        <option value="">-- Seleccionar --</option>
+                                        @foreach(['QRO'=>'Querétaro','AGS'=>'Aguascalientes','CDMX'=>'Ciudad de México','JAL'=>'Jalisco','NL'=>'Nuevo León','GTO'=>'Guanajuato','COAH'=>'Coahuila','CHIH'=>'Chihuahua','SON'=>'Sonora'] as $val => $label)
+                                        <option value="{{ $val }}" {{ $estadoSel === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Código Postal</label>
-                                    <input type="text" name="cp" class="mac-input" placeholder="20000" maxlength="5" pattern="[0-9]{5}" value="{{ old('cp') }}" required>
+                                    <input type="text" name="cp" class="mac-input" placeholder="20000" maxlength="5" pattern="[0-9]{5}" value="{{ old('cp', $perfil['cp'] ?? '') }}" required>
                                     @error('cp')
                                         <p style="color:#C41230;font-size:12px;margin-top:4px;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>{{ $message }}</p>
                                     @enderror
@@ -241,6 +241,10 @@
                                     <span style="color:var(--macuin-muted);">Envío</span>
                                     <span style="font-weight:600;color:#16A34A;">Gratis</span>
                                 </div>
+                                <div style="display:flex;justify-content:space-between;font-size:13px;">
+                                    <span style="color:var(--macuin-muted);">IVA (16%)</span>
+                                    <span style="font-weight:600;">${{ number_format($iva, 2) }}</span>
+                                </div>
                             </div>
 
                             <div style="
@@ -248,8 +252,8 @@
                                 padding:14px;margin-bottom:20px;
                                 display:flex;justify-content:space-between;align-items:center;
                             ">
-                                <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;">SUBTOTAL</span>
-                                <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--macuin-red);">${{ number_format($subtotal, 2) }}</span>
+                                <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;">TOTAL</span>
+                                <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--macuin-red);">${{ number_format($total, 2) }}</span>
                             </div>
 
                             <button type="submit" class="mac-btn mac-btn-primary mac-btn-block mac-btn-lg" style="margin-bottom:12px;">

@@ -32,8 +32,10 @@ Route::middleware('check.session')->group(function () {
     Route::get('/checkout',            [CarritoController::class,   'showCheckout']);
     Route::post('/checkout',           [CarritoController::class,   'checkout']);
 
-    Route::get('/pedidos',             [PedidoController::class,    'index']);
-    Route::get('/pedido/{id}',         [PedidoController::class,    'show']);
+    Route::get('/pedidos',                    [PedidoController::class,  'index']);
+    Route::get('/pedido/{id}',               [PedidoController::class,  'show']);
+    Route::get('/pedido/{id}/pdf',           [PedidoController::class,  'pdf']);
+    Route::post('/pedido/{id}/reordenar',    [CarritoController::class, 'reordenar']);
 
     Route::get('/perfil',              [PerfilController::class,    'index']);
     Route::put('/perfil',              [PerfilController::class,    'update']);

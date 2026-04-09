@@ -31,4 +31,15 @@ class PedidoController extends Controller
         }
         return view('pedido-detalle', compact('pedido'));
     }
+
+    /** Vista imprimible del pedido (ticket PDF via window.print). */
+    public function pdf(int $id)
+    {
+        try {
+            $pedido = $this->pedidosService->obtener($id);
+        } catch (ApiException $e) {
+            return redirect('/pedidos')->withErrors(['api' => $e->getMessage()]);
+        }
+        return view('pedido-pdf', compact('pedido'));
+    }
 }

@@ -4,18 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\PedidosService;
+use App\Http\Services\UsuariosExternosService;
 use App\Http\Client\ApiException;
 
 class CarritoController extends Controller
 {
-    public function __construct(private PedidosService $pedidosService) {}
+    public function __construct(
+        private PedidosService $pedidosService,
+        private UsuariosExternosService $usuariosService,
+    ) {}
 
     /** Muestra el carrito actual desde session. */
     public function index()
     {
-        $carrito = session('carrito', []);
+        $carrito  = session('carrito', []);
         $subtotal = collect($carrito)->sum(fn($i) => $i['precio'] * $i['cantidad']);
-        return view('carrito', compact('carrito', 'subtotal'));
+        $iva      = round($subtotal * 0.16, 2);
+        $total    = $subtotal + $iva;
+        return view('carrito', compact('carrito', 'subtotal', 'iva', 'total'));
     }
 
     /** Agrega o actualiza item en el carrito (session). */
@@ -59,7 +65,49 @@ class CarritoController extends Controller
     {
         $carrito  = session('carrito', []);
         $subtotal = collect($carrito)->sum(fn($i) => $i['precio'] * $i['cantidad']);
-        return view('checkout', compact('carrito', 'subtotal'));
+        $iva      = round($subtotal * 0.16, 2);
+        $total    = $subtotal + $iva;
+
+        // Obtener perfil completo del usuario (incluye dirección si fue registrada desde portal interno)
+        $usuario = session('usuario', []);
+        $perfil  = [];
+        if (!empty($usuario['id'])) {
+            try {
+                $perfil = $this->usuariosService->obtener($usuario['id']);
+            } catch (\Throwable) {
+                $perfil = [];
+            }
+        }
+
+        return view('checkout', compact('carrito', 'subtotal', 'iva', 'total', 'usuario', 'perfil'));
+    }
+
+    /** Agrega al carrito todos los items de un pedido anterior. */
+    public function reordenar(int $id)
+    {
+        try {
+            $pedido = $this->pedidosService->obtener($id);
+        } catch (ApiException $e) {
+            return redirect('/pedidos')->withErrors(['api' => $e->getMessage()]);
+        }
+
+        $carrito = session('carrito', []);
+        foreach ($pedido['items'] ?? [] as $item) {
+            $apId = $item['autoparte_id'];
+            if (isset($carrito[$apId])) {
+                $carrito[$apId]['cantidad'] += $item['cantidad'];
+            } else {
+                $carrito[$apId] = [
+                    'id'       => $apId,
+                    'nombre'   => $item['nombre'],
+                    'precio'   => $item['precio_unitario'],
+                    'cantidad' => $item['cantidad'],
+                    'imagen'   => $item['imagen'] ?? '',
+                ];
+            }
+        }
+        session(['carrito' => $carrito]);
+        return redirect('/carrito')->with('success', 'Artículos del pedido agregados al carrito.');
     }
 
     /** Procesa checkout → llama API → limpia carrito. */

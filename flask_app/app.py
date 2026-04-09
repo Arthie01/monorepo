@@ -162,10 +162,11 @@ def detalle_pedido(id):
     if r: return r
     try:
         pedido = PedidosService.obtener(id)
+        cliente = UsuariosService.obtener_externo(pedido["usuario_externo_id"])
     except ApiException as e:
         flash(e.detail, "error")
         return redirect("/gestion-pedidos")
-    return render_template("detalle_pedido.html", pedido=pedido)
+    return render_template("detalle_pedido.html", pedido=pedido, cliente=cliente)
 
 
 @app.route("/pedidos/<int:id>/estado", methods=["POST"])

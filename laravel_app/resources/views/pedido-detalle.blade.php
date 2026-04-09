@@ -54,9 +54,10 @@
                 Pedido <span style="color:var(--macuin-red);">#{{ $pedido['folio'] ?? '' }}</span>
             </h1>
             <div style="display:flex;gap:10px;">
-                <button class="mac-btn mac-btn-outline mac-btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3);">
+                <a href="/pedido/{{ $pedido['id'] }}/pdf" target="_blank"
+                   class="mac-btn mac-btn-outline mac-btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3);text-decoration:none;">
                     <i class="fas fa-file-pdf"></i> Descargar PDF
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -187,14 +188,18 @@
 
                 {{-- Acciones --}}
                 <div style="display:flex;flex-direction:column;gap:10px;">
-                    <button class="mac-btn mac-btn-ghost mac-btn-block">
+                    <a href="/pedido/{{ $pedido['id'] }}/pdf" target="_blank"
+                       class="mac-btn mac-btn-ghost mac-btn-block" style="text-decoration:none;text-align:center;">
                         <i class="fas fa-file-pdf" style="color:var(--macuin-red);"></i>
                         Descargar PDF del Pedido
-                    </button>
-                    <button class="mac-btn mac-btn-ghost mac-btn-block">
-                        <i class="fas fa-redo" style="color:var(--macuin-red);"></i>
-                        Reordenar estos artículos
-                    </button>
+                    </a>
+                    <form action="/pedido/{{ $pedido['id'] }}/reordenar" method="POST">
+                        @csrf
+                        <button type="submit" class="mac-btn mac-btn-ghost mac-btn-block" style="width:100%;">
+                            <i class="fas fa-redo" style="color:var(--macuin-red);"></i>
+                            Reordenar estos artículos
+                        </button>
+                    </form>
                     <a href="/pedidos" style="text-align:center;font-size:13px;color:var(--macuin-muted);padding:8px;text-decoration:none;">← Volver a mis pedidos</a>
                 </div>
 

@@ -72,11 +72,39 @@ async def consultar_por_usuario(usuario_id: int, db: Session = Depends(get_db)):
     if not usuario:
         raise HTTPException(status_code=404, detail=f"Usuario externo con id {usuario_id} no encontrado")
 
-    pedidos = db.query(Pedido).filter(Pedido.usuario_externo_id == usuario_id).all()
+    pedidos = db.query(Pedido).filter(Pedido.usuario_externo_id == usuario_id).order_by(Pedido.creado_en.desc()).all()
+
+    result = []
+    for p in pedidos:
+        items_count = db.query(DetallePedido).filter(DetallePedido.pedido_id == p.id).count()
+        primer_detalle = db.query(DetallePedido).filter(DetallePedido.pedido_id == p.id).first()
+        primer_articulo = None
+        if primer_detalle:
+            ap = db.query(Autoparte).filter(Autoparte.id == primer_detalle.autoparte_id).first()
+            primer_articulo = ap.nombre if ap else None
+
+        result.append({
+            "id":                 p.id,
+            "folio":              p.folio,
+            "usuario_externo_id": p.usuario_externo_id,
+            "estado":             p.estado,
+            "subtotal":           float(p.subtotal),
+            "envio":              float(p.envio),
+            "impuestos":          float(p.impuestos),
+            "total":              float(p.total),
+            "creado_en":          str(p.creado_en),
+            "dir_calle":          p.dir_calle,
+            "dir_ciudad":         p.dir_ciudad,
+            "dir_estado":         p.dir_estado,
+            "dir_cp":             p.dir_cp,
+            "items_count":        items_count,
+            "primer_articulo":    primer_articulo,
+        })
+
     return {
         "status": "200",
-        "total":  len(pedidos),
-        "data":   pedidos
+        "total":  len(result),
+        "data":   result
     }
 
 

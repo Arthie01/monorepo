@@ -168,10 +168,14 @@
                             <span style="color:var(--macuin-muted);">Envío estimado</span>
                             <span style="font-weight:600;color:#16A34A;">Gratis</span>
                         </div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px;">
+                            <span style="color:var(--macuin-muted);">IVA (16%)</span>
+                            <span style="font-weight:600;color:var(--macuin-text);">${{ number_format($iva, 2) }}</span>
+                        </div>
                     </div>
                     <div style="border-top:2px solid var(--macuin-gray);padding-top:14px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:baseline;">
-                        <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:var(--macuin-text);">Subtotal</span>
-                        <span style="font-family:'Oswald',sans-serif;font-size:26px;font-weight:700;color:var(--macuin-red);">${{ number_format($subtotal, 2) }}</span>
+                        <span style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:var(--macuin-text);">Total</span>
+                        <span style="font-family:'Oswald',sans-serif;font-size:26px;font-weight:700;color:var(--macuin-red);">${{ number_format($total, 2) }}</span>
                     </div>
 
                     {{-- Cupón --}}

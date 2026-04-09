@@ -211,21 +211,21 @@
                   <i class="fas fa-user"></i>
                   <div>
                     <div class="info-label">Nombre</div>
-                    <div class="info-value">Artemio Hurtado</div>
+                    <div class="info-value">{{ cliente.nombre }} {{ cliente.apellidos }}</div>
                   </div>
                 </div>
                 <div class="info-row">
                   <i class="fas fa-envelope"></i>
                   <div>
                     <div class="info-label">Correo</div>
-                    <div class="info-value">artemio@correo.com</div>
+                    <div class="info-value">{{ cliente.email }}</div>
                   </div>
                 </div>
                 <div class="info-row">
                   <i class="fas fa-phone"></i>
                   <div>
                     <div class="info-label">Teléfono</div>
-                    <div class="info-value">+52 614 123 4567</div>
+                    <div class="info-value">{{ cliente.telefono or '—' }}</div>
                   </div>
                 </div>
               </div>
@@ -243,16 +243,16 @@
                   <i class="fas fa-map-pin"></i>
                   <div>
                     <div class="info-label">Dirección</div>
-                    <div class="info-value">
-                      Av. Tecnológico #1234, Col. Centro
-                    </div>
+                    <div class="info-value">{{ pedido.dir_calle or '—' }}</div>
                   </div>
                 </div>
                 <div class="info-row">
                   <i class="fas fa-city"></i>
                   <div>
                     <div class="info-label">Ciudad</div>
-                    <div class="info-value">Chihuahua, Chih. CP 31000</div>
+                    <div class="info-value">
+                      {{ pedido.dir_ciudad or '' }}{% if pedido.dir_estado %}, {{ pedido.dir_estado }}{% endif %}{% if pedido.dir_cp %} CP {{ pedido.dir_cp }}{% endif %}
+                    </div>
                   </div>
                 </div>
               </div>
