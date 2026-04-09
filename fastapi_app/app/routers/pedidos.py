@@ -171,6 +171,11 @@ async def crear(data: Crear_Pedido, db: Session = Depends(get_db)):
                 status_code=400,
                 detail=f"Stock insuficiente para '{autoparte.nombre}': disponible {autoparte.stock}, solicitado {item.cantidad}"
             )
+        if autoparte.stock - item.cantidad <= autoparte.stock_minimo:
+            raise HTTPException(
+                status_code=400,
+                detail=f"No es posible realizar el pedido: '{autoparte.nombre}' no cuenta con stock suficiente para completar tu compra (stock mínimo de reserva: {autoparte.stock_minimo} unidades)"
+            )
         autopartes_map[item.autoparte_id] = autoparte
 
     # 3. Calcular totales con descuento del usuario
