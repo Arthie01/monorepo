@@ -65,6 +65,7 @@ async def login_externo(email: str, password: str, db: Session = Depends(get_db)
             "nombre":       usuario.nombre,
             "apellidos":    usuario.apellidos,
             "email":        usuario.email,
+            "telefono":     usuario.telefono,
             "tipo_cliente": usuario.tipo_cliente,
             "empresa":      usuario.empresa,
             "lista_precio": usuario.lista_precio,

@@ -118,7 +118,7 @@
               <div class="profile-info-item">
                 <i class="fas fa-box"></i>
                 <span class="profile-info-item__label">Pedidos</span>
-                <span class="profile-info-item__val">—</span>
+                <span class="profile-info-item__val">{{ total_pedidos }}</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-calendar-plus"></i>
@@ -137,7 +137,6 @@
               <div class="status-options">
                 <label class="status-opt">
                   <input type="radio" name="estado" value="activo" {% if usuario.estado == 'activo' %}checked{% endif %} />
-                  <span class="status-pill status-pill--ok">Activo</span>
                   <span class="status-pill status-pill--ok">Activo</span>
                 </label>
                 <label class="status-opt">
@@ -342,13 +341,14 @@
                   <div class="field-select-wrap">
                     <select id="fEstado" name="estado_geo" class="field-select">
                       <option value="">— Seleccionar —</option>
-                      <option value="NL" selected>Nuevo León</option>
-                      <option value="COAH">Coahuila</option>
-                      <option value="TAM">Tamaulipas</option>
-                      <option value="CHIH">Chihuahua</option>
-                      <option value="SON">Sonora</option>
-                      <option value="CDMX">Ciudad de México</option>
-                      <option value="JAL">Jalisco</option>
+                      <option value="NL" {% if usuario.estado_geo == 'NL' %}selected{% endif %}>Nuevo León</option>
+                      <option value="COAH" {% if usuario.estado_geo == 'COAH' %}selected{% endif %}>Coahuila</option>
+                      <option value="TAM" {% if usuario.estado_geo == 'TAM' %}selected{% endif %}>Tamaulipas</option>
+                      <option value="CHIH" {% if usuario.estado_geo == 'CHIH' %}selected{% endif %}>Chihuahua</option>
+                      <option value="SON" {% if usuario.estado_geo == 'SON' %}selected{% endif %}>Sonora</option>
+                      <option value="CDMX" {% if usuario.estado_geo == 'CDMX' %}selected{% endif %}>Ciudad de México</option>
+                      <option value="JAL" {% if usuario.estado_geo == 'JAL' %}selected{% endif %}>Jalisco</option>
+                      <option value="QRO" {% if usuario.estado_geo == 'QRO' %}selected{% endif %}>Querétaro</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -376,7 +376,7 @@
                     id="fReferencia"
                     name="referencia"
                     class="field-input"
-                    value="Frente al parque"
+                    value="{{ usuario.referencia or '' }}"
                     placeholder="Ej. Entre calles X y Y"
                   />
                 </div>

@@ -319,7 +319,12 @@ def editar_usuario_externo_form(id):
     except ApiException as e:
         flash(e.detail, "error")
         return redirect("/gestion-usuarios-externos")
-    return render_template("editar_usuario_externo.html", usuario=usuario)
+    try:
+        pedidos_resp = ApiClient.get(f"/v1/pedidos/usuario/{id}")
+        total_pedidos = pedidos_resp.get("total", 0)
+    except Exception:
+        total_pedidos = 0
+    return render_template("editar_usuario_externo.html", usuario=usuario, total_pedidos=total_pedidos)
 
 
 @app.route("/editar-usuario-externo/<int:id>", methods=["POST"])

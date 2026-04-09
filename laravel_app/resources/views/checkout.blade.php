@@ -164,7 +164,7 @@
                                 </div>
                                 <div class="mac-form-group">
                                     <label class="mac-label">Referencias</label>
-                                    <input type="text" name="refs" class="mac-input" placeholder="Entre calles, color de casa...">
+                                    <input type="text" name="refs" class="mac-input" placeholder="Entre calles, color de casa..." value="{{ old('refs', $perfil['referencia'] ?? '') }}">
                                 </div>
                             </div>
                         </div>

@@ -30,6 +30,15 @@
         ">{{ message }}</div>
       {% endfor %}
     {% endwith %}
+    <script>
+      setTimeout(function () {
+        document.querySelectorAll('.flash').forEach(function (f) {
+          f.style.transition = 'opacity .4s';
+          f.style.opacity = '0';
+          setTimeout(function () { f.remove(); }, 400);
+        });
+      }, 3500);
+    </script>
     {# Sección: Header #}
     <header class="site-header" role="banner">
       <div class="hdr-inner">
