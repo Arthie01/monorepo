@@ -10,15 +10,20 @@ class PedidosService
 
     /**
      * Crea un pedido.
-     * $usuarioId: id del cliente externo logueado.
-     * $items: [['autoparte_id' => int, 'cantidad' => int], ...]
-     * $direccion: ['calle' => str, 'ciudad' => str, 'estado' => str, 'cp' => str]
+     * $usuarioId:   id del cliente externo logueado.
+     * $items:       [['autoparte_id' => int, 'cantidad' => int], ...]
+     * $direccion:   ['calle' => str, 'ciudad' => str, 'estado' => str, 'cp' => str]
+     * $metodoPago:  'tarjeta' | 'transferencia' | 'credito_macuin'
+     * $metodoEnvio: 'express' | 'estandar' | 'recoger'
+     * $notas:       string|null
      */
-    public function crear(int $usuarioId, array $items, array $direccion, string $metodoPago): array
+    public function crear(int $usuarioId, array $items, array $direccion, string $metodoPago, string $metodoEnvio = 'estandar', ?string $notas = null): array
     {
         return $this->client->post('/v1/pedidos/', [
             'usuario_externo_id' => $usuarioId,
             'metodo_pago'        => $metodoPago,
+            'metodo_envio'       => $metodoEnvio,
+            'notas'              => $notas,
             'items'              => $items,
             'dir_calle'          => $direccion['calle']  ?? '',
             'dir_ciudad'         => $direccion['ciudad'] ?? '',

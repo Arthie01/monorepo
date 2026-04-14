@@ -194,6 +194,30 @@
                 </table>
               </div>
             </div>
+            <!-- Card: Método de envío y notas -->
+            <div class="detail-card">
+              <div class="card-header">
+                <h2 class="card-header__title">
+                  <i class="fas fa-truck"></i> Envío y Notas
+                </h2>
+              </div>
+              <div class="card-body">
+                <div class="info-row">
+                  <i class="fas fa-truck"></i>
+                  <div>
+                    <div class="info-label">Método de envío</div>
+                    <div class="info-value">{{ pedido.metodo_envio or '—' }}</div>
+                  </div>
+                </div>
+                <div class="info-row">
+                  <i class="fas fa-sticky-note"></i>
+                  <div>
+                    <div class="info-label">Notas del pedido</div>
+                    <div class="info-value">{{ pedido.notas or '—' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- /detail-left -->
 

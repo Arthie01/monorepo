@@ -146,6 +146,8 @@ async def consultar_uno(pedido_id: int, db: Session = Depends(get_db)):
             "dir_ciudad":        pedido.dir_ciudad,
             "dir_estado":        pedido.dir_estado,
             "dir_cp":            pedido.dir_cp,
+            "metodo_envio":      pedido.metodo_envio,
+            "notas":             pedido.notas,
             "creado_en":         pedido.creado_en,
             "items":             items
         }
@@ -217,7 +219,9 @@ async def crear(data: Crear_Pedido, db: Session = Depends(get_db)):
         dir_calle          = data.dir_calle,
         dir_ciudad         = data.dir_ciudad,
         dir_estado         = data.dir_estado,
-        dir_cp             = data.dir_cp
+        dir_cp             = data.dir_cp,
+        metodo_envio       = data.metodo_envio,
+        notas              = data.notas,
     )
     db.add(nuevo_pedido)
     db.flush()  # obtener id sin commit

@@ -64,6 +64,11 @@ class CarritoController extends Controller
     public function showCheckout()
     {
         $carrito  = session('carrito', []);
+
+        if (empty($carrito)) {
+            return redirect('/carrito')->withErrors(['api' => 'Tu carrito está vacío. Agrega productos antes de continuar.']);
+        }
+
         $subtotal = collect($carrito)->sum(fn($i) => $i['precio'] * $i['cantidad']);
         $iva      = round($subtotal * 0.16, 2);
         $total    = $subtotal + $iva;
@@ -138,12 +143,14 @@ class CarritoController extends Controller
             'cantidad'     => (int) $i['cantidad'],
         ])->values()->all();
 
-        $direccion  = $request->only(['calle', 'ciudad', 'estado', 'cp']);
-        $usuarioId  = session('usuario.id');
-        $metodoPago = $request->input('metodo_pago');
+        $direccion   = $request->only(['calle', 'ciudad', 'estado', 'cp']);
+        $usuarioId   = session('usuario.id');
+        $metodoPago  = $request->input('metodo_pago');
+        $metodoEnvio = $request->input('shipping', 'estandar');
+        $notas       = $request->input('notes');
 
         try {
-            $this->pedidosService->crear($usuarioId, $items, $direccion, $metodoPago);
+            $this->pedidosService->crear($usuarioId, $items, $direccion, $metodoPago, $metodoEnvio, $notas);
             session()->forget('carrito');
             return redirect('/pedidos')->with('success', 'Pedido realizado exitosamente.');
         } catch (ApiException $e) {

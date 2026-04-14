@@ -55,11 +55,14 @@
     .pay-sub.active { display:block; }
     .card-input-wrap { position:relative; }
     .card-input-wrap .card-brand { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:700; color:var(--macuin-muted); letter-spacing:.05em; }
-    .transfer-box { background:var(--macuin-navy); border-radius:8px; padding:18px; color:#fff; }
-    .transfer-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; }
+    .transfer-box { background:var(--macuin-white); border:1px solid var(--macuin-gray); border-radius:8px; overflow:hidden; }
+    .transfer-box__header { background:var(--macuin-red); padding:10px 16px; display:flex; align-items:center; gap:8px; }
+    .transfer-box__header span { font-family:'Oswald',sans-serif; font-size:11px; color:#fff; text-transform:uppercase; letter-spacing:.1em; }
+    .transfer-box__body { padding:4px 16px 8px; }
+    .transfer-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--macuin-gray); font-size:13px; }
     .transfer-row:last-child { border-bottom:none; }
-    .transfer-row__label { color:var(--macuin-steel); font-size:12px; }
-    .transfer-row__val { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px; }
+    .transfer-row__label { color:var(--macuin-muted); font-size:12px; font-weight:500; }
+    .transfer-row__val { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px; color:var(--macuin-text); }
     .credit-info { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:16px; }
     .credit-info.over { background:#fff5f5; border-color:#fecaca; }
 
@@ -214,21 +217,24 @@
                             <div class="pay-sub {{ $metodoOld === 'transferencia' ? 'active' : '' }}" id="sub-transferencia">
                                 <p style="font-size:13px;color:var(--macuin-muted);margin-bottom:12px;">Realiza tu transferencia a la siguiente cuenta y envía tu comprobante a <strong>pagos@macuin.mx</strong></p>
                                 <div class="transfer-box">
-                                    <div style="margin-bottom:12px;">
-                                        <span style="font-family:'Oswald',sans-serif;font-size:11px;color:var(--macuin-steel);text-transform:uppercase;letter-spacing:.08em;">Datos de transferencia</span>
+                                    <div class="transfer-box__header">
+                                        <i class="fas fa-university" style="color:#fff;font-size:13px;"></i>
+                                        <span>Datos de transferencia</span>
                                     </div>
-                                    @foreach([
-                                        ['Beneficiario','MACUIN Autopartes y Distribución S.A. de C.V.'],
-                                        ['Banco','BBVA México'],
-                                        ['CLABE','012 310 001 2345 678 90'],
-                                        ['Cuenta','1234 5678 90'],
-                                        ['Concepto','Pedido MACUIN'],
-                                    ] as [$label, $val])
-                                    <div class="transfer-row">
-                                        <span class="transfer-row__label">{{ $label }}</span>
-                                        <span class="transfer-row__val">{{ $val }}</span>
+                                    <div class="transfer-box__body">
+                                        @foreach([
+                                            ['Beneficiario','MACUIN Autopartes y Distribución S.A. de C.V.'],
+                                            ['Banco','BBVA México'],
+                                            ['CLABE','012 310 001 2345 678 90'],
+                                            ['Cuenta','1234 5678 90'],
+                                            ['Concepto','Pedido MACUIN'],
+                                        ] as [$label, $val])
+                                        <div class="transfer-row">
+                                            <span class="transfer-row__label">{{ $label }}</span>
+                                            <span class="transfer-row__val">{{ $val }}</span>
+                                        </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
                                 </div>
                             </div>
 
@@ -303,7 +309,7 @@
                             <div class="checkout-section__title">Método de Envío</div>
                         </div>
                         <div class="checkout-section__body">
-                            @foreach([['express','Envío Express (24 hrs)','fas fa-bolt','$0','Gratis por compra mayor a $1,500'],['estandar','Envío Estándar (3–5 días)','fas fa-truck','$0','Gratis en pedidos calificados'],['recoger','Recoger en sucursal','fas fa-store','$0','Aguascalientes, Centro']] as [$val,$label,$icon,$precio,$desc])
+                            @foreach([['express','Envío Express (24 hrs)','fas fa-bolt','$0','Gratis por compra mayor a $1,500'],['estandar','Envío Estándar (3–5 días)','fas fa-truck','$0','Gratis en pedidos calificados'],['recoger','Recoger en sucursal','fas fa-store','$0','Querétaro, Centro']] as [$val,$label,$icon,$precio,$desc])
                             <label style="
                                 display:flex;align-items:center;gap:14px;
                                 padding:14px;border:2px solid var(--macuin-gray);

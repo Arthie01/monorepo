@@ -164,6 +164,11 @@ CREATE TABLE IF NOT EXISTS tb_pedidos (
     dir_estado          VARCHAR(5),
     dir_cp              VARCHAR(5),
 
+    -- Logística del pedido
+    metodo_envio        VARCHAR(30)     NOT NULL DEFAULT 'estandar',
+    -- Valores: 'express', 'estandar', 'recoger'
+    notas               TEXT,
+
     creado_en           TIMESTAMP       NOT NULL DEFAULT NOW()
 );
 

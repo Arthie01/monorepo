@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, TIMESTAMP, Text
 from sqlalchemy.sql import func
 from app.data.db import Base
 
@@ -23,5 +23,8 @@ class Pedido(Base):
     dir_ciudad         = Column(String(100))
     dir_estado         = Column(String(5))
     dir_cp             = Column(String(5))
+
+    metodo_envio       = Column(String(30), nullable=False, default="estandar")
+    notas              = Column(Text, nullable=True)
 
     creado_en          = Column(TIMESTAMP, nullable=False, server_default=func.now())

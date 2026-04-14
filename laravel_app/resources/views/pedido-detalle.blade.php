@@ -156,6 +156,24 @@
                     </table>
                 </div>
 
+                {{-- Sección: Método de envío y notas --}}
+                @if(!empty($pedido['metodo_envio']) || !empty($pedido['notas']))
+                <div style="background:#fff;border:1px solid var(--macuin-gray);border-radius:8px;padding:20px;margin-top:20px;">
+                    @if(!empty($pedido['metodo_envio']))
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--macuin-gray);">
+                        <span style="font-size:13px;color:var(--macuin-muted);">Método de envío</span>
+                        <span style="font-size:13px;font-weight:600;color:var(--macuin-text);">{{ $pedido['metodo_envio'] }}</span>
+                    </div>
+                    @endif
+                    @if(!empty($pedido['notas']))
+                    <div style="padding-top:12px;">
+                        <div style="font-size:13px;color:var(--macuin-muted);margin-bottom:6px;">Notas del pedido</div>
+                        <div style="font-size:13px;color:var(--macuin-text);line-height:1.6;">{{ $pedido['notas'] }}</div>
+                    </div>
+                    @endif
+                </div>
+                @endif
+
             </div>
 
             {{-- Panel lateral --}}
