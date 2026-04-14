@@ -7,7 +7,7 @@ def listar(categoria: str = None) -> list:
     """Retorna lista de autopartes. Si categoria se pasa, filtra por ella."""
     params = {"categoria": categoria} if categoria else None
     resp = ApiClient.get("/v1/autopartes/", params=params)
-    return resp["data"]
+    return sorted(resp["data"], key=lambda a: a["id"])
 
 
 def obtener(id: int) -> dict:

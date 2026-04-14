@@ -297,7 +297,7 @@
                 <div class="field-group field-group--full">
                   <div class="toggle-group">
                     <label class="toggle-switch">
-                      <input type="checkbox" name="perm_autopartes" checked />
+                      <input type="checkbox" id="permAutopartes" name="perm_autopartes" {% if usuario.perm_autopartes %}checked{% endif %} />
                       <span class="toggle-slider"></span>
                     </label>
                     <span class="toggle-label"
@@ -309,7 +309,7 @@
                 <div class="field-group field-group--full">
                   <div class="toggle-group">
                     <label class="toggle-switch">
-                      <input type="checkbox" name="perm_pedidos" checked />
+                      <input type="checkbox" id="permPedidos" name="perm_pedidos" {% if usuario.perm_pedidos %}checked{% endif %} />
                       <span class="toggle-slider"></span>
                     </label>
                     <span class="toggle-label"
@@ -321,7 +321,7 @@
                 <div class="field-group field-group--full">
                   <div class="toggle-group">
                     <label class="toggle-switch">
-                      <input type="checkbox" name="perm_usuarios" checked />
+                      <input type="checkbox" id="permUsuarios" name="perm_usuarios" {% if usuario.perm_usuarios %}checked{% endif %} />
                       <span class="toggle-slider"></span>
                     </label>
                     <span class="toggle-label"
@@ -333,7 +333,7 @@
                 <div class="field-group field-group--full">
                   <div class="toggle-group">
                     <label class="toggle-switch">
-                      <input type="checkbox" name="perm_reportes" checked />
+                      <input type="checkbox" id="permReportes" name="perm_reportes" {% if usuario.perm_reportes %}checked{% endif %} />
                       <span class="toggle-slider"></span>
                     </label>
                     <span class="toggle-label"
@@ -345,7 +345,7 @@
                 <div class="field-group field-group--full">
                   <div class="toggle-group">
                     <label class="toggle-switch">
-                      <input type="checkbox" name="perm_config" />
+                      <input type="checkbox" id="permConfig" name="perm_config" {% if usuario.perm_config %}checked{% endif %} />
                       <span class="toggle-slider"></span>
                     </label>
                     <span class="toggle-label">Configuración del sistema</span>
@@ -484,5 +484,22 @@
         </form>
       </div>
     </main>
+  <script>
+    const PERMISOS_POR_ROL = {
+      admin:    { permAutopartes: true,  permPedidos: true, permUsuarios: true,  permReportes: true,  permConfig: true },
+      ventas:   { permAutopartes: false, permPedidos: true, permUsuarios: false, permReportes: true,  permConfig: false },
+      almacen:  { permAutopartes: true,  permPedidos: true, permUsuarios: false, permReportes: false, permConfig: false },
+      logistica:{ permAutopartes: false, permPedidos: true, permUsuarios: false, permReportes: false, permConfig: false },
+    };
+
+    document.getElementById('fRol').addEventListener('change', function () {
+      const defaults = PERMISOS_POR_ROL[this.value];
+      const ids = ['permAutopartes', 'permPedidos', 'permUsuarios', 'permReportes', 'permConfig'];
+      ids.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.checked = defaults ? defaults[id] : false;
+      });
+    });
+  </script>
   </body>
 </html>

@@ -76,7 +76,7 @@
               <div class="avatar-circle">{{ usuario.nombre[0] }}{{ usuario.apellidos[0] if usuario.apellidos else '' }}</div>
               <div class="avatar-name">{{ usuario.nombre }} {{ usuario.apellidos }}</div>
               <div class="avatar-email">{{ usuario.email }}</div>
-              <span class="avatar-role">Personal Activo</span>
+              <span class="avatar-role">{{ usuario.estado | capitalize if usuario.estado else 'Activo' }}</span>
             </div>
 
             <!-- Navegación -->
@@ -183,7 +183,7 @@
                         id="pPuesto"
                         name="puesto"
                         class="form-input"
-                        value="{{ usuario.rol }}"
+                        value="{{ usuario.rol or '' }}"
                         disabled
                       />
                     </div>

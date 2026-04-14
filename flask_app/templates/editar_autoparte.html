@@ -95,12 +95,16 @@
           <!-- ── Left column: image ── -->
           <aside class="edit-img-col">
             <div class="img-preview-wrap">
+              {% if autoparte.imagen %}
               <img
-                src="{{ url_for('static', filename='images/copa_piston.png') }}"
-                alt="Copa de pistón"
+                src="{{ autoparte.imagen }}"
+                alt="{{ autoparte.nombre }}"
                 class="img-preview"
                 id="imgPreview"
               />
+              {% else %}
+              <i class="fas fa-image" style="font-size:64px;color:#ccc;"></i>
+              {% endif %}
               <div class="img-overlay">
                 <i class="fas fa-camera"></i>
                 <span>Cambiar imagen</span>

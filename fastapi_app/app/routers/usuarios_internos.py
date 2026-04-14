@@ -39,13 +39,28 @@ async def crear(usuarioP: Crear_UsuarioInterno, db: Session = Depends(get_db)):
     if existe:
         raise HTTPException(status_code=400, detail="El email ya está registrado")
 
+    # Defaults de permisos según rol si no se enviaron explícitamente
+    defaults = {
+        "admin":     dict(perm_autopartes=True,  perm_pedidos=True, perm_usuarios=True,  perm_reportes=True,  perm_config=True),
+        "ventas":    dict(perm_autopartes=False, perm_pedidos=True, perm_usuarios=False, perm_reportes=True,  perm_config=False),
+        "almacen":   dict(perm_autopartes=True,  perm_pedidos=True, perm_usuarios=False, perm_reportes=False, perm_config=False),
+        "logistica": dict(perm_autopartes=False, perm_pedidos=True, perm_usuarios=False, perm_reportes=False, perm_config=False),
+    }
+    rol_key = usuarioP.rol.lower()
+    d = defaults.get(rol_key, dict(perm_autopartes=False, perm_pedidos=False, perm_usuarios=False, perm_reportes=False, perm_config=False))
+
     nuevo = UsuarioInterno(
         nombre=usuarioP.nombre,
         apellidos=usuarioP.apellidos,
         email=usuarioP.email,
         password=usuarioP.password,
         departamento=usuarioP.departamento,
-        rol=usuarioP.rol
+        rol=usuarioP.rol,
+        perm_autopartes=usuarioP.perm_autopartes if usuarioP.perm_autopartes is not None else d["perm_autopartes"],
+        perm_pedidos=   usuarioP.perm_pedidos    if usuarioP.perm_pedidos    is not None else d["perm_pedidos"],
+        perm_usuarios=  usuarioP.perm_usuarios   if usuarioP.perm_usuarios   is not None else d["perm_usuarios"],
+        perm_reportes=  usuarioP.perm_reportes   if usuarioP.perm_reportes   is not None else d["perm_reportes"],
+        perm_config=    usuarioP.perm_config      if usuarioP.perm_config     is not None else d["perm_config"],
     )
     db.add(nuevo)
     db.commit()

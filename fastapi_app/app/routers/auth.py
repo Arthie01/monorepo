@@ -97,6 +97,7 @@ async def login_interno(email: str, password: str, db: Session = Depends(get_db)
             "nombre":          usuario.nombre,
             "apellidos":       usuario.apellidos,
             "email":           usuario.email,
+            "telefono":        usuario.telefono,
             "departamento":    usuario.departamento,
             "rol":             usuario.rol,
             "cargo":           usuario.cargo,

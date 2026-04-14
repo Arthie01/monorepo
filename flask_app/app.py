@@ -37,6 +37,15 @@ def requiere_sesion():
     return None
 
 
+def requiere_permiso(clave):
+    """Retorna redirect/render 403 si el usuario no tiene el permiso requerido."""
+    r = requiere_sesion()
+    if r: return r
+    if not session["usuario"].get(clave):
+        return render_template("sin_permisos.html"), 403
+    return None
+
+
 # ── Health ────────────────────────────────────────────────────────────────────
 
 @app.route("/", methods=["GET"])
@@ -76,7 +85,7 @@ def logout():
 
 @app.route("/gestion-autopartes", methods=["GET"])
 def gestion_autopartes():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_autopartes")
     if r: return r
     try:
         autopartes = AutopartesService.listar()
@@ -87,14 +96,14 @@ def gestion_autopartes():
 
 @app.route("/agregar-autoparte", methods=["GET"])
 def agregar_autoparte_form():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_autopartes")
     if r: return r
     return render_template("agregar_autoparte.html")
 
 
 @app.route("/agregar-autoparte", methods=["POST"])
 def agregar_autoparte_submit():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_autopartes")
     if r: return r
     try:
         AutopartesService.crear(request.form.to_dict(), request.files.get("imagen"))
@@ -107,7 +116,7 @@ def agregar_autoparte_submit():
 
 @app.route("/editar-autoparte/<int:id>", methods=["GET"])
 def editar_autoparte_form(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_autopartes")
     if r: return r
     try:
         autoparte = AutopartesService.obtener(id)
@@ -119,7 +128,7 @@ def editar_autoparte_form(id):
 
 @app.route("/editar-autoparte/<int:id>", methods=["POST"])
 def editar_autoparte_submit(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_autopartes")
     if r: return r
     try:
         AutopartesService.editar(id, request.form.to_dict(), request.files.get("imagen"))
@@ -132,7 +141,7 @@ def editar_autoparte_submit(id):
 
 @app.route("/eliminar-autoparte/<int:id>")
 def eliminar_autoparte(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_autopartes")
     if r: return r
     try:
         AutopartesService.eliminar(id)
@@ -146,7 +155,7 @@ def eliminar_autoparte(id):
 
 @app.route("/gestion-pedidos", methods=["GET"])
 def gestion_pedidos():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_pedidos")
     if r: return r
     estado = request.args.get("estado")
     try:
@@ -158,7 +167,7 @@ def gestion_pedidos():
 
 @app.route("/detalle-pedido/<int:id>", methods=["GET"])
 def detalle_pedido(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_pedidos")
     if r: return r
     try:
         pedido = PedidosService.obtener(id)
@@ -171,7 +180,7 @@ def detalle_pedido(id):
 
 @app.route("/pedidos/<int:id>/estado", methods=["POST"])
 def cambiar_estado_pedido(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_pedidos")
     if r: return r
     nuevo_estado = request.form.get("estado", "").strip()
     try:
@@ -186,7 +195,7 @@ def cambiar_estado_pedido(id):
 
 @app.route("/gestion-usuarios-internos", methods=["GET"])
 def gestion_usuarios_internos():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     try:
         usuarios = sorted(UsuariosService.listar_internos(), key=lambda u: u.get('id', 0))
@@ -207,16 +216,18 @@ def gestion_usuarios_internos():
 
 @app.route("/agregar-usuario-interno", methods=["GET"])
 def agregar_usuario_interno_form():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     return render_template("agregar_usuario_interno.html")
 
 
 @app.route("/agregar-usuario-interno", methods=["POST"])
 def agregar_usuario_interno_submit():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     data = request.form.to_dict()
+    for perm in ["perm_autopartes", "perm_pedidos", "perm_usuarios", "perm_reportes", "perm_config"]:
+        data[perm] = perm in request.form
     try:
         UsuariosService.crear_interno(data)
         flash("Usuario interno creado.", "success")
@@ -228,7 +239,7 @@ def agregar_usuario_interno_submit():
 
 @app.route("/editar-usuario-interno/<int:id>", methods=["GET"])
 def editar_usuario_interno_form(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     try:
         usuario = UsuariosService.obtener_interno(id)
@@ -240,14 +251,14 @@ def editar_usuario_interno_form(id):
 
 @app.route("/editar-usuario-interno/<int:id>", methods=["POST"])
 def editar_usuario_interno_submit(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     data = request.form.to_dict()
-    
     # Si password está vacío, quitarlo del payload (no cambiar contraseña)
     if "password" in data and not data["password"].strip():
         del data["password"]
-    
+    for perm in ["perm_autopartes", "perm_pedidos", "perm_usuarios", "perm_reportes", "perm_config"]:
+        data[perm] = perm in request.form
     try:
         UsuariosService.editar_interno(id, data)
         flash("Usuario interno actualizado.", "success")
@@ -259,7 +270,7 @@ def editar_usuario_interno_submit(id):
 
 @app.route("/eliminar-usuario-interno/<int:id>")
 def eliminar_usuario_interno(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     try:
         UsuariosService.eliminar_interno(id)
@@ -273,7 +284,7 @@ def eliminar_usuario_interno(id):
 
 @app.route("/gestion-usuarios-externos", methods=["GET"])
 def gestion_usuarios_externos():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     try:
         usuarios = sorted(UsuariosService.listar_externos(), key=lambda u: u.get('id', 0))
@@ -291,14 +302,14 @@ def gestion_usuarios_externos():
 
 @app.route("/agregar-usuario-externo", methods=["GET"])
 def agregar_usuario_externo_form():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     return render_template("agregar_usuario_externo.html")
 
 
 @app.route("/agregar-usuario-externo", methods=["POST"])
 def agregar_usuario_externo_submit():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     data = request.form.to_dict()
     try:
@@ -312,7 +323,7 @@ def agregar_usuario_externo_submit():
 
 @app.route("/editar-usuario-externo/<int:id>", methods=["GET"])
 def editar_usuario_externo_form(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     try:
         usuario = UsuariosService.obtener_externo(id)
@@ -329,7 +340,7 @@ def editar_usuario_externo_form(id):
 
 @app.route("/editar-usuario-externo/<int:id>", methods=["POST"])
 def editar_usuario_externo_submit(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     data = request.form.to_dict()
     try:
@@ -351,7 +362,7 @@ def editar_usuario_externo_submit(id):
 
 @app.route("/eliminar-usuario-externo/<int:id>")
 def eliminar_usuario_externo(id):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_usuarios")
     if r: return r
     try:
         UsuariosService.eliminar_externo(id)
@@ -374,7 +385,7 @@ def perfil():
 
 @app.route("/reportes", methods=["GET"])
 def reportes():
-    r = requiere_sesion()
+    r = requiere_permiso("perm_reportes")
     if r: return r
     
     # Obtener filtros de la URL
@@ -440,7 +451,7 @@ def reportes():
 
 @app.route("/reportes/descargar/<tipo>/<formato>")
 def descargar_reporte(tipo, formato):
-    r = requiere_sesion()
+    r = requiere_permiso("perm_reportes")
     if r: return r
     # Pasar todos los query params al endpoint de FastAPI
     params = {k: v for k, v in {
