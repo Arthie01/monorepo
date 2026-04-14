@@ -268,6 +268,18 @@ def editar_usuario_interno_submit(id):
         return redirect(f"/editar-usuario-interno/{id}")
 
 
+@app.route("/desactivar-usuario-interno/<int:id>")
+def desactivar_usuario_interno(id):
+    r = requiere_permiso("perm_usuarios")
+    if r: return r
+    try:
+        UsuariosService.patch_interno(id, {"estado": "inactivo"})
+        flash("Cuenta de usuario desactivada.", "success")
+    except ApiException as e:
+        flash(e.detail, "error")
+    return redirect("/gestion-usuarios-internos")
+
+
 @app.route("/eliminar-usuario-interno/<int:id>")
 def eliminar_usuario_interno(id):
     r = requiere_permiso("perm_usuarios")
@@ -358,6 +370,18 @@ def editar_usuario_externo_submit(id):
     except ApiException as e:
         flash(e.detail, "error")
         return redirect(f"/editar-usuario-externo/{id}")
+
+
+@app.route("/desactivar-usuario-externo/<int:id>")
+def desactivar_usuario_externo(id):
+    r = requiere_permiso("perm_usuarios")
+    if r: return r
+    try:
+        UsuariosService.patch_externo(id, {"estado": "inactivo"})
+        flash("Cuenta de cliente desactivada.", "success")
+    except ApiException as e:
+        flash(e.detail, "error")
+    return redirect("/gestion-usuarios-externos")
 
 
 @app.route("/eliminar-usuario-externo/<int:id>")

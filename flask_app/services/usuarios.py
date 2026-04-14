@@ -26,6 +26,10 @@ def editar_interno(id: int, data: dict) -> dict:
     return ApiClient.put(f"/v1/usuarios/internos/{id}", json=data)
 
 
+def patch_interno(id: int, campos: dict) -> dict:
+    return ApiClient.patch(f"/v1/usuarios/internos/{id}", json=campos)
+
+
 def eliminar_interno(id: int) -> dict:
     return ApiClient.delete(f"/v1/usuarios/internos/{id}")
 

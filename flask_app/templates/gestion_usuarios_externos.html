@@ -202,8 +202,8 @@
                   </td>
                   <td>
                     <a href="/editar-usuario-externo/{{ u.id }}" class="act-btn act-btn--edit"><i class="fas fa-edit"></i></a>
-                    <a href="/eliminar-usuario-externo/{{ u.id }}" class="act-btn act-btn--del"
-                       onclick="return confirm('¿Eliminar a {{ u.nombre }}?')"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="act-btn act-btn--del"
+                       onclick="macModal('/eliminar-usuario-externo/{{ u.id }}','¿Eliminar cliente?','Se eliminará permanentemente a {{ u.nombre }} {{ u.apellidos }}. Esta acción no se puede revertir.');return false;"><i class="fas fa-trash"></i></a>
                   </td>
                 </tr>
                 {% else %}
@@ -320,6 +320,33 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+    });
+  </script>
+
+  {# Modal de confirmación MACUIN #}
+  <div id="mac-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#1a1a1a;border:1px solid #C41230;border-radius:10px;padding:36px 32px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.6);">
+      <div style="width:56px;height:56px;background:#C41230;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><i class="fas fa-triangle-exclamation" style="color:#fff;font-size:22px;"></i></div>
+      <p id="mac-modal-title" style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:#F5F5F0;margin:0 0 8px;"></p>
+      <p id="mac-modal-msg" style="font-family:'DM Sans',sans-serif;font-size:14px;color:#8B949E;margin:0 0 28px;line-height:1.5;"></p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="macModalClose()" style="padding:10px 24px;border:1px solid #444;background:transparent;color:#8B949E;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;">Cancelar</button>
+        <a id="mac-modal-btn" href="#" style="padding:10px 24px;background:#C41230;color:#fff;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;text-decoration:none;font-weight:600;">Confirmar</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function macModal(url, title, msg) {
+      document.getElementById('mac-modal-title').textContent = title;
+      document.getElementById('mac-modal-msg').textContent   = msg;
+      document.getElementById('mac-modal-btn').href          = url;
+      document.getElementById('mac-modal').style.display     = 'flex';
+    }
+    function macModalClose() {
+      document.getElementById('mac-modal').style.display = 'none';
+    }
+    document.getElementById('mac-modal').addEventListener('click', function(e) {
+      if (e.target === this) macModalClose();
     });
   </script>
   </body>

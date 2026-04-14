@@ -68,7 +68,7 @@
             </p>
           </div>
           <div class="page-heading__badge">
-            <span class="id-badge">USR-001</span>
+            <span class="id-badge">USR-{{ '%03d'|format(usuario.id) }}</span>
           </div>
         </div>
 
@@ -92,37 +92,37 @@
           {# Columna izquierda: perfil #}
           <aside class="edit-profile-col">
             <div class="profile-avatar-wrap">
-              <span class="profile-avatar-initials">AH</span>
+              <span class="profile-avatar-initials">{{ usuario.nombre[0] | upper }}{{ usuario.apellidos[0] | upper }}</span>
               <div class="profile-avatar-overlay">
                 <i class="fas fa-camera"></i>
                 <span>Cambiar</span>
               </div>
             </div>
 
-            <p class="profile-name">Artemio Hurtado</p>
-            <p class="profile-email">artemio@macuin.mx</p>
+            <p class="profile-name">{{ usuario.nombre }} {{ usuario.apellidos }}</p>
+            <p class="profile-email">{{ usuario.email }}</p>
 
             {# Info rápida #}
             <div class="profile-info-block">
               <div class="profile-info-item">
                 <i class="fas fa-building"></i>
                 <span class="profile-info-item__label">Depto.</span>
-                <span class="profile-info-item__val">Ventas</span>
+                <span class="profile-info-item__val">{{ usuario.departamento | capitalize if usuario.departamento else '—' }}</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-shield-halved"></i>
                 <span class="profile-info-item__label">Rol</span>
-                <span class="profile-info-item__val">Administrador</span>
+                <span class="profile-info-item__val">{{ usuario.rol | capitalize if usuario.rol else '—' }}</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-clock"></i>
                 <span class="profile-info-item__label">Acceso</span>
-                <span class="profile-info-item__val">06/03/2026</span>
+                <span class="profile-info-item__val">{{ usuario.ultima_actividad[:10] if usuario.ultima_actividad else '—' }}</span>
               </div>
               <div class="profile-info-item">
                 <i class="fas fa-calendar-plus"></i>
                 <span class="profile-info-item__label">Alta</span>
-                <span class="profile-info-item__val">15/01/2024</span>
+                <span class="profile-info-item__val">—</span>
               </div>
             </div>
 
@@ -131,15 +131,15 @@
               <p class="status-block__label">Estado de la cuenta</p>
               <div class="status-options">
                 <label class="status-opt">
-                  <input type="radio" name="estado" value="activo" checked />
+                  <input type="radio" name="estado" value="activo" {% if usuario.estado == 'activo' %}checked{% endif %} />
                   <span class="status-pill status-pill--ok">Activo</span>
                 </label>
                 <label class="status-opt">
-                  <input type="radio" name="estado" value="suspendido" />
+                  <input type="radio" name="estado" value="suspendido" {% if usuario.estado == 'suspendido' %}checked{% endif %} />
                   <span class="status-pill status-pill--warn">Suspendido</span>
                 </label>
                 <label class="status-opt">
-                  <input type="radio" name="estado" value="inactivo" />
+                  <input type="radio" name="estado" value="inactivo" {% if usuario.estado == 'inactivo' %}checked{% endif %} />
                   <span class="status-pill status-pill--err">Inactivo</span>
                 </label>
               </div>
@@ -234,10 +234,10 @@
                       required
                     >
                       <option value="">— Seleccionar —</option>
-                      <option value="ventas" selected>Ventas</option>
-                      <option value="almacen">Almacén</option>
-                      <option value="logistica">Logística</option>
-                      <option value="administracion">Administración</option>
+                      <option value="ventas" {% if usuario.departamento == 'ventas' %}selected{% endif %}>Ventas</option>
+                      <option value="almacen" {% if usuario.departamento == 'almacen' %}selected{% endif %}>Almacén</option>
+                      <option value="logistica" {% if usuario.departamento == 'logistica' %}selected{% endif %}>Logística</option>
+                      <option value="administracion" {% if usuario.departamento == 'administracion' %}selected{% endif %}>Administración</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -250,10 +250,10 @@
                   <div class="field-select-wrap">
                     <select id="fRol" name="rol" class="field-select" required>
                       <option value="">— Seleccionar —</option>
-                      <option value="admin" selected>Administrador</option>
-                      <option value="ventas">Ventas</option>
-                      <option value="almacen">Almacén</option>
-                      <option value="logistica">Logística</option>
+                      <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %}>Administrador</option>
+                      <option value="ventas" {% if usuario.rol == 'ventas' %}selected{% endif %}>Ventas</option>
+                      <option value="almacen" {% if usuario.rol == 'almacen' %}selected{% endif %}>Almacén</option>
+                      <option value="logistica" {% if usuario.rol == 'logistica' %}selected{% endif %}>Logística</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -275,12 +275,10 @@
                   <label class="field-label" for="fSucursal">Sucursal</label>
                   <div class="field-select-wrap">
                     <select id="fSucursal" name="sucursal" class="field-select">
-                      <option value="monterrey" selected>
-                        Monterrey — Central
-                      </option>
-                      <option value="guadalupe">Guadalupe</option>
-                      <option value="apodaca">Apodaca</option>
-                      <option value="san_nicolas">San Nicolás</option>
+                      <option value="queretaro" {% if usuario.sucursal == 'queretaro' %}selected{% endif %}>Querétaro — Centro</option>
+                      <option value="el_marques" {% if usuario.sucursal == 'el_marques' %}selected{% endif %}>El Marqués</option>
+                      <option value="corregidora" {% if usuario.sucursal == 'corregidora' %}selected{% endif %}>Corregidora</option>
+                      <option value="san_juan_rio" {% if usuario.sucursal == 'san_juan_rio' %}selected{% endif %}>San Juan del Río</option>
                     </select>
                     <i class="fas fa-chevron-down field-arrow"></i>
                   </div>
@@ -394,55 +392,6 @@
               </div>
             </section>
 
-            {# Sección: Actividad reciente #}
-            <section class="fields-section">
-              <h2 class="section-title">
-                <i class="fas fa-clock-rotate-left"></i> Actividad Reciente
-              </h2>
-              <ul class="activity-log">
-                <li class="activity-item">
-                  <div class="activity-icon">
-                    <i class="fas fa-right-to-bracket"></i>
-                  </div>
-                  <div>
-                    <p class="activity-text">
-                      Inició sesión desde 189.203.xx.xx
-                    </p>
-                    <p class="activity-date">06/03/2026 — 09:14</p>
-                  </div>
-                </li>
-                <li class="activity-item">
-                  <div class="activity-icon"><i class="fas fa-pen"></i></div>
-                  <div>
-                    <p class="activity-text">
-                      Editó autoparte AUT-045 (cambio de precio)
-                    </p>
-                    <p class="activity-date">05/03/2026 — 16:30</p>
-                  </div>
-                </li>
-                <li class="activity-item">
-                  <div class="activity-icon"><i class="fas fa-truck"></i></div>
-                  <div>
-                    <p class="activity-text">
-                      Cambió estado del pedido PED-1032 a "Enviado"
-                    </p>
-                    <p class="activity-date">05/03/2026 — 11:22</p>
-                  </div>
-                </li>
-                <li class="activity-item">
-                  <div class="activity-icon">
-                    <i class="fas fa-user-plus"></i>
-                  </div>
-                  <div>
-                    <p class="activity-text">
-                      Registró al usuario CLI-008 (Daniel Mora)
-                    </p>
-                    <p class="activity-date">04/03/2026 — 14:05</p>
-                  </div>
-                </li>
-              </ul>
-            </section>
-
             {# Sección: Zona peligrosa #}
             <section class="fields-section fields-section--last">
               <h2 class="section-title">
@@ -456,7 +405,8 @@
                     revertir.
                   </p>
                 </div>
-                <button type="button" class="btn-danger">
+                <button type="button" class="btn-danger"
+                  onclick="macModal('/desactivar-usuario-interno/{{ usuario.id }}','¿Desactivar cuenta?','{{ usuario.nombre }} {{ usuario.apellidos }} perderá acceso al sistema. Puedes reactivarlo editando su estado.')">
                   <i class="fas fa-user-slash"></i>
                   Desactivar
                 </button>
@@ -499,6 +449,33 @@
         const el = document.getElementById(id);
         if (el) el.checked = defaults ? defaults[id] : false;
       });
+    });
+  </script>
+
+  {# Modal de confirmación MACUIN #}
+  <div id="mac-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#1a1a1a;border:1px solid #C41230;border-radius:10px;padding:36px 32px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.6);">
+      <div style="width:56px;height:56px;background:#C41230;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><i class="fas fa-triangle-exclamation" style="color:#fff;font-size:22px;"></i></div>
+      <p id="mac-modal-title" style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:#F5F5F0;margin:0 0 8px;"></p>
+      <p id="mac-modal-msg" style="font-family:'DM Sans',sans-serif;font-size:14px;color:#8B949E;margin:0 0 28px;line-height:1.5;"></p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="macModalClose()" style="padding:10px 24px;border:1px solid #444;background:transparent;color:#8B949E;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;">Cancelar</button>
+        <a id="mac-modal-btn" href="#" style="padding:10px 24px;background:#C41230;color:#fff;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;text-decoration:none;font-weight:600;">Confirmar</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function macModal(url, title, msg) {
+      document.getElementById('mac-modal-title').textContent = title;
+      document.getElementById('mac-modal-msg').textContent   = msg;
+      document.getElementById('mac-modal-btn').href          = url;
+      document.getElementById('mac-modal').style.display     = 'flex';
+    }
+    function macModalClose() {
+      document.getElementById('mac-modal').style.display = 'none';
+    }
+    document.getElementById('mac-modal').addEventListener('click', function(e) {
+      if (e.target === this) macModalClose();
     });
   </script>
   </body>
